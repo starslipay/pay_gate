@@ -1,6 +1,6 @@
-# 先删除旧镜像，不存在也不会报错 docker rmi -f pay_gate
-# 构建镜像 docker build -t pay_gate .
-# 导出镜像 docker save -o pay_gate.tar pay_gate:latest
+# 先删除旧镜像，不存在也不会报错 docker rmi -f pay_gate:v1.0.2
+# 构建镜像 docker build -t pay_gate:v1.0.2 .
+# 导出镜像 docker save -o pay_gate.v1.0.2.tar pay_gate:v1.0.2
 # 多阶段构建减小镜像体积
 FROM golang:1.25-alpine AS builder
 WORKDIR /app
