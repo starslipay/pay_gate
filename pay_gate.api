@@ -1,0 +1,36 @@
+// 生成代码
+// goctl api go -api pay_gate.api -dir .
+// 导出swagger文件, 将其导入apifox可以识别接口协议
+// goctl api swagger -api pay_gate.api -dir . -filename pay_gate
+syntax = "v1"
+
+info (
+	title:   "pay_gate"
+	desc:    "支付网关"
+	version: "v1"
+	author:  "starsli"
+)
+
+type (
+	HealthReq  {}
+	HealthRsp  {}
+	GetUserInfoReq {
+		UserId string `json:"user_id,optional"`
+	}
+	GetUserInfoRsp {
+		UserId string `json:"user_id"`
+	}
+)
+
+@server (
+	group:  pay_gate
+	prefix: /api/pay_gate
+)
+service pay_gate {
+	@handler health
+	get /health (HealthReq) returns (HealthRsp)
+
+	@handler get_user_info
+	post /get_user_info (GetUserInfoReq) returns (GetUserInfoRsp)
+}
+

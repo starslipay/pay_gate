@@ -1,0 +1,10 @@
+Name: pay_gate
+Host: 0.0.0.0
+Port: 8888
+Etcd:
+  Hosts:
+    # - 127.0.0.1:2379  # 本地开发环境
+    - etcd-0.etcd.middleware-ns.svc.cluster.local:2379
+    - etcd-1.etcd.middleware-ns.svc.cluster.local:2379
+    - etcd-2.etcd.middleware-ns.svc.cluster.local:2379
+  Key: pay_gate.api
