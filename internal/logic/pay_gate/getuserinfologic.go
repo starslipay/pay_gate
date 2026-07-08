@@ -29,7 +29,7 @@ func NewGet_user_infoLogic(ctx context.Context, svcCtx *svc.ServiceContext) *Get
 
 func (l *Get_user_infoLogic) Get_user_info(req *types.GetUserInfoReq) (resp *types.GetUserInfoRsp, err error) {
 	resp = &types.GetUserInfoRsp{
-		UserId: "xxx" + req.UserId,
+		UserId: req.UserId,
 	}
 	err = nil
 	return
