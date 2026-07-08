@@ -6,8 +6,8 @@ package pay_gate
 import (
 	"context"
 
-	"pay_gate/internal/svc"
-	"pay_gate/internal/types"
+	"github.com/starslipay/pay_gate/internal/svc"
+	"github.com/starslipay/pay_gate/internal/types"
 
 	"github.com/zeromicro/go-zero/core/logx"
 )

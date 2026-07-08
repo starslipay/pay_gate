@@ -6,8 +6,9 @@ package pay_gate
 import (
 	"context"
 
-	"pay_gate/internal/svc"
-	"pay_gate/internal/types"
+	"github.com/starslipay/pay_gate/internal/svc"
+	"github.com/starslipay/pay_gate/internal/types"
+	"github.com/starslipay/user_mgr/user_mgr_pb"
 
 	"github.com/zeromicro/go-zero/core/logx"
 )
@@ -28,8 +29,16 @@ func NewGet_user_infoLogic(ctx context.Context, svcCtx *svc.ServiceContext) *Get
 }
 
 func (l *Get_user_infoLogic) Get_user_info(req *types.GetUserInfoReq) (resp *types.GetUserInfoRsp, err error) {
-	resp = &types.GetUserInfoRsp{
+	// 调用user_mgr服务
+	userInfo, err := l.svcCtx.UserMgrRpcClient.GetUserInfo(l.ctx, &user_mgr_pb.GetUserInfoReq{
 		UserId: req.UserId,
+	})
+	if err != nil {
+		l.Logger.Errorf("GetUserInfo failed, err: %v", err)
+		return
+	}
+	resp = &types.GetUserInfoRsp{
+		UserId: userInfo.UserId,
 	}
 	err = nil
 	return

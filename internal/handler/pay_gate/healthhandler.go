@@ -6,10 +6,10 @@ package pay_gate
 import (
 	"net/http"
 
+	"github.com/starslipay/pay_gate/internal/logic/pay_gate"
+	"github.com/starslipay/pay_gate/internal/svc"
+	"github.com/starslipay/pay_gate/internal/types"
 	"github.com/zeromicro/go-zero/rest/httpx"
-	"pay_gate/internal/logic/pay_gate"
-	"pay_gate/internal/svc"
-	"pay_gate/internal/types"
 )
 
 func HealthHandler(svcCtx *svc.ServiceContext) http.HandlerFunc {

@@ -4,15 +4,19 @@
 package svc
 
 import (
-	"pay_gate/internal/config"
+	"github.com/starslipay/pay_gate/internal/config"
+	"github.com/starslipay/user_mgr/user_mgr_pb"
+	"github.com/zeromicro/go-zero/zrpc"
 )
 
 type ServiceContext struct {
-	Config config.Config
+	Config           config.Config
+	UserMgrRpcClient user_mgr_pb.UserMgrClient
 }
 
 func NewServiceContext(c config.Config) *ServiceContext {
 	return &ServiceContext{
-		Config: c,
+		Config:           c,
+		UserMgrRpcClient: user_mgr_pb.NewUserMgrClient(zrpc.MustNewClient(c.UserMgrRpcConfig).Conn()),
 	}
 }

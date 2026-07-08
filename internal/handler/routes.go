@@ -6,8 +6,8 @@ package handler
 import (
 	"net/http"
 
-	pay_gate "pay_gate/internal/handler/pay_gate"
-	"pay_gate/internal/svc"
+	pay_gate "github.com/starslipay/pay_gate/internal/handler/pay_gate"
+	"github.com/starslipay/pay_gate/internal/svc"
 
 	"github.com/zeromicro/go-zero/rest"
 )

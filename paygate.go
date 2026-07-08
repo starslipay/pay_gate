@@ -7,9 +7,9 @@ import (
 	"flag"
 	"fmt"
 
-	"pay_gate/internal/config"
-	"pay_gate/internal/handler"
-	"pay_gate/internal/svc"
+	"github.com/starslipay/pay_gate/internal/config"
+	"github.com/starslipay/pay_gate/internal/handler"
+	"github.com/starslipay/pay_gate/internal/svc"
 
 	"github.com/zeromicro/go-zero/core/conf"
 	"github.com/zeromicro/go-zero/rest"

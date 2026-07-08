@@ -6,7 +6,7 @@ metadata:
   labels:
     app: pay-gate
 spec:
-  replicas: 8
+  replicas: 1
   selector:
     matchLabels:
       app: pay-gate
