@@ -2,7 +2,7 @@ apiVersion: apps/v1
 kind: Deployment
 metadata:
   name: pay-gate
-  namespace: gateway-ns
+  namespace: pay-ns
   labels:
     app: pay-gate
 spec:
@@ -28,7 +28,7 @@ spec:
         node-type: business-worker
       containers:
       - name: pay-gate
-        image: pay_gate:v1.0.2
+        image: pay_gate:v1.0.3
         imagePullPolicy: Never
         ports:
         - containerPort: 8888

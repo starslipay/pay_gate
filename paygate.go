@@ -38,8 +38,8 @@ echo "=== 节点信息 ==="
 sudo kubectl get nodes -o wide
 
 echo -e "\n=== 服务信息 ==="
-sudo kubectl get svc -n gateway-ns
+sudo kubectl get svc -n pay-ns
 
 echo -e "\n=== Pod 状态 ==="
-sudo kubectl get pods -n gateway-ns -o wide
+sudo kubectl get pods -n pay-ns -o wide
 */
