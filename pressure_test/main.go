@@ -50,7 +50,7 @@ func main() {
 		totalRequest int
 	)
 
-	flag.StringVar(&targetURL, "url", "http://172.30.40.184:30888", "目标服务地址")
+	flag.StringVar(&targetURL, "url", "http://172.30.38.14:30880", "目标服务地址")
 	flag.IntVar(&concurrency, "c", 10, "并发数")
 	flag.IntVar(&qps, "qps", 100, "每秒请求数")
 	flag.IntVar(&totalRequest, "n", 2000, "总请求数")
