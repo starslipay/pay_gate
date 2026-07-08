@@ -1,0 +1,15 @@
+apiVersion: v1
+kind: ConfigMap
+metadata:
+  name: etcd-config
+  namespace: pay-ns
+data:
+  etcd.conf.json: |
+    {
+      "data-dir": "/var/lib/etcd",
+      "listen-peer-urls": ["http://0.0.0.0:2380"],
+      "listen-client-urls": ["http://0.0.0.0:2379"],
+      "initial-cluster-token": "trade-etcd-cluster",
+      "initial-cluster": "etcd-0=http://etcd-0.etcd.pay-ns.svc.cluster.local:2380,etcd-1=http://etcd-1.etcd.pay-ns.svc.cluster.local:2380,etcd-2=http://etcd-2.etcd.pay-ns.svc.cluster.local:2380",
+      "initial-cluster-state": "new"
+    }

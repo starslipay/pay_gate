@@ -1,0 +1,79 @@
+apiVersion: apps/v1
+kind: StatefulSet
+metadata:
+  name: etcd
+  namespace: pay-ns
+spec:
+  replicas: 3
+  selector:
+    matchLabels:
+      app: etcd
+  serviceName: etcd
+  template:
+    metadata:
+      labels:
+        app: etcd
+    spec:
+      nodeSelector:
+        business-worker: "true"
+      affinity:
+        podAntiAffinity:
+          requiredDuringSchedulingIgnoredDuringExecution:
+          - labelSelector:
+              matchExpressions:
+              - key: app
+                operator: In
+                values:
+                - etcd
+            topologyKey: kubernetes.io/hostname
+      initContainers:
+      - name: init-etcd
+        image: busybox:1.35
+        command:
+        - sh
+        - -c
+        - |
+          mkdir -p /var/lib/etcd && chmod 700 /var/lib/etcd
+          cat > /var/lib/etcd/etcd.conf <<EOF
+          data-dir: /var/lib/etcd
+          name: ${HOSTNAME}
+          listen-peer-urls: http://0.0.0.0:2380
+          listen-client-urls: http://0.0.0.0:2379
+          initial-advertise-peer-urls: http://${HOSTNAME}.etcd.pay-ns.svc.cluster.local:2380
+          advertise-client-urls: http://${HOSTNAME}.etcd.pay-ns.svc.cluster.local:2379
+          initial-cluster-token: trade-etcd-cluster
+          initial-cluster: etcd-0=http://etcd-0.etcd.pay-ns.svc.cluster.local:2380,etcd-1=http://etcd-1.etcd.pay-ns.svc.cluster.local:2380,etcd-2=http://etcd-2.etcd.pay-ns.svc.cluster.local:2380
+          initial-cluster-state: new
+          EOF
+        volumeMounts:
+        - name: data
+          mountPath: /var/lib/etcd
+      containers:
+      - name: etcd
+        image: registry.k8s.io/etcd:3.6.13-0
+        imagePullPolicy: IfNotPresent
+        resources:
+          requests:
+            cpu: 500m
+            memory: 512Mi
+          limits:
+            cpu: 1000m
+            memory: 1Gi
+        ports:
+        - containerPort: 2379
+          name: client
+        - containerPort: 2380
+          name: peer
+        volumeMounts:
+        - name: data
+          mountPath: /var/lib/etcd
+        command:
+        - /usr/local/bin/etcd
+        args:
+        - --config-file=/var/lib/etcd/etcd.conf
+      volumes:
+      - name: data
+        emptyDir: {}
+  podManagementPolicy: Parallel
+  updateStrategy:
+    type: RollingUpdate
