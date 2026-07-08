@@ -28,7 +28,7 @@ spec:
         node-type: business-worker
       containers:
       - name: pay-gate
-        image: pay_gate:v1.0.3
+        image: pay_gate:v1.0.7
         imagePullPolicy: Never
         ports:
         - containerPort: 8888

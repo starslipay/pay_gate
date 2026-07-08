@@ -1,6 +1,8 @@
-# 定义镜像版本变量
+pushd
 cd ..
-$PAY_GATE_VERSION = "v1.0.4"
+
+# 定义镜像版本变量
+$PAY_GATE_VERSION = "v1.0.7"
 
 docker rmi -f pay_gate:$PAY_GATE_VERSION
 docker build -t pay_gate:$PAY_GATE_VERSION .
@@ -33,3 +35,8 @@ foreach ($vm in $vmList) {
 }
 
 Write-Host "全部节点导入任务执行完毕" -ForegroundColor Yellow
+
+# 删除本地镜像tar文件
+rm pay_gate.$PAY_GATE_VERSION.tar
+
+popd
