@@ -15,5 +15,5 @@ UserMgrRpcConfig:
     - etcd-0.etcd.pay-ns.svc.cluster.local:2379
     - etcd-1.etcd.pay-ns.svc.cluster.local:2379
     - etcd-2.etcd.pay-ns.svc.cluster.local:2379
-    Key: user_mgr.rpc  # 注册到etcd的服务key，客户端要对应这个key
+    Key: usermgr.rpc  # 注册到etcd的服务key，客户端要对应这个key
   Timeout: 3000  # 超时时间，单位毫秒
