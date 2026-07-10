@@ -3,6 +3,16 @@
 
 package types
 
+type GetUserBalanceInfoReq struct {
+	UserId string `json:"user_id,optional"`
+}
+
+type GetUserBalanceInfoRsp struct {
+	UserId  string `json:"user_id"`
+	Balance int64  `json:"balance"`
+	CurType int32  `json:"cur_type"`
+}
+
 type GetUserInfoReq struct {
 	UserId string `json:"user_id,optional"`
 }

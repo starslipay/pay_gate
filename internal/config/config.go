@@ -10,5 +10,6 @@ import (
 
 type Config struct {
 	rest.RestConf
-	UserMgrRpcConfig zrpc.RpcClientConf
+	UserMgrRpcConfig    zrpc.RpcClientConf
+	AccountMgrRpcConfig zrpc.RpcClientConf
 }

@@ -1,6 +1,6 @@
 // 生成代码
-// goctl api go -api pay_gate.api -dir .
 // 导出swagger文件, 将其导入apifox可以识别接口协议
+// goctl api go -api pay_gate.api -dir .
 // goctl api swagger -api pay_gate.api -dir . -filename pay_gate
 syntax = "v1"
 
@@ -57,6 +57,14 @@ type (
 		IdType  int32  `json:"id_type"`
 		IdCard  string `json:"id_card"`
 	}
+	GetUserBalanceInfoReq {
+		UserId string `json:"user_id,optional"`
+	}
+	GetUserBalanceInfoRsp {
+		UserId  string `json:"user_id"`
+		Balance int64  `json:"balance"`
+		CurType int32  `json:"cur_type"`
+	}
 )
 
 @server (
@@ -75,5 +83,8 @@ service pay_gate {
 
 	@handler get_user_info
 	post /get_user_info (GetUserInfoReq) returns (GetUserInfoRsp)
+
+	@handler get_user_balance_info
+	post /get_user_balance_info (GetUserBalanceInfoReq) returns (GetUserBalanceInfoRsp)
 }
 
