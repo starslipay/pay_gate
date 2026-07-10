@@ -8,11 +8,36 @@ type GetUserInfoReq struct {
 }
 
 type GetUserInfoRsp struct {
-	UserId string `json:"user_id"`
+	UserId  string `json:"user_id"`
+	Name    string `json:"name"`
+	Gender  int32  `json:"gender"`
+	Age     int32  `json:"age"`
+	Address string `json:"address"`
+	Phone   string `json:"phone"`
+	Email   string `json:"email"`
+	IdType  int32  `json:"id_type"`
+	IdCard  string `json:"id_card"`
 }
 
 type HealthReq struct {
 }
 
 type HealthRsp struct {
+}
+
+type RegUserReq struct {
+	UserId   string `json:"user_id,optional"`
+	Password string `json:"password,optional"`
+	Name     string `json:"name,optional"`
+	Gender   int32  `json:"gender,optional"`
+	Age      int32  `json:"age,optional"`
+	Address  string `json:"address,optional"`
+	Phone    string `json:"phone,optional"`
+	Email    string `json:"email,optional"`
+	IdType   int32  `json:"id_type,optional"`
+	IdCard   string `json:"id_card,optional"`
+}
+
+type RegUserRsp struct {
+	UserId string `json:"user_id"`
 }

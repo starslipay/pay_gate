@@ -38,7 +38,15 @@ func (l *Get_user_infoLogic) Get_user_info(req *types.GetUserInfoReq) (resp *typ
 		return
 	}
 	resp = &types.GetUserInfoRsp{
-		UserId: userInfo.UserId,
+		UserId:  userInfo.UserId,
+		Name:    userInfo.Name,
+		Gender:  userInfo.Gender,
+		Age:     userInfo.Age,
+		Address: userInfo.Address,
+		Phone:   userInfo.Phone,
+		Email:   userInfo.Email,
+		IdType:  userInfo.IdType,
+		IdCard:  userInfo.IdCard,
 	}
 	err = nil
 	return

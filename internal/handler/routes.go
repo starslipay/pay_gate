@@ -25,6 +25,11 @@ func RegisterHandlers(server *rest.Server, serverCtx *svc.ServiceContext) {
 				Path:    "/health",
 				Handler: pay_gate.HealthHandler(serverCtx),
 			},
+			{
+				Method:  http.MethodPost,
+				Path:    "/reg_user",
+				Handler: pay_gate.Reg_userHandler(serverCtx),
+			},
 		},
 		rest.WithPrefix("/api/pay_gate"),
 	)

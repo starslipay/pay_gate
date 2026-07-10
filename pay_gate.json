@@ -49,6 +49,30 @@
             "schema": {
               "type": "object",
               "properties": {
+                "address": {
+                  "type": "string"
+                },
+                "age": {
+                  "type": "integer"
+                },
+                "email": {
+                  "type": "string"
+                },
+                "gender": {
+                  "type": "integer"
+                },
+                "id_card": {
+                  "type": "string"
+                },
+                "id_type": {
+                  "type": "integer"
+                },
+                "name": {
+                  "type": "string"
+                },
+                "phone": {
+                  "type": "string"
+                },
                 "user_id": {
                   "type": "string"
                 }
@@ -59,10 +83,7 @@
       }
     },
     "/api/pay_gate/health": {
-      "post": {
-        "consumes": [
-          "application/x-www-form-urlencoded"
-        ],
+      "get": {
         "produces": [
           "application/json"
         ],
@@ -80,9 +101,79 @@
           }
         }
       }
+    },
+    "/api/pay_gate/reg_user": {
+      "post": {
+        "consumes": [
+          "application/json"
+        ],
+        "produces": [
+          "application/json"
+        ],
+        "schemes": [
+          "https"
+        ],
+        "summary": "reg_user",
+        "operationId": "payGateRegUser",
+        "parameters": [
+          {
+            "name": "body",
+            "in": "body",
+            "required": true,
+            "schema": {
+              "type": "object",
+              "properties": {
+                "address": {
+                  "type": "string"
+                },
+                "age": {
+                  "type": "integer"
+                },
+                "email": {
+                  "type": "string"
+                },
+                "gender": {
+                  "type": "integer"
+                },
+                "id_card": {
+                  "type": "string"
+                },
+                "id_type": {
+                  "type": "integer"
+                },
+                "name": {
+                  "type": "string"
+                },
+                "password": {
+                  "type": "string"
+                },
+                "phone": {
+                  "type": "string"
+                },
+                "user_id": {
+                  "type": "string"
+                }
+              }
+            }
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "",
+            "schema": {
+              "type": "object",
+              "properties": {
+                "user_id": {
+                  "type": "string"
+                }
+              }
+            }
+          }
+        }
+      }
     }
   },
-  "x-date": "2026-07-07 19:41:41",
+  "x-date": "2026-07-10 10:51:55",
   "x-description": "This is a goctl generated swagger file.",
   "x-github": "https://github.com/zeromicro/go-zero",
   "x-go-zero-doc": "https://go-zero.dev/",
