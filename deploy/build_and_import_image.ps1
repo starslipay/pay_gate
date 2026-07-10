@@ -17,7 +17,7 @@ docker save -o pay_gate.$PAY_GATE_VERSION.tar pay_gate:$PAY_GATE_VERSION
 # multipass mount C:/study/starslipay master3:/home/ubuntu/starslipay
 
 # 所有需要导入镜像的虚拟机列表
-$vmList = @("master1", "master2", "master3", "worker1", "worker2", "worker3")
+$vmList = @("worker1", "worker2", "worker3")
 # 虚拟机内镜像tar路径
 $tarPath = "/home/ubuntu/starslipay/pay_gate/pay_gate.$PAY_GATE_VERSION.tar"
 
