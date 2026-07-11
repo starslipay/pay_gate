@@ -5,6 +5,7 @@ package pay_gate
 
 import (
 	"context"
+	"errors"
 
 	"github.com/starslipay/pay_gate/internal/svc"
 	"github.com/starslipay/pay_gate/internal/types"
@@ -43,7 +44,7 @@ func (l *Reg_userLogic) Reg_user(req *types.RegUserReq) (resp *types.RegUserRsp,
 	})
 	if err != nil {
 		l.Logger.Errorf("RegUser failed, err: %v", err)
-		return
+		return nil, errors.New("RegUser failed")
 	}
 	resp = &types.RegUserRsp{
 		UserId: RegUserRsp.UserId,

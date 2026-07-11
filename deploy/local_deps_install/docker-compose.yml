@@ -1,0 +1,110 @@
+# 本地先安装docker desktop
+# 在本地构建并启动所有依赖组件
+# 删除所有容器和数据卷 docker-compose down -v
+# 部署所有容器 docker-compose up -d
+
+# 统一内网，各服务互通
+networks:
+  dev_net:
+    driver: bridge
+
+# 持久化数据卷
+volumes:
+  mysql_data:
+  redis_data:
+  etcd_data:
+  kafka_data:
+  zk_data:
+  prom_data:  # prometheus时序数据持久化
+  graf_data:  # grafana面板配置持久化
+
+services:
+  # MySQL 8.0
+  mysql:
+    image: mysql:8.0
+    container_name: mysql8
+    restart: always
+    ports:
+      - "3306:3306"
+    environment:
+      TZ: Asia/Shanghai  
+      MYSQL_ROOT_PASSWORD: root123456
+      MYSQL_DATABASE: user_db
+      MYSQL_USER: starslipay
+      MYSQL_PASSWORD: starslipay123456
+    volumes:
+      - mysql_data:/var/lib/mysql
+    command: --default-authentication-plugin=mysql_native_password
+    networks:
+      - dev_net
+
+  # Redis 6
+  redis:
+    image: redis:6-alpine
+    container_name: redis6
+    restart: always
+    ports:
+      - "6379:6379"
+    environment:
+      TZ: Asia/Shanghai
+    volumes:
+      - redis_data:/data
+    command: redis-server --appendonly yes
+    networks:
+      - dev_net
+
+  # Etcd 3.5 分布式注册中心【新增command解决报错】
+  etcd:
+    image: registry.aliyuncs.com/google_containers/etcd:3.5.6-0
+    container_name: etcd
+    restart: always
+    ports:
+      - "2379:2379"
+      - "2380:2380"
+    environment:
+      TZ: Asia/Shanghai
+      ALLOW_NONE_AUTHENTICATION: yes
+      ETCD_NAME: etcd-node1
+      ETCD_DATA_DIR: /etcd/data
+      ETCD_LISTEN_CLIENT_URLS: http://0.0.0.0:2379
+      ETCD_LISTEN_PEER_URLS: http://0.0.0.0:2380
+      ETCD_ADVERTISE_CLIENT_URLS: http://etcd:2379
+      ETCD_INITIAL_ADVERTISE_PEER_URLS: http://etcd:2380
+      ETCD_INITIAL_CLUSTER: etcd-node1=http://etcd:2380
+    volumes:
+      - etcd_data:/etcd/data
+    # 关键修复：添加etcd启动命令
+    command:
+      - /usr/local/bin/etcd
+    networks:
+      - dev_net
+
+  # Kafka 3.8 (KRaft mode, no Zookeeper)
+  kafka:
+    image: apache/kafka:3.8.0
+    container_name: kafka
+    restart: always
+    ports:
+      - "9092:9092"
+      - "9093:9093"
+    environment:
+      TZ: Asia/Shanghai
+      CLUSTER_ID: kafka-cluster-001
+      BROKER_ID: 1
+      # 监听器配置
+      LISTENERS: INTERNAL://kafka:29092,EXTERNAL://0.0.0.0:9092,CONTROLLER://0.0.0.0:9093
+      ADVERTISED_LISTENERS: INTERNAL://kafka:29092,EXTERNAL://127.0.0.1:9092
+      LISTENER_SECURITY_PROTOCOL_MAP: INTERNAL:PLAINTEXT,EXTERNAL:PLAINTEXT,CONTROLLER:PLAINTEXT
+      INTER_BROKER_LISTENER_NAME: INTERNAL
+      # KRaft 控制器配置
+      CONTROLLER_QUORUM_VOTERS: 1@kafka:9093
+      PROCESS_ROLES: broker,controller
+      # 默认分区数和副本数
+      DEFAULT_REPLICATION_FACTOR: 1
+      NUM_PARTITIONS: 3
+      # JVM 内存配置
+      KAFKA_HEAP_OPTS: "-Xms512m -Xmx512m"
+    volumes:
+      - kafka_data:/tmp/kraft-combined-logs
+    networks:
+      - dev_net
