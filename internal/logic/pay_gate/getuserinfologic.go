@@ -8,6 +8,7 @@ import (
 
 	"github.com/starslipay/pay_gate/internal/svc"
 	"github.com/starslipay/pay_gate/internal/types"
+	"github.com/starslipay/pay_gate/internal/xerr"
 	"github.com/starslipay/user_mgr/user_mgr_pb"
 
 	"github.com/zeromicro/go-zero/core/logx"
@@ -34,8 +35,7 @@ func (l *Get_user_infoLogic) Get_user_info(req *types.GetUserInfoReq) (resp *typ
 		UserId: req.UserId,
 	})
 	if err != nil {
-		l.Logger.Errorf("GetUserInfo failed, err: %v", err)
-		return
+		return nil, xerr.NewServerInternalError("GetUserInfo failed:" + err.Error())
 	}
 	resp = &types.GetUserInfoRsp{
 		UserId:  userInfo.UserId,

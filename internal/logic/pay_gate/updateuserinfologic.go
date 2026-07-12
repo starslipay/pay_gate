@@ -8,6 +8,7 @@ import (
 
 	"github.com/starslipay/pay_gate/internal/svc"
 	"github.com/starslipay/pay_gate/internal/types"
+	"github.com/starslipay/pay_gate/internal/xerr"
 	"github.com/starslipay/user_mgr/user_mgr_pb"
 
 	"github.com/zeromicro/go-zero/core/logx"
@@ -41,8 +42,7 @@ func (l *Update_user_infoLogic) Update_user_info(req *types.UpdateUserInfoReq) (
 		IdCard:  req.IdCard,
 	})
 	if err != nil {
-		l.Logger.Errorf("UpdateUserInfo failed, err: %v", err)
-		return
+		return nil, xerr.NewServerInternalError("UpdateUserInfo failed:" + err.Error())
 	}
 	resp = &types.UpdateUserInfoRsp{
 		UserId: UpdateUserInfoRsp.UserId,

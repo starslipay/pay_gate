@@ -8,6 +8,6 @@ docker rmi -f pay_gate:$VERSION
 docker build -t pay_gate:$VERSION .
 docker run -d --name pay_gate --network local_deps_install_dev_net -p 30888:8888 pay_gate:$VERSION
 docker ps
-docker logs pay_gate -f
+docker logs pay_gate
 
 popd
