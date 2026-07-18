@@ -1,10 +1,12 @@
-$MODULE_NAME = "user_mgr"
+$MODULE_NAME = "pay_gate"
 $VERSION = "v1.0.0"
 $IMAGE_NAME = "${MODULE_NAME}:${VERSION}"
 
 docker rm -f $MODULE_NAME
 docker rmi -f $IMAGE_NAME
 docker build -t $IMAGE_NAME .
-docker run -d --name $MODULE_NAME --network local_deps_install_dev_net -p 30880:8080 $IMAGE_NAME
+docker run -d --name $MODULE_NAME --network dev_pay_net -p 30888:8888 $IMAGE_NAME
+# docker run -d --name pay_gate --network dev_pay_net -p 30888:8888 pay_gate:v1.0.0
+
 docker ps
 docker logs $MODULE_NAME
