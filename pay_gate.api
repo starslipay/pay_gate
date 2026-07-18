@@ -65,6 +65,13 @@ type (
 		Balance int64  `json:"balance"`
 		CurType int32  `json:"cur_type"`
 	}
+	C2CTransferPreReq {
+		BuyerUserId string `json:"buyer_user_id"`
+	}
+	C2CTransferPreRsp {
+		BuyerUserId   string `json:"buyer_user_id"`
+		TransactionId string `json:"transaction_id"`
+	}
 )
 
 @server (
@@ -86,5 +93,8 @@ service pay_gate {
 
 	@handler get_user_balance_info
 	post /get_user_balance_info (GetUserBalanceInfoReq) returns (GetUserBalanceInfoRsp)
+
+	@handler c2c_transfer_pre
+	post /c2c_transfer_pre (C2CTransferPreReq) returns (C2CTransferPreRsp)
 }
 

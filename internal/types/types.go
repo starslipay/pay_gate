@@ -3,6 +3,15 @@
 
 package types
 
+type C2CTransferPreReq struct {
+	BuyerUserId string `json:"buyer_user_id"`
+}
+
+type C2CTransferPreRsp struct {
+	BuyerUserId   string `json:"buyer_user_id"`
+	TransactionId string `json:"transaction_id"`
+}
+
 type GetUserBalanceInfoReq struct {
 	UserId string `json:"user_id,optional"`
 }

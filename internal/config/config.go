@@ -12,4 +12,5 @@ type Config struct {
 	rest.RestConf
 	UserMgrRpcConfig    zrpc.RpcClientConf
 	AccountMgrRpcConfig zrpc.RpcClientConf
+	TradeItgRpcConfig   zrpc.RpcClientConf
 }
