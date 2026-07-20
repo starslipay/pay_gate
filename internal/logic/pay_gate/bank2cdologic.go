@@ -34,6 +34,8 @@ func (l *Bank2c_doLogic) Bank2c_do(req *types.Bank2CDoReq) (resp *types.Bank2CDo
 		BankType:      req.BankType,
 		Amount:        req.Amount,
 		Desc:          req.Desc,
+		VerifyType:    req.VerifyType,
+		Password:      req.Password,
 	})
 	if err != nil {
 		return

@@ -40,7 +40,9 @@
                 "user_id",
                 "bank_type",
                 "amount",
-                "desc"
+                "desc",
+                "verify_type",
+                "password"
               ],
               "properties": {
                 "amount": {
@@ -52,11 +54,17 @@
                 "desc": {
                   "type": "string"
                 },
+                "password": {
+                  "type": "string"
+                },
                 "transaction_id": {
                   "type": "string"
                 },
                 "user_id": {
                   "type": "string"
+                },
+                "verify_type": {
+                  "type": "integer"
                 }
               }
             }
@@ -587,7 +595,7 @@
       }
     }
   },
-  "x-date": "2026-07-20 23:52:37",
+  "x-date": "2026-07-20 23:59:54",
   "x-description": "This is a goctl generated swagger file.",
   "x-github": "https://github.com/zeromicro/go-zero",
   "x-go-zero-doc": "https://go-zero.dev/",

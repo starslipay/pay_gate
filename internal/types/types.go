@@ -9,6 +9,8 @@ type Bank2CDoReq struct {
 	BankType      int32  `json:"bank_type"`
 	Amount        int64  `json:"amount"`
 	Desc          string `json:"desc"`
+	VerifyType    int32  `json:"verify_type"`
+	Password      string `json:"password"`
 }
 
 type Bank2CDoRsp struct {
