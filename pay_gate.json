@@ -132,6 +132,81 @@
         }
       }
     },
+    "/api/pay_gate/c2c_transfer_do": {
+      "post": {
+        "consumes": [
+          "application/json"
+        ],
+        "produces": [
+          "application/json"
+        ],
+        "schemes": [
+          "https"
+        ],
+        "summary": "c2c_transfer_do",
+        "operationId": "payGateC2cTransferDo",
+        "parameters": [
+          {
+            "name": "body",
+            "in": "body",
+            "required": true,
+            "schema": {
+              "type": "object",
+              "required": [
+                "transaction_id",
+                "buyer_user_id",
+                "seller_user_id",
+                "amount",
+                "verify_type",
+                "password"
+              ],
+              "properties": {
+                "amount": {
+                  "type": "integer"
+                },
+                "buyer_user_id": {
+                  "type": "string"
+                },
+                "password": {
+                  "type": "string"
+                },
+                "seller_user_id": {
+                  "type": "string"
+                },
+                "transaction_id": {
+                  "type": "string"
+                },
+                "verify_type": {
+                  "type": "integer"
+                }
+              }
+            }
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "",
+            "schema": {
+              "type": "object",
+              "properties": {
+                "buyer_user_id": {
+                  "type": "string"
+                },
+                "is_repeat": {
+                  "type": "integer"
+                },
+                "seller_user_id": {
+                  "type": "string"
+                },
+                "transaction_id": {
+                  "type": "string"
+                }
+              }
+            }
+          }
+        }
+      }
+    },
     "/api/pay_gate/c2c_transfer_pre": {
       "post": {
         "consumes": [
@@ -455,7 +530,7 @@
       }
     }
   },
-  "x-date": "2026-07-20 17:04:54",
+  "x-date": "2026-07-20 21:12:20",
   "x-description": "This is a goctl generated swagger file.",
   "x-github": "https://github.com/zeromicro/go-zero",
   "x-go-zero-doc": "https://go-zero.dev/",

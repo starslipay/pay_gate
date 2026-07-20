@@ -144,6 +144,8 @@ github.com/starslipay/trade_itg v1.0.0 h1:tdShVGPsKAbh1X2kLh3cMPfRnI24rTDGlWROGy
 github.com/starslipay/trade_itg v1.0.0/go.mod h1:zRGB+ssMcusucyU+YqUK0/6OeKqi1y+ptpJjk+FYwuQ=
 github.com/starslipay/trade_itg v1.0.1 h1:fbFeE8x0Ipb8XH/cNDqTEmts5XH+nnCiTBvVEJAqVJ0=
 github.com/starslipay/trade_itg v1.0.1/go.mod h1:zRGB+ssMcusucyU+YqUK0/6OeKqi1y+ptpJjk+FYwuQ=
+github.com/starslipay/trade_itg v1.0.4 h1:I6zeEAPwNiGbFZfV7Fxfh99+CanBAKXDvNOyYu3W4eQ=
+github.com/starslipay/trade_itg v1.0.4/go.mod h1:zRGB+ssMcusucyU+YqUK0/6OeKqi1y+ptpJjk+FYwuQ=
 github.com/starslipay/user_mgr v1.0.1 h1:3ptolwNw1azqY5h9KZ5Ta1s7M+SNH8NbkQy8GSgy9c8=
 github.com/starslipay/user_mgr v1.0.1/go.mod h1:C/To0yMifKCvz4RhCfD3y2W1nJglN5Cn0k0MAe6y8GE=
 github.com/stretchr/objx v0.1.0/go.mod h1:HFkY916IF+rwdDfMAkV7OtwuqBVzrE8GR6GFx+wExME=

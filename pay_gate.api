@@ -72,6 +72,20 @@ type (
 		BuyerUserId   string `json:"buyer_user_id"`
 		TransactionId string `json:"transaction_id"`
 	}
+	C2CTransferDoReq {
+		TransactionId string `json:"transaction_id"`
+		BuyerUserId   string `json:"buyer_user_id"`
+		SellerUserId  string `json:"seller_user_id"`
+		Amount        int64  `json:"amount"`
+		VerifyType    int32  `json:"verify_type"`
+		Password      string `json:"password"`
+	}
+	C2CTransferDoRsp {
+		TransactionId string `json:"transaction_id"`
+		BuyerUserId   string `json:"buyer_user_id"`
+		SellerUserId  string `json:"seller_user_id"`
+		IsRepeat      int32  `json:"is_repeat"`
+	}
 	Bank2CPreReq {
 		UserId string `json:"user_id"`
 	}
@@ -115,6 +129,9 @@ service pay_gate {
 
 	@handler c2c_transfer_pre
 	post /c2c_transfer_pre (C2CTransferPreReq) returns (C2CTransferPreRsp)
+
+	@handler c2c_transfer_do
+	post /c2c_transfer_do (C2CTransferDoReq) returns (C2CTransferDoRsp)
 
 	@handler bank2c_pre
 	post /bank2c_pre (Bank2CPreReq) returns (Bank2CPreRsp)
