@@ -15,30 +15,62 @@ type C2CTransferPreReq struct {
 	BuyerUserId string `json:"buyer_user_id"`
 }
 
+// 错误分类常量
+const (
+	ErrMarshal      = "JSON序列化失败"
+	ErrRequest      = "HTTP请求失败"
+	ErrStatusNot200 = "HTTP状态码非200"
+	ErrReadBody     = "读取响应体失败"
+)
+
+// 每类错误最多保存的样本数量
+const maxSamplesPerCategory = 5
+
 type Stats struct {
 	successCount int64
 	failureCount int64
 	totalLatency time.Duration
 	minLatency   time.Duration
 	maxLatency   time.Duration
+	// 错误分类统计
+	errorStats map[string]int64
+	// 错误样本（每类保留前N条）
+	errorSamples map[string][]string
 	mu           sync.Mutex
 }
 
-func (s *Stats) addResult(success bool, latency time.Duration) {
+func newStats() *Stats {
+	return &Stats{
+		errorStats:   make(map[string]int64),
+		errorSamples: make(map[string][]string),
+	}
+}
+
+func (s *Stats) addSuccess(latency time.Duration) {
 	s.mu.Lock()
 	defer s.mu.Unlock()
 
-	if success {
-		s.successCount++
-		s.totalLatency += latency
-		if s.minLatency == 0 || latency < s.minLatency {
-			s.minLatency = latency
-		}
-		if latency > s.maxLatency {
-			s.maxLatency = latency
-		}
-	} else {
-		s.failureCount++
+	s.successCount++
+	s.totalLatency += latency
+	if s.minLatency == 0 || latency < s.minLatency {
+		s.minLatency = latency
+	}
+	if latency > s.maxLatency {
+		s.maxLatency = latency
+	}
+}
+
+// addFailure 记录失败请求，category 为错误分类，sample 为错误样本信息
+func (s *Stats) addFailure(category, sample string) {
+	s.mu.Lock()
+	defer s.mu.Unlock()
+
+	s.failureCount++
+	s.errorStats[category]++
+
+	// 限制每类错误的样本数量
+	if len(s.errorSamples[category]) < maxSamplesPerCategory {
+		s.errorSamples[category] = append(s.errorSamples[category], sample)
 	}
 }
 
@@ -52,8 +84,8 @@ func main() {
 
 	flag.StringVar(&targetURL, "url", "http://127.0.0.1:30888", "目标服务地址")
 	flag.IntVar(&concurrency, "c", 100, "并发数")
-	flag.IntVar(&qps, "qps", 100, "每秒请求数")
-	flag.IntVar(&totalRequest, "n", 10000, "总请求数")
+	flag.IntVar(&qps, "qps", 10000, "每秒请求数")
+	flag.IntVar(&totalRequest, "n", 20000, "总请求数")
 	flag.Parse()
 
 	apiURL := fmt.Sprintf("%s/api/pay_gate/c2c_transfer_pre", targetURL)
@@ -65,7 +97,7 @@ func main() {
 	fmt.Printf("总请求数: %d\n", totalRequest)
 	fmt.Println("===============")
 
-	stats := &Stats{}
+	stats := newStats()
 	sem := make(chan struct{}, concurrency)
 	wg := &sync.WaitGroup{}
 
@@ -98,7 +130,7 @@ func main() {
 				reqBody := C2CTransferPreReq{BuyerUserId: "51"}
 				jsonData, err := json.Marshal(reqBody)
 				if err != nil {
-					stats.addResult(false, 0)
+					stats.addFailure(ErrMarshal, fmt.Sprintf("requestID=%d err=%v", id, err))
 					return
 				}
 
@@ -107,25 +139,26 @@ func main() {
 				latency := time.Since(reqStart)
 
 				if err != nil {
-					stats.addResult(false, latency)
+					stats.addFailure(ErrRequest, fmt.Sprintf("requestID=%d latency=%v err=%v", id, latency, err))
 					return
 				}
 
 				defer resp.Body.Close()
 
 				if resp.StatusCode != http.StatusOK {
-					stats.addResult(false, latency)
+					body, _ := ioutil.ReadAll(resp.Body)
+					stats.addFailure(ErrStatusNot200, fmt.Sprintf("requestID=%d status=%d body=%s", id, resp.StatusCode, string(body)))
 					return
 				}
 
 				data, err := ioutil.ReadAll(resp.Body)
-				fmt.Printf("Response Body: %s\n", data)
 				if err != nil {
-					stats.addResult(false, latency)
+					stats.addFailure(ErrReadBody, fmt.Sprintf("requestID=%d err=%v", id, err))
 					return
 				}
 
-				stats.addResult(true, latency)
+				fmt.Printf("Response Body: %s\n", data)
+				stats.addSuccess(latency)
 			}(requestID)
 			requestID++
 		}
@@ -140,6 +173,8 @@ func main() {
 	totalLatency := stats.totalLatency
 	minLatency := stats.minLatency
 	maxLatency := stats.maxLatency
+	errorStats := stats.errorStats
+	errorSamples := stats.errorSamples
 	stats.mu.Unlock()
 
 	totalCount := successCount + failureCount
@@ -167,4 +202,26 @@ func main() {
 		fmt.Printf("最大耗时: %.2f毫秒\n", float64(maxLatency)/float64(time.Millisecond))
 	}
 	fmt.Println("===============")
+
+	// 打印错误分类统计
+	if failureCount > 0 {
+		fmt.Println("\n=== 失败错误分类统计 ===")
+		fmt.Printf("%-25s %-10s %-10s\n", "错误类型", "数量", "占比")
+		fmt.Println("---------------------------------------------")
+		for category, count := range errorStats {
+			rate := float64(count) / float64(failureCount) * 100
+			fmt.Printf("%-25s %-10d %.2f%%\n", category, count, rate)
+		}
+		fmt.Println("=============================================")
+
+		// 打印每类错误的样本信息
+		fmt.Println("\n=== 失败错误样本（每类最多5条） ===")
+		for category, samples := range errorSamples {
+			fmt.Printf("\n[%s] 共 %d 条样本:\n", category, len(samples))
+			for i, sample := range samples {
+				fmt.Printf("  %d. %s\n", i+1, sample)
+			}
+		}
+		fmt.Println("=============================================")
+	}
 }

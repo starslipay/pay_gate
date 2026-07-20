@@ -15,6 +15,123 @@
   },
   "basePath": "/",
   "paths": {
+    "/api/pay_gate/bank2c_do": {
+      "post": {
+        "consumes": [
+          "application/json"
+        ],
+        "produces": [
+          "application/json"
+        ],
+        "schemes": [
+          "https"
+        ],
+        "summary": "bank2c_do",
+        "operationId": "payGateBank2cDo",
+        "parameters": [
+          {
+            "name": "body",
+            "in": "body",
+            "required": true,
+            "schema": {
+              "type": "object",
+              "required": [
+                "transaction_id",
+                "user_id",
+                "bank_type",
+                "amount",
+                "desc"
+              ],
+              "properties": {
+                "amount": {
+                  "type": "integer"
+                },
+                "bank_type": {
+                  "type": "integer"
+                },
+                "desc": {
+                  "type": "string"
+                },
+                "transaction_id": {
+                  "type": "string"
+                },
+                "user_id": {
+                  "type": "string"
+                }
+              }
+            }
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "",
+            "schema": {
+              "type": "object",
+              "properties": {
+                "is_repeat": {
+                  "type": "integer"
+                },
+                "transaction_id": {
+                  "type": "string"
+                },
+                "user_id": {
+                  "type": "string"
+                }
+              }
+            }
+          }
+        }
+      }
+    },
+    "/api/pay_gate/bank2c_pre": {
+      "post": {
+        "consumes": [
+          "application/json"
+        ],
+        "produces": [
+          "application/json"
+        ],
+        "schemes": [
+          "https"
+        ],
+        "summary": "bank2c_pre",
+        "operationId": "payGateBank2cPre",
+        "parameters": [
+          {
+            "name": "body",
+            "in": "body",
+            "required": true,
+            "schema": {
+              "type": "object",
+              "required": [
+                "user_id"
+              ],
+              "properties": {
+                "user_id": {
+                  "type": "string"
+                }
+              }
+            }
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "",
+            "schema": {
+              "type": "object",
+              "properties": {
+                "transaction_id": {
+                  "type": "string"
+                },
+                "user_id": {
+                  "type": "string"
+                }
+              }
+            }
+          }
+        }
+      }
+    },
     "/api/pay_gate/c2c_transfer_pre": {
       "post": {
         "consumes": [
@@ -338,7 +455,7 @@
       }
     }
   },
-  "x-date": "2026-07-19 00:10:41",
+  "x-date": "2026-07-20 17:04:54",
   "x-description": "This is a goctl generated swagger file.",
   "x-github": "https://github.com/zeromicro/go-zero",
   "x-go-zero-doc": "https://go-zero.dev/",

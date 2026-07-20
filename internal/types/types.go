@@ -3,6 +3,29 @@
 
 package types
 
+type Bank2CDoReq struct {
+	TransactionId string `json:"transaction_id"`
+	UserId        string `json:"user_id"`
+	BankType      int32  `json:"bank_type"`
+	Amount        int64  `json:"amount"`
+	Desc          string `json:"desc"`
+}
+
+type Bank2CDoRsp struct {
+	TransactionId string `json:"transaction_id"`
+	UserId        string `json:"user_id"`
+	IsRepeat      int32  `json:"is_repeat"`
+}
+
+type Bank2CPreReq struct {
+	UserId string `json:"user_id"`
+}
+
+type Bank2CPreRsp struct {
+	UserId        string `json:"user_id"`
+	TransactionId string `json:"transaction_id"`
+}
+
 type C2CTransferPreReq struct {
 	BuyerUserId string `json:"buyer_user_id"`
 }

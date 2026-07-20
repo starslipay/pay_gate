@@ -17,6 +17,16 @@ func RegisterHandlers(server *rest.Server, serverCtx *svc.ServiceContext) {
 		[]rest.Route{
 			{
 				Method:  http.MethodPost,
+				Path:    "/bank2c_do",
+				Handler: pay_gate.Bank2c_doHandler(serverCtx),
+			},
+			{
+				Method:  http.MethodPost,
+				Path:    "/bank2c_pre",
+				Handler: pay_gate.Bank2c_preHandler(serverCtx),
+			},
+			{
+				Method:  http.MethodPost,
 				Path:    "/c2c_transfer_pre",
 				Handler: pay_gate.C2c_transfer_preHandler(serverCtx),
 			},

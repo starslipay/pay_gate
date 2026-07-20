@@ -72,6 +72,25 @@ type (
 		BuyerUserId   string `json:"buyer_user_id"`
 		TransactionId string `json:"transaction_id"`
 	}
+	Bank2CPreReq {
+		UserId string `json:"user_id"`
+	}
+	Bank2CPreRsp {
+		UserId        string `json:"user_id"`
+		TransactionId string `json:"transaction_id"`
+	}
+	Bank2CDoReq {
+		TransactionId string `json:"transaction_id"`
+		UserId        string `json:"user_id"`
+		BankType      int32  `json:"bank_type"`
+		Amount        int64  `json:"amount"`
+		Desc          string `json:"desc"`
+	}
+	Bank2CDoRsp {
+		TransactionId string `json:"transaction_id"`
+		UserId        string `json:"user_id"`
+		IsRepeat      int32  `json:"is_repeat"`
+	}
 )
 
 @server (
@@ -96,5 +115,11 @@ service pay_gate {
 
 	@handler c2c_transfer_pre
 	post /c2c_transfer_pre (C2CTransferPreReq) returns (C2CTransferPreRsp)
+
+	@handler bank2c_pre
+	post /bank2c_pre (Bank2CPreReq) returns (Bank2CPreRsp)
+
+	@handler bank2c_do
+	post /bank2c_do (Bank2CDoReq) returns (Bank2CDoRsp)
 }
 
