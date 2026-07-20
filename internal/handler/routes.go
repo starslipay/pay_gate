@@ -46,6 +46,11 @@ func RegisterHandlers(server *rest.Server, serverCtx *svc.ServiceContext) {
 				Handler: pay_gate.Get_user_infoHandler(serverCtx),
 			},
 			{
+				Method:  http.MethodPost,
+				Path:    "/get_user_token",
+				Handler: pay_gate.Get_user_tokenHandler(serverCtx),
+			},
+			{
 				Method:  http.MethodGet,
 				Path:    "/health",
 				Handler: pay_gate.HealthHandler(serverCtx),

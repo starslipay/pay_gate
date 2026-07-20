@@ -65,6 +65,15 @@ type (
 		Balance int64  `json:"balance"`
 		CurType int32  `json:"cur_type"`
 	}
+	GetUserTokenReq {
+		UserId       string `json:"user_id"`
+		Password     string `json:"password"`
+		BusinessInfo string `json:"business_info"`
+	}
+	GetUserTokenRsp {
+		UserId    string `json:"user_id"`
+		UserToken string `json:"user_token"`
+	}
 	C2CTransferPreReq {
 		BuyerUserId string `json:"buyer_user_id"`
 	}
@@ -126,6 +135,9 @@ service pay_gate {
 
 	@handler get_user_balance_info
 	post /get_user_balance_info (GetUserBalanceInfoReq) returns (GetUserBalanceInfoRsp)
+
+	@handler get_user_token
+	post /get_user_token (GetUserTokenReq) returns (GetUserTokenRsp)
 
 	@handler c2c_transfer_pre
 	post /c2c_transfer_pre (C2CTransferPreReq) returns (C2CTransferPreRsp)

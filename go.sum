@@ -1,3 +1,5 @@
+filippo.io/edwards25519 v1.2.0 h1:crnVqOiS4jqYleHd9vaKZ+HKtHfllngJIiOpNpoJsjo=
+filippo.io/edwards25519 v1.2.0/go.mod h1:xzAOLCNug/yB62zG1bQ8uziwrIqIuxhctzJT18Q77mc=
 github.com/alicebob/miniredis/v2 v2.38.0 h1:nZAzCR+Lj+Vxk4ZXzm2NuKq2O33RXj1XxJ2e2uP9jiw=
 github.com/alicebob/miniredis/v2 v2.38.0/go.mod h1:TcL7YfarKPGDAthEtl5NBeHZfeUQj6OXMm/+iu5cLMM=
 github.com/benbjohnson/clock v1.1.0 h1:Q92kusRqC1XV2MjkWETPvjJVqKetz1OzxZB7mHJLju8=
@@ -39,6 +41,8 @@ github.com/go-openapi/jsonreference v0.20.2/go.mod h1:Bl1zwGIM8/wsvqjsOQLJ/SH+En
 github.com/go-openapi/swag v0.22.3/go.mod h1:UzaqsxGiab7freDnrUUra0MwWfN/q7tE4j+VcZ0yl14=
 github.com/go-openapi/swag v0.23.0 h1:vsEVJDUo2hPJ2tu0/Xc+4noaxyEffXNIs3cOULZ+GrE=
 github.com/go-openapi/swag v0.23.0/go.mod h1:esZ8ITTYEsH1V2trKHjAN8Ai7xHb8RV+YSZ577vPjgQ=
+github.com/go-sql-driver/mysql v1.10.0 h1:Q+1LV8DkHJvSYAdR83XzuhDaTykuDx0l6fkXxoWCWfw=
+github.com/go-sql-driver/mysql v1.10.0/go.mod h1:M+cqaI7+xxXGG9swrdeUIoPG3Y3KCkF0pZej+SK+nWk=
 github.com/go-task/slim-sprig v0.0.0-20230315185526-52ccab3ef572 h1:tfuBGBXKqDEevZMzYi5KSi8KkcZtzBcTgAUUtapy0OI=
 github.com/go-task/slim-sprig/v3 v3.0.0 h1:sUs3vkvUymDpBKi3qH1YSqBQk9+9D/8M2mN1vB6EwHI=
 github.com/go-task/slim-sprig/v3 v3.0.0/go.mod h1:W848ghGpv3Qj3dhTPRyJypKRiqCdHZiAzKg9hl15HA8=
@@ -138,6 +142,8 @@ github.com/starslipay/account_mgr v1.0.3 h1:Uj9CsRJ3kz6W8yJRv89rwynSTt7gi6y06IBd
 github.com/starslipay/account_mgr v1.0.3/go.mod h1:vlxOcponuimB+ezD2SlmMDLCG+1SSTRfCl6qmf07HKI=
 github.com/starslipay/trade_id_mgr v0.0.0-20260717053558-c4d57265c180 h1:zLcf5s67mjWlGSrseiGyF21wbaWe4B90LTxe21UVyw8=
 github.com/starslipay/trade_id_mgr v0.0.0-20260717053558-c4d57265c180/go.mod h1:3I3JMCkZorhE6jgTkcuLQQLp0Zk2ncrFuh7R/z9Ij4I=
+github.com/starslipay/trade_id_mgr v0.0.0-20260720063512-3bf34b953db9 h1:sm7teS/DHdi/cLNtroUmkdFFtW9WJ/NxPKMDb8O9C5A=
+github.com/starslipay/trade_id_mgr v0.0.0-20260720063512-3bf34b953db9/go.mod h1:3I3JMCkZorhE6jgTkcuLQQLp0Zk2ncrFuh7R/z9Ij4I=
 github.com/starslipay/trade_itg v0.0.0-20260717054631-d057bb145155 h1:RNo2poqwR2MjYNcN+u+MEdrcLrCaQ4XvMECT20EoikI=
 github.com/starslipay/trade_itg v0.0.0-20260717054631-d057bb145155/go.mod h1:Tpt4r9u4cPVua1+MLHAFAhTZzXoBFDiIkjmhtQa0iIM=
 github.com/starslipay/trade_itg v1.0.0 h1:tdShVGPsKAbh1X2kLh3cMPfRnI24rTDGlWROGyDIWiE=
@@ -148,6 +154,8 @@ github.com/starslipay/trade_itg v1.0.4 h1:I6zeEAPwNiGbFZfV7Fxfh99+CanBAKXDvNOyYu
 github.com/starslipay/trade_itg v1.0.4/go.mod h1:zRGB+ssMcusucyU+YqUK0/6OeKqi1y+ptpJjk+FYwuQ=
 github.com/starslipay/user_mgr v1.0.1 h1:3ptolwNw1azqY5h9KZ5Ta1s7M+SNH8NbkQy8GSgy9c8=
 github.com/starslipay/user_mgr v1.0.1/go.mod h1:C/To0yMifKCvz4RhCfD3y2W1nJglN5Cn0k0MAe6y8GE=
+github.com/starslipay/user_mgr v1.0.4 h1:k42H3JaBcx1fbbzWGgidw6E0BCpe/35XHWiSjNJYLAo=
+github.com/starslipay/user_mgr v1.0.4/go.mod h1:c1N+ZDv3Pq80nv+Q1iM7rXHGu7E3CqbVkTiKouizDHo=
 github.com/stretchr/objx v0.1.0/go.mod h1:HFkY916IF+rwdDfMAkV7OtwuqBVzrE8GR6GFx+wExME=
 github.com/stretchr/objx v0.4.0/go.mod h1:YvHI0jy2hoMjB+UWwv71VJQ9isScKT/TqJzVSSt89Yw=
 github.com/stretchr/objx v0.5.0/go.mod h1:Yh+to48EsGEfYuaHDzXPcE3xhTkx73EhmCGUpEOglKo=

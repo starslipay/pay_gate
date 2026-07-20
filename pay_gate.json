@@ -372,6 +372,63 @@
         }
       }
     },
+    "/api/pay_gate/get_user_token": {
+      "post": {
+        "consumes": [
+          "application/json"
+        ],
+        "produces": [
+          "application/json"
+        ],
+        "schemes": [
+          "https"
+        ],
+        "summary": "get_user_token",
+        "operationId": "payGateGetUserToken",
+        "parameters": [
+          {
+            "name": "body",
+            "in": "body",
+            "required": true,
+            "schema": {
+              "type": "object",
+              "required": [
+                "user_id",
+                "password",
+                "business_info"
+              ],
+              "properties": {
+                "business_info": {
+                  "type": "string"
+                },
+                "password": {
+                  "type": "string"
+                },
+                "user_id": {
+                  "type": "string"
+                }
+              }
+            }
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "",
+            "schema": {
+              "type": "object",
+              "properties": {
+                "user_id": {
+                  "type": "string"
+                },
+                "user_token": {
+                  "type": "string"
+                }
+              }
+            }
+          }
+        }
+      }
+    },
     "/api/pay_gate/health": {
       "get": {
         "produces": [
@@ -530,7 +587,7 @@
       }
     }
   },
-  "x-date": "2026-07-20 21:12:20",
+  "x-date": "2026-07-20 23:52:37",
   "x-description": "This is a goctl generated swagger file.",
   "x-github": "https://github.com/zeromicro/go-zero",
   "x-go-zero-doc": "https://go-zero.dev/",

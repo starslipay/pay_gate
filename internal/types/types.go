@@ -77,6 +77,17 @@ type GetUserInfoRsp struct {
 	IdCard  string `json:"id_card"`
 }
 
+type GetUserTokenReq struct {
+	UserId       string `json:"user_id"`
+	Password     string `json:"password"`
+	BusinessInfo string `json:"business_info"`
+}
+
+type GetUserTokenRsp struct {
+	UserId    string `json:"user_id"`
+	UserToken string `json:"user_token"`
+}
+
 type HealthReq struct {
 }
 
