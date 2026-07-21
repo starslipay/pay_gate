@@ -316,7 +316,7 @@
     "/api/pay_gate/get_user_flow": {
       "post": {
         "consumes": [
-          "application/x-www-form-urlencoded"
+          "application/json"
         ],
         "produces": [
           "application/json"
@@ -328,21 +328,23 @@
         "operationId": "payGateGetUserFlow",
         "parameters": [
           {
-            "type": "string",
-            "name": "user_id",
-            "in": "path"
-          },
-          {
-            "type": "integer",
-            "name": "offset",
-            "in": "formData",
-            "allowEmptyValue": true
-          },
-          {
-            "type": "integer",
-            "name": "limit",
-            "in": "formData",
-            "allowEmptyValue": true
+            "name": "body",
+            "in": "body",
+            "required": true,
+            "schema": {
+              "type": "object",
+              "properties": {
+                "limit": {
+                  "type": "integer"
+                },
+                "offset": {
+                  "type": "integer"
+                },
+                "user_id": {
+                  "type": "string"
+                }
+              }
+            }
           }
         ],
         "responses": {
@@ -694,7 +696,7 @@
       }
     }
   },
-  "x-date": "2026-07-21 11:51:14",
+  "x-date": "2026-07-21 12:43:05",
   "x-description": "This is a goctl generated swagger file.",
   "x-github": "https://github.com/zeromicro/go-zero",
   "x-go-zero-doc": "https://go-zero.dev/",

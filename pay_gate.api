@@ -75,9 +75,9 @@ type (
 		UserToken string `json:"user_token"`
 	}
 	GetUserFlowReq {
-		UserId string `path:"user_id,optional"`
-		Offset int32  `form:"offset,optional"`
-		Limit  int32  `form:"limit,optional"`
+		UserId string `json:"user_id,optional"`
+		Offset int32  `json:"offset,optional"`
+		Limit  int32  `json:"limit,optional"`
 	}
 	UserFlow {
 		TransactionId      string `json:"transaction_id"`

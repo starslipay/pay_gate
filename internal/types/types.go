@@ -64,9 +64,9 @@ type GetUserBalanceInfoRsp struct {
 }
 
 type GetUserFlowReq struct {
-	UserId string `path:"user_id,optional"`
-	Offset int32  `form:"offset,optional"`
-	Limit  int32  `form:"limit,optional"`
+	UserId string `json:"user_id,optional"`
+	Offset int32  `json:"offset,optional"`
+	Limit  int32  `json:"limit,optional"`
 }
 
 type GetUserFlowRsp struct {
