@@ -17,6 +17,27 @@ func RegisterHandlers(server *rest.Server, serverCtx *svc.ServiceContext) {
 		[]rest.Route{
 			{
 				Method:  http.MethodPost,
+				Path:    "/get_user_token",
+				Handler: pay_gate.Get_user_tokenHandler(serverCtx),
+			},
+			{
+				Method:  http.MethodGet,
+				Path:    "/health",
+				Handler: pay_gate.HealthHandler(serverCtx),
+			},
+			{
+				Method:  http.MethodPost,
+				Path:    "/reg_user",
+				Handler: pay_gate.Reg_userHandler(serverCtx),
+			},
+		},
+		rest.WithPrefix("/api/pay_gate"),
+	)
+
+	server.AddRoutes(
+		[]rest.Route{
+			{
+				Method:  http.MethodPost,
 				Path:    "/bank2c_do",
 				Handler: pay_gate.Bank2c_doHandler(serverCtx),
 			},
@@ -49,21 +70,6 @@ func RegisterHandlers(server *rest.Server, serverCtx *svc.ServiceContext) {
 				Method:  http.MethodPost,
 				Path:    "/get_user_info",
 				Handler: pay_gate.Get_user_infoHandler(serverCtx),
-			},
-			{
-				Method:  http.MethodPost,
-				Path:    "/get_user_token",
-				Handler: pay_gate.Get_user_tokenHandler(serverCtx),
-			},
-			{
-				Method:  http.MethodGet,
-				Path:    "/health",
-				Handler: pay_gate.HealthHandler(serverCtx),
-			},
-			{
-				Method:  http.MethodPost,
-				Path:    "/reg_user",
-				Handler: pay_gate.Reg_userHandler(serverCtx),
 			},
 			{
 				Method:  http.MethodPost,

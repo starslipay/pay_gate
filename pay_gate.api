@@ -151,6 +151,16 @@ service pay_gate {
 	@handler reg_user
 	post /reg_user (RegUserReq) returns (RegUserRsp)
 
+	@handler get_user_token
+	post /get_user_token (GetUserTokenReq) returns (GetUserTokenRsp)
+}
+
+@server (
+	group:  pay_gate
+	prefix: /api/pay_gate
+//  middleware: AuthInterceptor
+)
+service pay_gate {
 	@handler update_user_info
 	post /update_user_info (UpdateUserInfoReq) returns (UpdateUserInfoRsp)
 
@@ -159,9 +169,6 @@ service pay_gate {
 
 	@handler get_user_balance_info
 	post /get_user_balance_info (GetUserBalanceInfoReq) returns (GetUserBalanceInfoRsp)
-
-	@handler get_user_token
-	post /get_user_token (GetUserTokenReq) returns (GetUserTokenRsp)
 
 	@handler get_user_flow
 	post /get_user_flow (GetUserFlowReq) returns (GetUserFlowRsp)
