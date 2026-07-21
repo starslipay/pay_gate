@@ -5,18 +5,12 @@ package middleware
 
 import (
 	"encoding/json"
-	"errors"
 	"net/http"
 
+	"github.com/starslipay/pay_gate/internal/xerr"
 	"github.com/starslipay/user_mgr/user_mgr_pb"
 	"github.com/zeromicro/go-zero/core/logx"
 	"github.com/zeromicro/go-zero/rest/httpx"
-)
-
-var (
-	ErrTokenMissing  = errors.New("user_token is missing")
-	ErrTokenInvalid  = errors.New("user_token is invalid")
-	ErrUserIdMissing = errors.New("user_id is missing")
 )
 
 type AuthInterceptorMiddleware struct {
@@ -38,7 +32,7 @@ func (m *AuthInterceptorMiddleware) Handle(next http.HandlerFunc) http.HandlerFu
 			var body map[string]interface{}
 			if err := json.NewDecoder(r.Body).Decode(&body); err != nil {
 				logx.Error("parse request body error:", err)
-				httpx.ErrorCtx(r.Context(), w, ErrTokenMissing)
+				httpx.ErrorCtx(r.Context(), w, xerr.ErrTokenMissing)
 				return
 			}
 
@@ -55,13 +49,13 @@ func (m *AuthInterceptorMiddleware) Handle(next http.HandlerFunc) http.HandlerFu
 
 		if userToken == "" {
 			logx.Error("user_token is missing")
-			httpx.ErrorCtx(r.Context(), w, ErrTokenMissing)
+			httpx.ErrorCtx(r.Context(), w, xerr.ErrTokenMissing)
 			return
 		}
 
 		if userId == "" {
 			logx.Error("user_id is missing")
-			httpx.ErrorCtx(r.Context(), w, ErrUserIdMissing)
+			httpx.ErrorCtx(r.Context(), w, xerr.ErrUserIdMissing)
 			return
 		}
 
@@ -71,13 +65,13 @@ func (m *AuthInterceptorMiddleware) Handle(next http.HandlerFunc) http.HandlerFu
 		})
 		if err != nil {
 			logx.Error("check user token rpc error:", err)
-			httpx.ErrorCtx(r.Context(), w, ErrTokenInvalid)
+			httpx.ErrorCtx(r.Context(), w, xerr.ErrTokenInvalid)
 			return
 		}
 
 		if rsp.GetValidStatus() != 1 {
 			logx.Error("user_token is invalid, status:", rsp.GetValidStatus())
-			httpx.ErrorCtx(r.Context(), w, ErrTokenInvalid)
+			httpx.ErrorCtx(r.Context(), w, xerr.ErrTokenInvalid)
 			return
 		}
 

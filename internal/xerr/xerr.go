@@ -11,24 +11,42 @@ func (c *CodeMsg) Error() string {
 	return fmt.Sprintf("[%d]%s", c.Code, c.Msg)
 }
 
-// 错误码  10000 0000 ~~99999 9999
-// 模块id  30000
-// 错误码 = 模块id + 业务错误码
 var (
 	ModuleId        = 10000
 	ModuleErrorBase = ModuleId * 10000
 )
 
-var (
-	// 系统错误 0000-0999
-	ErrServerInternal = newError(ModuleErrorBase+0, "server internal error")
+// FromError 转换为CodeMsg
+func FromError(err error) *CodeMsg {
+	if err == nil {
+		return nil
+	}
+	if ce, ok := err.(*CodeMsg); ok {
+		return ce
+	}
+	return ErrUnknown
+}
 
-	// 业务错误码 1000-1999
+// IsErrCode 判断错误是否为指定的错误码
+func IsErrCode(err error, code int) bool {
+	if ce := FromError(err); ce != nil {
+		return ce.Code == code
+	}
+	return false
+}
+
+var (
+	ErrServerInternal = newError(ModuleErrorBase+0, "server internal error")
+	ErrUnknown        = newError(ModuleErrorBase+1, "unknown error")
+
 	ErrParam                                   = newError(ModuleErrorBase+1000, "param error")
 	ErrUserNotExist                            = newError(ModuleErrorBase+1001, "user not exist")
 	ErrPasswordWrong                           = newError(ModuleErrorBase+1002, "password wrong")
 	ErrUserAlreadyRegistered                   = newError(ModuleErrorBase+1003, "user already registered")
 	ErrRelationStateNotRegisteringOrRegistered = newError(ModuleErrorBase+1004, "relation state is not registering or registered")
+	ErrTokenMissing                            = newError(ModuleErrorBase+1005, "user_token is missing")
+	ErrTokenInvalid                            = newError(ModuleErrorBase+1006, "user_token is invalid")
+	ErrUserIdMissing                           = newError(ModuleErrorBase+1007, "user_id is missing")
 )
 
 func newError(code int, msg string) *CodeMsg {

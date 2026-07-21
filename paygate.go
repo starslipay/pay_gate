@@ -9,6 +9,7 @@ import (
 
 	"github.com/starslipay/pay_gate/internal/config"
 	"github.com/starslipay/pay_gate/internal/handler"
+	_ "github.com/starslipay/pay_gate/internal/response"
 	"github.com/starslipay/pay_gate/internal/svc"
 
 	"github.com/zeromicro/go-zero/core/conf"
