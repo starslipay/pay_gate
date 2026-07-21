@@ -313,6 +313,105 @@
         }
       }
     },
+    "/api/pay_gate/get_user_flow": {
+      "post": {
+        "consumes": [
+          "application/x-www-form-urlencoded"
+        ],
+        "produces": [
+          "application/json"
+        ],
+        "schemes": [
+          "https"
+        ],
+        "summary": "get_user_flow",
+        "operationId": "payGateGetUserFlow",
+        "parameters": [
+          {
+            "type": "string",
+            "name": "user_id",
+            "in": "path"
+          },
+          {
+            "type": "integer",
+            "name": "offset",
+            "in": "formData",
+            "allowEmptyValue": true
+          },
+          {
+            "type": "integer",
+            "name": "limit",
+            "in": "formData",
+            "allowEmptyValue": true
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "",
+            "schema": {
+              "type": "object",
+              "properties": {
+                "UserFlowList": {
+                  "type": "array",
+                  "items": {
+                    "type": "object",
+                    "required": [
+                      "transaction_id",
+                      "user_id",
+                      "counterparty_user_id",
+                      "inout_type",
+                      "biz_type",
+                      "amount",
+                      "balance",
+                      "desc",
+                      "create_time"
+                    ],
+                    "properties": {
+                      "amount": {
+                        "type": "integer"
+                      },
+                      "balance": {
+                        "type": "integer"
+                      },
+                      "biz_type": {
+                        "type": "integer"
+                      },
+                      "counterparty_user_id": {
+                        "type": "string"
+                      },
+                      "create_time": {
+                        "type": "string"
+                      },
+                      "desc": {
+                        "type": "string"
+                      },
+                      "inout_type": {
+                        "type": "integer"
+                      },
+                      "transaction_id": {
+                        "type": "string"
+                      },
+                      "user_id": {
+                        "type": "string"
+                      }
+                    }
+                  }
+                },
+                "end_flag": {
+                  "type": "integer"
+                },
+                "next_offset": {
+                  "type": "integer"
+                },
+                "user_id": {
+                  "type": "string"
+                }
+              }
+            }
+          }
+        }
+      }
+    },
     "/api/pay_gate/get_user_info": {
       "post": {
         "consumes": [
@@ -595,7 +694,7 @@
       }
     }
   },
-  "x-date": "2026-07-20 23:59:54",
+  "x-date": "2026-07-21 11:51:14",
   "x-description": "This is a goctl generated swagger file.",
   "x-github": "https://github.com/zeromicro/go-zero",
   "x-go-zero-doc": "https://go-zero.dev/",

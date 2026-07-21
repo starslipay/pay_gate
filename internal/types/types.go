@@ -63,6 +63,19 @@ type GetUserBalanceInfoRsp struct {
 	CurType int32  `json:"cur_type"`
 }
 
+type GetUserFlowReq struct {
+	UserId string `path:"user_id,optional"`
+	Offset int32  `form:"offset,optional"`
+	Limit  int32  `form:"limit,optional"`
+}
+
+type GetUserFlowRsp struct {
+	UserId       string     `json:"user_id"`
+	NextOffset   int32      `json:"next_offset"`
+	EndFlag      int32      `json:"end_flag"`
+	UserFlowList []UserFlow `json:"UserFlowList"`
+}
+
 type GetUserInfoReq struct {
 	UserId string `json:"user_id,optional"`
 }
@@ -127,4 +140,16 @@ type UpdateUserInfoReq struct {
 
 type UpdateUserInfoRsp struct {
 	UserId string `json:"user_id"`
+}
+
+type UserFlow struct {
+	TransactionId      string `json:"transaction_id"`
+	UserId             string `json:"user_id"`
+	CounterpartyUserId string `json:"counterparty_user_id"`
+	InoutType          int32  `json:"inout_type"`
+	BizType            int32  `json:"biz_type"`
+	Amount             int64  `json:"amount"`
+	Balance            int64  `json:"balance"`
+	Desc               string `json:"desc"`
+	CreateTime         string `json:"create_time"`
 }

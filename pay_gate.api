@@ -74,6 +74,28 @@ type (
 		UserId    string `json:"user_id"`
 		UserToken string `json:"user_token"`
 	}
+	GetUserFlowReq {
+		UserId string `path:"user_id,optional"`
+		Offset int32  `form:"offset,optional"`
+		Limit  int32  `form:"limit,optional"`
+	}
+	UserFlow {
+		TransactionId      string `json:"transaction_id"`
+		UserId             string `json:"user_id"`
+		CounterpartyUserId string `json:"counterparty_user_id"`
+		InoutType          int32  `json:"inout_type"`
+		BizType            int32  `json:"biz_type"`
+		Amount             int64  `json:"amount"`
+		Balance            int64  `json:"balance"`
+		Desc               string `json:"desc"`
+		CreateTime         string `json:"create_time"`
+	}
+	GetUserFlowRsp {
+		UserId       string     `json:"user_id"`
+		NextOffset   int32      `json:"next_offset"`
+		EndFlag      int32      `json:"end_flag"`
+		UserFlowList []UserFlow `json:"UserFlowList"`
+	}
 	C2CTransferPreReq {
 		BuyerUserId string `json:"buyer_user_id"`
 	}
@@ -140,6 +162,9 @@ service pay_gate {
 
 	@handler get_user_token
 	post /get_user_token (GetUserTokenReq) returns (GetUserTokenRsp)
+
+	@handler get_user_flow
+	post /get_user_flow (GetUserFlowReq) returns (GetUserFlowRsp)
 
 	@handler c2c_transfer_pre
 	post /c2c_transfer_pre (C2CTransferPreReq) returns (C2CTransferPreRsp)

@@ -140,6 +140,8 @@ github.com/starslipay/account_mgr v1.0.2 h1:4TQoRSfDvU95ewirdSW6QPOb6LA0ochKmejT
 github.com/starslipay/account_mgr v1.0.2/go.mod h1:vlxOcponuimB+ezD2SlmMDLCG+1SSTRfCl6qmf07HKI=
 github.com/starslipay/account_mgr v1.0.3 h1:Uj9CsRJ3kz6W8yJRv89rwynSTt7gi6y06IBdcsLEdX0=
 github.com/starslipay/account_mgr v1.0.3/go.mod h1:vlxOcponuimB+ezD2SlmMDLCG+1SSTRfCl6qmf07HKI=
+github.com/starslipay/account_mgr v1.0.4 h1:rmZVXDd9jaxocQCG3RcDx97v4EmA3fYPxgbP9GpM+qE=
+github.com/starslipay/account_mgr v1.0.4/go.mod h1:vlxOcponuimB+ezD2SlmMDLCG+1SSTRfCl6qmf07HKI=
 github.com/starslipay/trade_id_mgr v0.0.0-20260717053558-c4d57265c180 h1:zLcf5s67mjWlGSrseiGyF21wbaWe4B90LTxe21UVyw8=
 github.com/starslipay/trade_id_mgr v0.0.0-20260717053558-c4d57265c180/go.mod h1:3I3JMCkZorhE6jgTkcuLQQLp0Zk2ncrFuh7R/z9Ij4I=
 github.com/starslipay/trade_id_mgr v0.0.0-20260720063512-3bf34b953db9 h1:sm7teS/DHdi/cLNtroUmkdFFtW9WJ/NxPKMDb8O9C5A=

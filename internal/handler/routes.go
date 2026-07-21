@@ -42,6 +42,11 @@ func RegisterHandlers(server *rest.Server, serverCtx *svc.ServiceContext) {
 			},
 			{
 				Method:  http.MethodPost,
+				Path:    "/get_user_flow",
+				Handler: pay_gate.Get_user_flowHandler(serverCtx),
+			},
+			{
+				Method:  http.MethodPost,
 				Path:    "/get_user_info",
 				Handler: pay_gate.Get_user_infoHandler(serverCtx),
 			},
