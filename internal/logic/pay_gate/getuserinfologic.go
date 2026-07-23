@@ -35,7 +35,7 @@ func (l *Get_user_infoLogic) Get_user_info(req *types.GetUserInfoReq) (resp *typ
 		UserId: req.UserId,
 	})
 	if err != nil {
-		return nil, xerr.NewError(xerr.CodeErrServerInternal, "GetUserInfo failed:"+err.Error())
+		return nil, xerr.ParseRPCError(err)
 	}
 	resp = &types.GetUserInfoRsp{
 		UserId:  userInfo.UserId,

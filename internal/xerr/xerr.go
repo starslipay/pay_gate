@@ -1,6 +1,10 @@
 package xerr
 
-import "fmt"
+import (
+	"fmt"
+
+	"github.com/starslipay/paycomm/xerror"
+)
 
 type CodeMsg struct {
 	Code int64
@@ -16,7 +20,6 @@ var (
 	ModuleErrorBase = ModuleId * 10000
 )
 
-// FromError 转换为CodeMsg
 func FromError(err error) *CodeMsg {
 	if err == nil {
 		return nil
@@ -27,12 +30,12 @@ func FromError(err error) *CodeMsg {
 	return NewError(CodeErrUnknown, "unknown error")
 }
 
-// IsErrCode 判断错误是否为指定的错误码
-func IsErrCode(err error, code int64) bool {
-	if ce := FromError(err); ce != nil {
-		return ce.Code == code
+func ParseRPCError(err error) error {
+	bizError, isSuccessParse := xerror.ParseBizError(err)
+	if isSuccessParse {
+		return NewError(bizError.Code, bizError.Message)
 	}
-	return false
+	return NewError(CodeErrUnknown, "RPC_ERROR:"+err.Error())
 }
 
 var (

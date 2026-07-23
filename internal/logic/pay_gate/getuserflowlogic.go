@@ -34,7 +34,7 @@ func (l *Get_user_flowLogic) Get_user_flow(req *types.GetUserFlowReq) (resp *typ
 		UserId: req.UserId,
 	})
 	if err != nil {
-		return nil, xerr.NewError(xerr.CodeErrServerInternal, "GetRelation failed:"+err.Error())
+		return nil, xerr.ParseRPCError(err)
 	}
 
 	userFlowRsp, err := l.svcCtx.AccountMgrRpcClient.GetUserFlow(l.ctx, &account_mgr_pb.GetUserFlowReq{
@@ -44,7 +44,7 @@ func (l *Get_user_flowLogic) Get_user_flow(req *types.GetUserFlowReq) (resp *typ
 	})
 
 	if err != nil {
-		return nil, xerr.NewError(xerr.CodeErrServerInternal, "GetUserFlow failed:"+err.Error())
+		return nil, xerr.ParseRPCError(err)
 	}
 	resp = &types.GetUserFlowRsp{
 		UserId:     req.UserId,

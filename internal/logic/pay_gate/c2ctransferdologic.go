@@ -8,6 +8,7 @@ import (
 
 	"github.com/starslipay/pay_gate/internal/svc"
 	"github.com/starslipay/pay_gate/internal/types"
+	"github.com/starslipay/pay_gate/internal/xerr"
 	"github.com/starslipay/trade_itg/trade_itg_pb"
 
 	"github.com/zeromicro/go-zero/core/logx"
@@ -37,7 +38,7 @@ func (l *C2c_transfer_doLogic) C2c_transfer_do(req *types.C2CTransferDoReq) (res
 		Password:      req.Password,
 	})
 	if err != nil {
-		return
+		return nil, xerr.ParseRPCError(err)
 	}
 	resp = &types.C2CTransferDoRsp{
 		TransactionId: c2CDoRsp.TransactionId,

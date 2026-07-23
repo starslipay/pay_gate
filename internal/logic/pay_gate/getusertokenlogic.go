@@ -9,7 +9,6 @@ import (
 	"github.com/starslipay/pay_gate/internal/svc"
 	"github.com/starslipay/pay_gate/internal/types"
 	"github.com/starslipay/pay_gate/internal/xerr"
-	"github.com/starslipay/paycomm/xerror"
 	"github.com/starslipay/user_mgr/user_mgr_pb"
 
 	"github.com/zeromicro/go-zero/core/logx"
@@ -36,12 +35,7 @@ func (l *Get_user_tokenLogic) Get_user_token(req *types.GetUserTokenReq) (resp *
 		BusinessInfo: req.BusinessInfo,
 	})
 	if err != nil {
-		bizError, isSuccessParse := xerror.ParseBizError(err)
-		if isSuccessParse {
-			return nil, xerr.NewError(bizError.Code, bizError.Message)
-		}
-
-		return nil, xerr.NewError(xerr.CodeErrUnknown, "UNKNOWN:"+err.Error())
+		return nil, xerr.ParseRPCError(err)
 	}
 	resp = &types.GetUserTokenRsp{
 		UserId:    userMgrResp.UserId,
