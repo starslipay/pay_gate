@@ -20,24 +20,6 @@ var (
 	ModuleErrorBase = ModuleId * 10000
 )
 
-func FromError(err error) *CodeMsg {
-	if err == nil {
-		return nil
-	}
-	if ce, ok := err.(*CodeMsg); ok {
-		return ce
-	}
-	return NewError(CodeErrUnknown, "unknown error")
-}
-
-func ParseRPCError(err error) error {
-	bizError, isSuccessParse := xerror.ParseBizError(err)
-	if isSuccessParse {
-		return NewError(bizError.Code, bizError.Message)
-	}
-	return NewError(CodeErrUnknown, "RPC_ERROR:"+err.Error())
-}
-
 var (
 	CodeErrUnknown        = ModuleErrorBase + 0
 	CodeErrServerInternal = ModuleErrorBase + 1
@@ -63,4 +45,22 @@ func NewError(code int64, msg string) *CodeMsg {
 		Code: code,
 		Msg:  msg,
 	}
+}
+
+func FromError(err error) *CodeMsg {
+	if err == nil {
+		return nil
+	}
+	if ce, ok := err.(*CodeMsg); ok {
+		return ce
+	}
+	return NewError(CodeErrUnknown, "unknown error")
+}
+
+func ParseRPCError(err error) error {
+	bizError, isSuccessParse := xerror.ParseBizError(err)
+	if isSuccessParse {
+		return NewError(bizError.Code, bizError.Message)
+	}
+	return NewError(CodeErrUnknown, "RPC_ERROR:"+err.Error())
 }
