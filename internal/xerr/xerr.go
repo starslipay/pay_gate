@@ -3,7 +3,7 @@ package xerr
 import "fmt"
 
 type CodeMsg struct {
-	Code int
+	Code int64
 	Msg  string
 }
 
@@ -12,7 +12,7 @@ func (c *CodeMsg) Error() string {
 }
 
 var (
-	ModuleId        = 10000
+	ModuleId        = int64(10000)
 	ModuleErrorBase = ModuleId * 10000
 )
 
@@ -24,11 +24,11 @@ func FromError(err error) *CodeMsg {
 	if ce, ok := err.(*CodeMsg); ok {
 		return ce
 	}
-	return ErrUnknown
+	return NewError(CodeErrUnknown, "unknown error")
 }
 
 // IsErrCode 判断错误是否为指定的错误码
-func IsErrCode(err error, code int) bool {
+func IsErrCode(err error, code int64) bool {
 	if ce := FromError(err); ce != nil {
 		return ce.Code == code
 	}
@@ -36,30 +36,28 @@ func IsErrCode(err error, code int) bool {
 }
 
 var (
-	ErrServerInternal = newError(ModuleErrorBase+0, "server internal error")
-	ErrUnknown        = newError(ModuleErrorBase+1, "unknown error")
+	CodeErrUnknown        = ModuleErrorBase + 0
+	CodeErrServerInternal = ModuleErrorBase + 1
 
-	ErrParam                                   = newError(ModuleErrorBase+1000, "param error")
-	ErrUserNotExist                            = newError(ModuleErrorBase+1001, "user not exist")
-	ErrPasswordWrong                           = newError(ModuleErrorBase+1002, "password wrong")
-	ErrUserAlreadyRegistered                   = newError(ModuleErrorBase+1003, "user already registered")
-	ErrRelationStateNotRegisteringOrRegistered = newError(ModuleErrorBase+1004, "relation state is not registering or registered")
-	ErrTokenMissing                            = newError(ModuleErrorBase+1005, "user_token is missing")
-	ErrTokenInvalid                            = newError(ModuleErrorBase+1006, "user_token is invalid")
-	ErrUserIdMissing                           = newError(ModuleErrorBase+1007, "user_id is missing")
+	CodeErrParam                                   = ModuleErrorBase + 1000
+	CodeErrUserNotExist                            = ModuleErrorBase + 1001
+	CodeErrPasswordWrong                           = ModuleErrorBase + 1002
+	CodeErrUserAlreadyRegistered                   = ModuleErrorBase + 1003
+	CodeErrRelationStateNotRegisteringOrRegistered = ModuleErrorBase + 1004
+	CodeErrTokenMissing                            = ModuleErrorBase + 1005
+	CodeErrTokenInvalid                            = ModuleErrorBase + 1006
+	CodeErrUserIdMissing                           = ModuleErrorBase + 1007
 )
 
-func newError(code int, msg string) *CodeMsg {
+var (
+	ErrTokenInvalid  = NewError(CodeErrTokenInvalid, "token invalid")
+	ErrUserIdMissing = NewError(CodeErrUserIdMissing, "user id missing")
+	ErrTokenMissing  = NewError(CodeErrTokenMissing, "token missing")
+)
+
+func NewError(code int64, msg string) *CodeMsg {
 	return &CodeMsg{
 		Code: code,
 		Msg:  msg,
 	}
-}
-
-func NewParamError(msg string) *CodeMsg {
-	return newError(ErrParam.Code, msg)
-}
-
-func NewServerInternalError(msg string) *CodeMsg {
-	return newError(ErrServerInternal.Code, msg)
 }

@@ -42,7 +42,7 @@ func (l *Update_user_infoLogic) Update_user_info(req *types.UpdateUserInfoReq) (
 		IdCard:  req.IdCard,
 	})
 	if err != nil {
-		return nil, xerr.NewServerInternalError("UpdateUserInfo failed:" + err.Error())
+		return nil, xerr.NewError(xerr.CodeErrServerInternal, "UpdateUserInfo failed:"+err.Error())
 	}
 	resp = &types.UpdateUserInfoRsp{
 		UserId: UpdateUserInfoRsp.UserId,

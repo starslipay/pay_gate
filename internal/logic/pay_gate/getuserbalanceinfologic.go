@@ -39,7 +39,7 @@ func (l *Get_user_balance_infoLogic) Get_user_balance_info(req *types.GetUserBal
 		UserId: req.UserId,
 	})
 	if err != nil {
-		return nil, xerr.NewServerInternalError("GetRelation failed:" + err.Error())
+		return nil, xerr.NewError(xerr.CodeErrServerInternal, "GetRelation failed:"+err.Error())
 	}
 
 	getUserBalanceInfoRsp, err := l.svcCtx.AccountMgrRpcClient.GetUserBalanceInfo(l.ctx, &account_mgr_pb.GetUserBalanceInfoReq{
@@ -47,7 +47,7 @@ func (l *Get_user_balance_infoLogic) Get_user_balance_info(req *types.GetUserBal
 		QryMode: QryModeSlave, // 查询从库
 	})
 	if err != nil {
-		return nil, xerr.NewServerInternalError("GetUserBalanceInfo failed:" + err.Error())
+		return nil, xerr.NewError(xerr.CodeErrServerInternal, "GetUserBalanceInfo failed:"+err.Error())
 	}
 
 	return &types.GetUserBalanceInfoRsp{
