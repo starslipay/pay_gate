@@ -28,6 +28,31 @@ type Bank2CPreRsp struct {
 	TransactionId string `json:"transaction_id"`
 }
 
+type C2BankDoReq struct {
+	TransactionId string `json:"transaction_id"`
+	UserId        string `json:"user_id"`
+	BankType      int32  `json:"bank_type"`
+	Amount        int64  `json:"amount"`
+	Desc          string `json:"desc"`
+	VerifyType    int32  `json:"verify_type"`
+	Password      string `json:"password"`
+}
+
+type C2BankDoRsp struct {
+	TransactionId string `json:"transaction_id"`
+	UserId        string `json:"user_id"`
+	IsRepeat      int32  `json:"is_repeat"`
+}
+
+type C2BankPreReq struct {
+	UserId string `json:"user_id"`
+}
+
+type C2BankPreRsp struct {
+	UserId        string `json:"user_id"`
+	TransactionId string `json:"transaction_id"`
+}
+
 type C2CTransferDoReq struct {
 	TransactionId string `json:"transaction_id"`
 	BuyerUserId   string `json:"buyer_user_id"`

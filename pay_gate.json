@@ -140,6 +140,131 @@
         }
       }
     },
+    "/api/pay_gate/c2bank_do": {
+      "post": {
+        "consumes": [
+          "application/json"
+        ],
+        "produces": [
+          "application/json"
+        ],
+        "schemes": [
+          "https"
+        ],
+        "summary": "c2bank_do",
+        "operationId": "payGateC2bankDo",
+        "parameters": [
+          {
+            "name": "body",
+            "in": "body",
+            "required": true,
+            "schema": {
+              "type": "object",
+              "required": [
+                "transaction_id",
+                "user_id",
+                "bank_type",
+                "amount",
+                "desc",
+                "verify_type",
+                "password"
+              ],
+              "properties": {
+                "amount": {
+                  "type": "integer"
+                },
+                "bank_type": {
+                  "type": "integer"
+                },
+                "desc": {
+                  "type": "string"
+                },
+                "password": {
+                  "type": "string"
+                },
+                "transaction_id": {
+                  "type": "string"
+                },
+                "user_id": {
+                  "type": "string"
+                },
+                "verify_type": {
+                  "type": "integer"
+                }
+              }
+            }
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "",
+            "schema": {
+              "type": "object",
+              "properties": {
+                "is_repeat": {
+                  "type": "integer"
+                },
+                "transaction_id": {
+                  "type": "string"
+                },
+                "user_id": {
+                  "type": "string"
+                }
+              }
+            }
+          }
+        }
+      }
+    },
+    "/api/pay_gate/c2bank_pre": {
+      "post": {
+        "consumes": [
+          "application/json"
+        ],
+        "produces": [
+          "application/json"
+        ],
+        "schemes": [
+          "https"
+        ],
+        "summary": "c2bank_pre",
+        "operationId": "payGateC2bankPre",
+        "parameters": [
+          {
+            "name": "body",
+            "in": "body",
+            "required": true,
+            "schema": {
+              "type": "object",
+              "required": [
+                "user_id"
+              ],
+              "properties": {
+                "user_id": {
+                  "type": "string"
+                }
+              }
+            }
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "",
+            "schema": {
+              "type": "object",
+              "properties": {
+                "transaction_id": {
+                  "type": "string"
+                },
+                "user_id": {
+                  "type": "string"
+                }
+              }
+            }
+          }
+        }
+      }
+    },
     "/api/pay_gate/c2c_transfer_do": {
       "post": {
         "consumes": [
@@ -696,7 +821,7 @@
       }
     }
   },
-  "x-date": "2026-07-21 23:36:39",
+  "x-date": "2026-07-24 08:02:51",
   "x-description": "This is a goctl generated swagger file.",
   "x-github": "https://github.com/zeromicro/go-zero",
   "x-go-zero-doc": "https://go-zero.dev/",

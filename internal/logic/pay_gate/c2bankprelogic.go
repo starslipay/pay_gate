@@ -14,28 +14,28 @@ import (
 	"github.com/zeromicro/go-zero/core/logx"
 )
 
-type Bank2c_preLogic struct {
+type C2bank_preLogic struct {
 	logx.Logger
 	ctx    context.Context
 	svcCtx *svc.ServiceContext
 }
 
-func NewBank2c_preLogic(ctx context.Context, svcCtx *svc.ServiceContext) *Bank2c_preLogic {
-	return &Bank2c_preLogic{
+func NewC2bank_preLogic(ctx context.Context, svcCtx *svc.ServiceContext) *C2bank_preLogic {
+	return &C2bank_preLogic{
 		Logger: logx.WithContext(ctx),
 		ctx:    ctx,
 		svcCtx: svcCtx,
 	}
 }
 
-func (l *Bank2c_preLogic) Bank2c_pre(req *types.Bank2CPreReq) (resp *types.Bank2CPreRsp, err error) {
-	itgRsp, err := l.svcCtx.TradeItgRpcClient.Bank2CPre(l.ctx, &trade_itg_pb.Bank2CPreReq{
+func (l *C2bank_preLogic) C2bank_pre(req *types.C2BankPreReq) (resp *types.C2BankPreRsp, err error) {
+	itgRsp, err := l.svcCtx.TradeItgRpcClient.C2BankPre(l.ctx, &trade_itg_pb.C2BankPreReq{
 		UserId: req.UserId,
 	})
 	if err != nil {
 		return nil, xerr.ParseRPCError(err)
 	}
-	resp = &types.Bank2CPreRsp{
+	resp = &types.C2BankPreRsp{
 		UserId:        req.UserId,
 		TransactionId: itgRsp.TransactionId,
 	}

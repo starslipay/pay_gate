@@ -138,6 +138,27 @@ type (
 		UserId        string `json:"user_id"`
 		IsRepeat      int32  `json:"is_repeat"`
 	}
+	C2BankPreReq {
+		UserId string `json:"user_id"`
+	}
+	C2BankPreRsp {
+		UserId        string `json:"user_id"`
+		TransactionId string `json:"transaction_id"`
+	}
+	C2BankDoReq {
+		TransactionId string `json:"transaction_id"`
+		UserId        string `json:"user_id"`
+		BankType      int32  `json:"bank_type"`
+		Amount        int64  `json:"amount"`
+		Desc          string `json:"desc"`
+		VerifyType    int32  `json:"verify_type"`
+		Password      string `json:"password"`
+	}
+	C2BankDoRsp {
+		TransactionId string `json:"transaction_id"`
+		UserId        string `json:"user_id"`
+		IsRepeat      int32  `json:"is_repeat"`
+	}
 )
 
 @server (
@@ -184,5 +205,11 @@ service pay_gate {
 
 	@handler bank2c_do
 	post /bank2c_do (Bank2CDoReq) returns (Bank2CDoRsp)
+
+	@handler c2bank_pre
+	post /c2bank_pre (C2BankPreReq) returns (C2BankPreRsp)
+
+	@handler c2bank_do
+	post /c2bank_do (C2BankDoReq) returns (C2BankDoRsp)
 }
 
