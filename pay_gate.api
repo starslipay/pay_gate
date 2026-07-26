@@ -96,6 +96,17 @@ type (
 		EndFlag      int32      `json:"end_flag"`
 		UserFlowList []UserFlow `json:"UserFlowList"`
 	}
+	GetC2CBillReq {
+		TransactionId string `json:"transaction_id"`
+	}
+	GetC2CBillRsp {
+		TransactionId string `json:"transaction_id"`
+		BuyerUserId   string `json:"buyer_user_id"`
+		SellerUserId  string `json:"seller_user_id"`
+		PayTime       string `json:"pay_time"`
+		Amount        int64  `json:"amount"`
+		Desc          string `json:"desc"`
+	}
 	C2CTransferPreReq {
 		BuyerUserId string `json:"buyer_user_id"`
 	}
@@ -193,6 +204,9 @@ service pay_gate {
 
 	@handler get_user_flow
 	post /get_user_flow (GetUserFlowReq) returns (GetUserFlowRsp)
+
+	@handler get_c2c_bill
+	post /get_c2c_bill (GetC2CBillReq) returns (GetC2CBillRsp)
 
 	@handler c2c_transfer_pre
 	post /c2c_transfer_pre (C2CTransferPreReq) returns (C2CTransferPreRsp)

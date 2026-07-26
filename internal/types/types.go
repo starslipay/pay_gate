@@ -78,6 +78,19 @@ type C2CTransferPreRsp struct {
 	TransactionId string `json:"transaction_id"`
 }
 
+type GetC2CBillReq struct {
+	TransactionId string `json:"transaction_id"`
+}
+
+type GetC2CBillRsp struct {
+	TransactionId string `json:"transaction_id"`
+	BuyerUserId   string `json:"buyer_user_id"`
+	SellerUserId  string `json:"seller_user_id"`
+	PayTime       string `json:"pay_time"`
+	Amount        int64  `json:"amount"`
+	Desc          string `json:"desc"`
+}
+
 type GetUserBalanceInfoReq struct {
 	UserId string `json:"user_id,optional"`
 }
