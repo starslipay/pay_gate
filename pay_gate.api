@@ -66,9 +66,9 @@ type (
 		CurType int32  `json:"cur_type"`
 	}
 	GetUserTokenReq {
-		UserId       string `json:"user_id"`
-		Password     string `json:"password"`
-		BusinessInfo string `json:"business_info"`
+		UserId       string `json:"user_id,optional"`
+		Password     string `json:"password,optional"`
+		BusinessInfo string `json:"business_info,optional"`
 	}
 	GetUserTokenRsp {
 		UserId    string `json:"user_id"`
@@ -97,7 +97,7 @@ type (
 		UserFlowList []UserFlow `json:"UserFlowList"`
 	}
 	GetC2CBillReq {
-		TransactionId string `json:"transaction_id"`
+		TransactionId string `json:"transaction_id,optional"`
 	}
 	GetC2CBillRsp {
 		TransactionId string `json:"transaction_id"`
@@ -108,20 +108,20 @@ type (
 		Desc          string `json:"desc"`
 	}
 	C2CTransferPreReq {
-		BuyerUserId string `json:"buyer_user_id"`
+		BuyerUserId string `json:"buyer_user_id,optional"`
 	}
 	C2CTransferPreRsp {
 		BuyerUserId   string `json:"buyer_user_id"`
 		TransactionId string `json:"transaction_id"`
 	}
 	C2CTransferDoReq {
-		TransactionId string `json:"transaction_id"`
-		BuyerUserId   string `json:"buyer_user_id"`
-		SellerUserId  string `json:"seller_user_id"`
-		Amount        int64  `json:"amount"`
-		VerifyType    int32  `json:"verify_type"`
-		Password      string `json:"password"`
-		Version       int32  `json:"version"`
+		TransactionId string `json:"transaction_id,optional"`
+		BuyerUserId   string `json:"buyer_user_id,optional"`
+		SellerUserId  string `json:"seller_user_id,optional"`
+		Amount        int64  `json:"amount,optional"`
+		VerifyType    int32  `json:"verify_type,optional"`
+		Password      string `json:"password,optional"`
+		Version       int32  `json:"version,optional"`
 	}
 	C2CTransferDoRsp {
 		TransactionId string `json:"transaction_id"`
@@ -130,20 +130,20 @@ type (
 		IsRepeat      int32  `json:"is_repeat"`
 	}
 	Bank2CPreReq {
-		UserId string `json:"user_id"`
+		UserId string `json:"user_id,optional"`
 	}
 	Bank2CPreRsp {
 		UserId        string `json:"user_id"`
 		TransactionId string `json:"transaction_id"`
 	}
 	Bank2CDoReq {
-		TransactionId string `json:"transaction_id"`
-		UserId        string `json:"user_id"`
-		BankType      int32  `json:"bank_type"`
-		Amount        int64  `json:"amount"`
-		Desc          string `json:"desc"`
-		VerifyType    int32  `json:"verify_type"`
-		Password      string `json:"password"`
+		TransactionId string `json:"transaction_id,optional"`
+		UserId        string `json:"user_id,optional"`
+		BankType      int32  `json:"bank_type,optional"`
+		Amount        int64  `json:"amount,optional"`
+		Desc          string `json:"desc,optional"`
+		VerifyType    int32  `json:"verify_type,optional"`
+		Password      string `json:"password,optional"`
 	}
 	Bank2CDoRsp {
 		TransactionId string `json:"transaction_id"`
@@ -151,20 +151,20 @@ type (
 		IsRepeat      int32  `json:"is_repeat"`
 	}
 	C2BankPreReq {
-		UserId string `json:"user_id"`
+		UserId string `json:"user_id,optional"`
 	}
 	C2BankPreRsp {
 		UserId        string `json:"user_id"`
 		TransactionId string `json:"transaction_id"`
 	}
 	C2BankDoReq {
-		TransactionId string `json:"transaction_id"`
-		UserId        string `json:"user_id"`
-		BankType      int32  `json:"bank_type"`
-		Amount        int64  `json:"amount"`
-		Desc          string `json:"desc"`
-		VerifyType    int32  `json:"verify_type"`
-		Password      string `json:"password"`
+		TransactionId string `json:"transaction_id,optional"`
+		UserId        string `json:"user_id,optional"`
+		BankType      int32  `json:"bank_type,optional"`
+		Amount        int64  `json:"amount,optional"`
+		Desc          string `json:"desc,optional"`
+		VerifyType    int32  `json:"verify_type,optional"`
+		Password      string `json:"password,optional"`
 	}
 	C2BankDoRsp {
 		TransactionId string `json:"transaction_id"`

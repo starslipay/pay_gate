@@ -4,13 +4,13 @@
 package types
 
 type Bank2CDoReq struct {
-	TransactionId string `json:"transaction_id"`
-	UserId        string `json:"user_id"`
-	BankType      int32  `json:"bank_type"`
-	Amount        int64  `json:"amount"`
-	Desc          string `json:"desc"`
-	VerifyType    int32  `json:"verify_type"`
-	Password      string `json:"password"`
+	TransactionId string `json:"transaction_id,optional"`
+	UserId        string `json:"user_id,optional"`
+	BankType      int32  `json:"bank_type,optional"`
+	Amount        int64  `json:"amount,optional"`
+	Desc          string `json:"desc,optional"`
+	VerifyType    int32  `json:"verify_type,optional"`
+	Password      string `json:"password,optional"`
 }
 
 type Bank2CDoRsp struct {
@@ -20,7 +20,7 @@ type Bank2CDoRsp struct {
 }
 
 type Bank2CPreReq struct {
-	UserId string `json:"user_id"`
+	UserId string `json:"user_id,optional"`
 }
 
 type Bank2CPreRsp struct {
@@ -29,13 +29,13 @@ type Bank2CPreRsp struct {
 }
 
 type C2BankDoReq struct {
-	TransactionId string `json:"transaction_id"`
-	UserId        string `json:"user_id"`
-	BankType      int32  `json:"bank_type"`
-	Amount        int64  `json:"amount"`
-	Desc          string `json:"desc"`
-	VerifyType    int32  `json:"verify_type"`
-	Password      string `json:"password"`
+	TransactionId string `json:"transaction_id,optional"`
+	UserId        string `json:"user_id,optional"`
+	BankType      int32  `json:"bank_type,optional"`
+	Amount        int64  `json:"amount,optional"`
+	Desc          string `json:"desc,optional"`
+	VerifyType    int32  `json:"verify_type,optional"`
+	Password      string `json:"password,optional"`
 }
 
 type C2BankDoRsp struct {
@@ -45,7 +45,7 @@ type C2BankDoRsp struct {
 }
 
 type C2BankPreReq struct {
-	UserId string `json:"user_id"`
+	UserId string `json:"user_id,optional"`
 }
 
 type C2BankPreRsp struct {
@@ -54,13 +54,13 @@ type C2BankPreRsp struct {
 }
 
 type C2CTransferDoReq struct {
-	TransactionId string `json:"transaction_id"`
-	BuyerUserId   string `json:"buyer_user_id"`
-	SellerUserId  string `json:"seller_user_id"`
-	Amount        int64  `json:"amount"`
-	VerifyType    int32  `json:"verify_type"`
-	Password      string `json:"password"`
-	Version       int32  `json:"version"`
+	TransactionId string `json:"transaction_id,optional"`
+	BuyerUserId   string `json:"buyer_user_id,optional"`
+	SellerUserId  string `json:"seller_user_id,optional"`
+	Amount        int64  `json:"amount,optional"`
+	VerifyType    int32  `json:"verify_type,optional"`
+	Password      string `json:"password,optional"`
+	Version       int32  `json:"version,optional"`
 }
 
 type C2CTransferDoRsp struct {
@@ -71,7 +71,7 @@ type C2CTransferDoRsp struct {
 }
 
 type C2CTransferPreReq struct {
-	BuyerUserId string `json:"buyer_user_id"`
+	BuyerUserId string `json:"buyer_user_id,optional"`
 }
 
 type C2CTransferPreRsp struct {
@@ -80,7 +80,7 @@ type C2CTransferPreRsp struct {
 }
 
 type GetC2CBillReq struct {
-	TransactionId string `json:"transaction_id"`
+	TransactionId string `json:"transaction_id,optional"`
 }
 
 type GetC2CBillRsp struct {
@@ -132,9 +132,9 @@ type GetUserInfoRsp struct {
 }
 
 type GetUserTokenReq struct {
-	UserId       string `json:"user_id"`
-	Password     string `json:"password"`
-	BusinessInfo string `json:"business_info"`
+	UserId       string `json:"user_id,optional"`
+	Password     string `json:"password,optional"`
+	BusinessInfo string `json:"business_info,optional"`
 }
 
 type GetUserTokenRsp struct {

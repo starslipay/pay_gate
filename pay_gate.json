@@ -35,15 +35,6 @@
             "required": true,
             "schema": {
               "type": "object",
-              "required": [
-                "transaction_id",
-                "user_id",
-                "bank_type",
-                "amount",
-                "desc",
-                "verify_type",
-                "password"
-              ],
               "properties": {
                 "amount": {
                   "type": "integer"
@@ -111,9 +102,6 @@
             "required": true,
             "schema": {
               "type": "object",
-              "required": [
-                "user_id"
-              ],
               "properties": {
                 "user_id": {
                   "type": "string"
@@ -160,15 +148,6 @@
             "required": true,
             "schema": {
               "type": "object",
-              "required": [
-                "transaction_id",
-                "user_id",
-                "bank_type",
-                "amount",
-                "desc",
-                "verify_type",
-                "password"
-              ],
               "properties": {
                 "amount": {
                   "type": "integer"
@@ -236,9 +215,6 @@
             "required": true,
             "schema": {
               "type": "object",
-              "required": [
-                "user_id"
-              ],
               "properties": {
                 "user_id": {
                   "type": "string"
@@ -285,15 +261,6 @@
             "required": true,
             "schema": {
               "type": "object",
-              "required": [
-                "transaction_id",
-                "buyer_user_id",
-                "seller_user_id",
-                "amount",
-                "verify_type",
-                "password",
-                "version"
-              ],
               "properties": {
                 "amount": {
                   "type": "integer"
@@ -364,9 +331,6 @@
             "required": true,
             "schema": {
               "type": "object",
-              "required": [
-                "buyer_user_id"
-              ],
               "properties": {
                 "buyer_user_id": {
                   "type": "string"
@@ -413,9 +377,6 @@
             "required": true,
             "schema": {
               "type": "object",
-              "required": [
-                "transaction_id"
-              ],
               "properties": {
                 "transaction_id": {
                   "type": "string"
@@ -691,11 +652,6 @@
             "required": true,
             "schema": {
               "type": "object",
-              "required": [
-                "user_id",
-                "password",
-                "business_info"
-              ],
               "properties": {
                 "business_info": {
                   "type": "string"
@@ -886,7 +842,7 @@
       }
     }
   },
-  "x-date": "2026-07-26 16:57:39",
+  "x-date": "2026-07-26 17:58:20",
   "x-description": "This is a goctl generated swagger file.",
   "x-github": "https://github.com/zeromicro/go-zero",
   "x-go-zero-doc": "https://go-zero.dev/",

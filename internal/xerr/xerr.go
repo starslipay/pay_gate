@@ -23,6 +23,7 @@ var (
 var (
 	CodeErrUnknown        = ModuleErrorBase + 0
 	CodeErrServerInternal = ModuleErrorBase + 1
+	CodeErrCallRpc        = ModuleErrorBase + 2
 
 	CodeErrParam                                   = ModuleErrorBase + 1000
 	CodeErrUserNotExist                            = ModuleErrorBase + 1001
@@ -62,5 +63,5 @@ func ParseRPCError(err error) error {
 	if isSuccessParse {
 		return NewError(bizError.Code, bizError.Message)
 	}
-	return NewError(CodeErrUnknown, "RPC_ERROR:"+err.Error())
+	return NewError(CodeErrCallRpc, "RPC_ERROR:"+err.Error())
 }
