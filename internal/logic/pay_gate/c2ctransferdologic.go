@@ -36,6 +36,7 @@ func (l *C2c_transfer_doLogic) C2c_transfer_do(req *types.C2CTransferDoReq) (res
 		Amount:        req.Amount,
 		VerifyType:    req.VerifyType,
 		Password:      req.Password,
+		Version:       req.Version,
 	})
 	if err != nil {
 		return nil, xerr.ParseRPCError(err)

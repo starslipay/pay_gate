@@ -60,6 +60,7 @@ type C2CTransferDoReq struct {
 	Amount        int64  `json:"amount"`
 	VerifyType    int32  `json:"verify_type"`
 	Password      string `json:"password"`
+	Version       int32  `json:"version"`
 }
 
 type C2CTransferDoRsp struct {

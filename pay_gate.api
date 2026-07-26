@@ -121,6 +121,7 @@ type (
 		Amount        int64  `json:"amount"`
 		VerifyType    int32  `json:"verify_type"`
 		Password      string `json:"password"`
+		Version       int32  `json:"version"`
 	}
 	C2CTransferDoRsp {
 		TransactionId string `json:"transaction_id"`

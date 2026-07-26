@@ -291,7 +291,8 @@
                 "seller_user_id",
                 "amount",
                 "verify_type",
-                "password"
+                "password",
+                "version"
               ],
               "properties": {
                 "amount": {
@@ -310,6 +311,9 @@
                   "type": "string"
                 },
                 "verify_type": {
+                  "type": "integer"
+                },
+                "version": {
                   "type": "integer"
                 }
               }
@@ -882,7 +886,7 @@
       }
     }
   },
-  "x-date": "2026-07-26 16:42:46",
+  "x-date": "2026-07-26 16:57:39",
   "x-description": "This is a goctl generated swagger file.",
   "x-github": "https://github.com/zeromicro/go-zero",
   "x-go-zero-doc": "https://go-zero.dev/",
