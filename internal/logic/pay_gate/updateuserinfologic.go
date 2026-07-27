@@ -8,7 +8,7 @@ import (
 
 	"github.com/starslipay/pay_gate/internal/svc"
 	"github.com/starslipay/pay_gate/internal/types"
-	"github.com/starslipay/pay_gate/internal/xerr"
+	"github.com/starslipay/paycomm/xerror"
 	"github.com/starslipay/user_mgr/user_mgr_pb"
 
 	"github.com/zeromicro/go-zero/core/logx"
@@ -30,7 +30,7 @@ func NewUpdate_user_infoLogic(ctx context.Context, svcCtx *svc.ServiceContext) *
 
 func (l *Update_user_infoLogic) Update_user_info(req *types.UpdateUserInfoReq) (resp *types.UpdateUserInfoRsp, err error) {
 	// 调用user_mgr服务
-	UpdateUserInfoRsp, err := l.svcCtx.UserMgrRpcClient.UpdateUserInfo(l.ctx, &user_mgr_pb.UpdateUserInfoReq{
+	UpdateUserInfoRsp, err := l.svcCtx.UserMgr.UpdateUserInfo(l.ctx, &user_mgr_pb.UpdateUserInfoReq{
 		UserId:  req.UserId,
 		Name:    req.Name,
 		Gender:  req.Gender,
@@ -42,7 +42,7 @@ func (l *Update_user_infoLogic) Update_user_info(req *types.UpdateUserInfoReq) (
 		IdCard:  req.IdCard,
 	})
 	if err != nil {
-		return nil, xerr.ParseRPCError(err)
+		return nil, xerror.HandleRPCError(err, "UserMgr.UpdateUserInfo")
 	}
 	resp = &types.UpdateUserInfoRsp{
 		UserId: UpdateUserInfoRsp.UserId,

@@ -9,7 +9,7 @@ import (
 	"github.com/starslipay/account_mgr/account_mgr_pb"
 	"github.com/starslipay/pay_gate/internal/svc"
 	"github.com/starslipay/pay_gate/internal/types"
-	"github.com/starslipay/pay_gate/internal/xerr"
+	"github.com/starslipay/paycomm/xerror"
 	"github.com/starslipay/user_mgr/user_mgr_pb"
 
 	"github.com/zeromicro/go-zero/core/logx"
@@ -35,19 +35,19 @@ func NewGet_user_balance_infoLogic(ctx context.Context, svcCtx *svc.ServiceConte
 }
 
 func (l *Get_user_balance_infoLogic) Get_user_balance_info(req *types.GetUserBalanceInfoReq) (resp *types.GetUserBalanceInfoRsp, err error) {
-	relationRsp, err := l.svcCtx.UserMgrRpcClient.GetRelation(l.ctx, &user_mgr_pb.GetRelationReq{
+	relationRsp, err := l.svcCtx.UserMgr.GetRelation(l.ctx, &user_mgr_pb.GetRelationReq{
 		UserId: req.UserId,
 	})
 	if err != nil {
-		return nil, xerr.ParseRPCError(err)
+		return nil, xerror.HandleRPCError(err, "UserMgr.GetRelation")
 	}
 
-	getUserBalanceInfoRsp, err := l.svcCtx.AccountMgrRpcClient.GetUserBalanceInfo(l.ctx, &account_mgr_pb.GetUserBalanceInfoReq{
+	getUserBalanceInfoRsp, err := l.svcCtx.AccountMgr.GetUserBalanceInfo(l.ctx, &account_mgr_pb.GetUserBalanceInfoReq{
 		Uid:     relationRsp.Uid,
 		QryMode: QryModeSlave, // 查询从库
 	})
 	if err != nil {
-		return nil, xerr.ParseRPCError(err)
+		return nil, xerror.HandleRPCError(err, "AccountMgr.GetUserBalanceInfo")
 	}
 
 	return &types.GetUserBalanceInfoRsp{

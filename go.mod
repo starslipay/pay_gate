@@ -4,7 +4,7 @@ go 1.25.4
 
 require (
 	github.com/starslipay/account_mgr v1.0.7
-	github.com/starslipay/paycomm v1.0.0
+	github.com/starslipay/paycomm v1.0.1
 	github.com/starslipay/trade_itg v1.0.6
 	github.com/starslipay/user_mgr v1.0.5
 	github.com/zeromicro/go-zero v1.10.2

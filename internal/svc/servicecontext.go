@@ -16,11 +16,11 @@ import (
 )
 
 type ServiceContext struct {
-	Config              config.Config
-	UserMgrRpcClient    user_mgr_pb.UserMgrClient
-	AccountMgrRpcClient account_mgr_pb.AccountMgrClient
-	TradeItgRpcClient   trade_itg_pb.TradeItgClient
-	AuthInterceptor     rest.Middleware
+	Config          config.Config
+	UserMgr         user_mgr_pb.UserMgrClient
+	AccountMgr      account_mgr_pb.AccountMgrClient
+	TradeItg        trade_itg_pb.TradeItgClient
+	AuthInterceptor rest.Middleware
 }
 
 func NewServiceContext(c config.Config) *ServiceContext {
@@ -31,10 +31,10 @@ func NewServiceContext(c config.Config) *ServiceContext {
 	authInterceptor := middleware.NewAuthInterceptorMiddleware(userMgrClient)
 
 	return &ServiceContext{
-		Config:              c,
-		UserMgrRpcClient:    userMgrClient,
-		AccountMgrRpcClient: accountMgrClient,
-		TradeItgRpcClient:   tradeItgClient,
+		Config:     c,
+		UserMgr:    userMgrClient,
+		AccountMgr: accountMgrClient,
+		TradeItg:   tradeItgClient,
 		AuthInterceptor: func(next http.HandlerFunc) http.HandlerFunc {
 			return authInterceptor.Handle(next)
 		},

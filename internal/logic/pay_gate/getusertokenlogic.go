@@ -8,7 +8,7 @@ import (
 
 	"github.com/starslipay/pay_gate/internal/svc"
 	"github.com/starslipay/pay_gate/internal/types"
-	"github.com/starslipay/pay_gate/internal/xerr"
+	"github.com/starslipay/paycomm/xerror"
 	"github.com/starslipay/user_mgr/user_mgr_pb"
 
 	"github.com/zeromicro/go-zero/core/logx"
@@ -29,13 +29,13 @@ func NewGet_user_tokenLogic(ctx context.Context, svcCtx *svc.ServiceContext) *Ge
 }
 
 func (l *Get_user_tokenLogic) Get_user_token(req *types.GetUserTokenReq) (resp *types.GetUserTokenRsp, err error) {
-	userMgrResp, err := l.svcCtx.UserMgrRpcClient.GetUserToken(l.ctx, &user_mgr_pb.GetUserTokenReq{
+	userMgrResp, err := l.svcCtx.UserMgr.GetUserToken(l.ctx, &user_mgr_pb.GetUserTokenReq{
 		UserId:       req.UserId,
 		Password:     req.Password,
 		BusinessInfo: req.BusinessInfo,
 	})
 	if err != nil {
-		return nil, xerr.ParseRPCError(err)
+		return nil, xerror.HandleRPCError(err, "UserMgr.GetUserToken")
 	}
 	resp = &types.GetUserTokenRsp{
 		UserId:    userMgrResp.UserId,

@@ -8,7 +8,7 @@ import (
 
 	"github.com/starslipay/pay_gate/internal/svc"
 	"github.com/starslipay/pay_gate/internal/types"
-	"github.com/starslipay/pay_gate/internal/xerr"
+	"github.com/starslipay/paycomm/xerror"
 	"github.com/starslipay/trade_itg/trade_itg_pb"
 
 	"github.com/zeromicro/go-zero/core/logx"
@@ -29,7 +29,7 @@ func NewBank2c_doLogic(ctx context.Context, svcCtx *svc.ServiceContext) *Bank2c_
 }
 
 func (l *Bank2c_doLogic) Bank2c_do(req *types.Bank2CDoReq) (resp *types.Bank2CDoRsp, err error) {
-	bank2CDoRsp, err := l.svcCtx.TradeItgRpcClient.Bank2CDo(l.ctx, &trade_itg_pb.Bank2CDoReq{
+	bank2CDoRsp, err := l.svcCtx.TradeItg.Bank2CDo(l.ctx, &trade_itg_pb.Bank2CDoReq{
 		TransactionId: req.TransactionId,
 		UserId:        req.UserId,
 		BankType:      req.BankType,
@@ -39,7 +39,7 @@ func (l *Bank2c_doLogic) Bank2c_do(req *types.Bank2CDoReq) (resp *types.Bank2CDo
 		Password:      req.Password,
 	})
 	if err != nil {
-		return nil, xerr.ParseRPCError(err)
+		return nil, xerror.HandleRPCError(err, "TradeItg.Bank2CDo")
 	}
 	resp = &types.Bank2CDoRsp{
 		TransactionId: bank2CDoRsp.TransactionId,
