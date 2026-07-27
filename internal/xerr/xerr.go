@@ -59,9 +59,12 @@ func FromError(err error) *CodeMsg {
 }
 
 func ParseRPCError(err error) error {
+	// 如果业务错误存在，传递业务错误
 	bizError, isSuccessParse := xerror.ParseBizError(err)
 	if isSuccessParse {
 		return NewError(bizError.Code, bizError.Message)
 	}
+
+	// 如果不是业务错误，传递默认错误
 	return NewError(CodeErrCallRpc, "RPC_ERROR:"+err.Error())
 }
