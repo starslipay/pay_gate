@@ -8,7 +8,7 @@ import (
 
 	"github.com/starslipay/pay_gate/internal/svc"
 	"github.com/starslipay/pay_gate/internal/types"
-	"github.com/starslipay/paycomm/xerror"
+	"github.com/starslipay/pay_gate/internal/xerr"
 	"github.com/starslipay/user_mgr/user_mgr_pb"
 
 	"github.com/zeromicro/go-zero/core/logx"
@@ -42,7 +42,7 @@ func (l *Update_user_infoLogic) Update_user_info(req *types.UpdateUserInfoReq) (
 		IdCard:  req.IdCard,
 	})
 	if err != nil {
-		return nil, xerror.HandleRPCError(err, "UserMgr.UpdateUserInfo")
+		return nil, xerr.HandleRPCError(err, "UserMgr.UpdateUserInfo")
 	}
 	resp = &types.UpdateUserInfoRsp{
 		UserId: UpdateUserInfoRsp.UserId,

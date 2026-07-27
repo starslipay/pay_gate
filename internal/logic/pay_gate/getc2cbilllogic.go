@@ -9,7 +9,7 @@ import (
 	"github.com/starslipay/account_mgr/account_mgr_pb"
 	"github.com/starslipay/pay_gate/internal/svc"
 	"github.com/starslipay/pay_gate/internal/types"
-	"github.com/starslipay/paycomm/xerror"
+	"github.com/starslipay/pay_gate/internal/xerr"
 
 	"github.com/zeromicro/go-zero/core/logx"
 )
@@ -33,7 +33,7 @@ func (l *Get_c2c_billLogic) Get_c2c_bill(req *types.GetC2CBillReq) (resp *types.
 		TransactionId: req.TransactionId,
 	})
 	if err != nil {
-		return nil, xerror.HandleRPCError(err, "AccountMgr.GetC2CBill")
+		return nil, xerr.HandleRPCError(err, "AccountMgr.GetC2CBill")
 	}
 
 	resp = &types.GetC2CBillRsp{

@@ -8,7 +8,7 @@ import (
 
 	"github.com/starslipay/pay_gate/internal/svc"
 	"github.com/starslipay/pay_gate/internal/types"
-	"github.com/starslipay/paycomm/xerror"
+	"github.com/starslipay/pay_gate/internal/xerr"
 	"github.com/starslipay/user_mgr/user_mgr_pb"
 	"github.com/zeromicro/go-zero/core/logx"
 )
@@ -41,7 +41,7 @@ func (l *Reg_userLogic) Reg_user(req *types.RegUserReq) (resp *types.RegUserRsp,
 		IdCard:   req.IdCard,
 	})
 	if err != nil {
-		return nil, xerror.HandleRPCError(err, "UserMgr.RegUser")
+		return nil, xerr.HandleRPCError(err, "UserMgr.RegUser")
 	}
 	resp = &types.RegUserRsp{
 		UserId: RegUserRsp.UserId,

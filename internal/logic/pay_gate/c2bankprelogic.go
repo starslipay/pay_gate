@@ -8,7 +8,7 @@ import (
 
 	"github.com/starslipay/pay_gate/internal/svc"
 	"github.com/starslipay/pay_gate/internal/types"
-	"github.com/starslipay/paycomm/xerror"
+	"github.com/starslipay/pay_gate/internal/xerr"
 	"github.com/starslipay/trade_itg/trade_itg_pb"
 
 	"github.com/zeromicro/go-zero/core/logx"
@@ -33,7 +33,7 @@ func (l *C2bank_preLogic) C2bank_pre(req *types.C2BankPreReq) (resp *types.C2Ban
 		UserId: req.UserId,
 	})
 	if err != nil {
-		return nil, xerror.HandleRPCError(err, "TradeItg.C2BankPre")
+		return nil, xerr.HandleRPCError(err, "TradeItg.C2BankPre")
 	}
 	resp = &types.C2BankPreRsp{
 		UserId:        req.UserId,

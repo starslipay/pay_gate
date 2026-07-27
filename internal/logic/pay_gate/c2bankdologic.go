@@ -8,7 +8,7 @@ import (
 
 	"github.com/starslipay/pay_gate/internal/svc"
 	"github.com/starslipay/pay_gate/internal/types"
-	"github.com/starslipay/paycomm/xerror"
+	"github.com/starslipay/pay_gate/internal/xerr"
 	"github.com/starslipay/trade_itg/trade_itg_pb"
 
 	"github.com/zeromicro/go-zero/core/logx"
@@ -39,7 +39,7 @@ func (l *C2bank_doLogic) C2bank_do(req *types.C2BankDoReq) (resp *types.C2BankDo
 		Password:      req.Password,
 	})
 	if err != nil {
-		return nil, xerror.HandleRPCError(err, "TradeItg.C2BankDo")
+		return nil, xerr.HandleRPCError(err, "TradeItg.C2BankDo")
 	}
 	resp = &types.C2BankDoRsp{
 		TransactionId: bank2CDoRsp.TransactionId,

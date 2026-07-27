@@ -8,7 +8,7 @@ import (
 
 	"github.com/starslipay/pay_gate/internal/svc"
 	"github.com/starslipay/pay_gate/internal/types"
-	"github.com/starslipay/paycomm/xerror"
+	"github.com/starslipay/pay_gate/internal/xerr"
 	"github.com/starslipay/trade_itg/trade_itg_pb"
 	"github.com/zeromicro/go-zero/core/logx"
 )
@@ -32,7 +32,7 @@ func (l *C2c_transfer_preLogic) C2c_transfer_pre(req *types.C2CTransferPreReq) (
 		BuyerUserId: req.BuyerUserId,
 	})
 	if err != nil {
-		return nil, xerror.HandleRPCError(err, "TradeItg.C2CTransferPre")
+		return nil, xerr.HandleRPCError(err, "TradeItg.C2CTransferPre")
 	}
 	resp = &types.C2CTransferPreRsp{
 		BuyerUserId:   req.BuyerUserId,
