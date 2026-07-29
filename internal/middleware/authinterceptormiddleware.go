@@ -4,78 +4,67 @@
 package middleware
 
 import (
+	"bytes"
 	"encoding/json"
+	"io"
 	"net/http"
 
+	"github.com/starslipay/pay_gate/internal/config"
+	"github.com/starslipay/pay_gate/internal/util"
 	"github.com/starslipay/pay_gate/internal/xerr"
-	"github.com/starslipay/user_mgr/user_mgr_pb"
 	"github.com/zeromicro/go-zero/core/logx"
 	"github.com/zeromicro/go-zero/rest/httpx"
 )
 
 type AuthInterceptorMiddleware struct {
-	userMgrClient user_mgr_pb.UserMgrClient
+	config *config.Config
 }
 
-func NewAuthInterceptorMiddleware(client user_mgr_pb.UserMgrClient) *AuthInterceptorMiddleware {
+func NewAuthInterceptorMiddleware(config *config.Config) *AuthInterceptorMiddleware {
 	return &AuthInterceptorMiddleware{
-		userMgrClient: client,
+		config: config,
 	}
 }
 
 func (m *AuthInterceptorMiddleware) Handle(next http.HandlerFunc) http.HandlerFunc {
 	return func(w http.ResponseWriter, r *http.Request) {
-		var userId, userToken string
+		userToken := r.Header.Get("UserToken")
+		businessInfo := r.Header.Get("BusinessInfo")
 
-		contentType := r.Header.Get("Content-Type")
-		if contentType == "application/json" {
-			var body map[string]interface{}
-			if err := json.NewDecoder(r.Body).Decode(&body); err != nil {
-				logx.Error("parse request body error:", err)
-				httpx.ErrorCtx(r.Context(), w, xerr.ErrTokenMissing)
+		bodyBytes, err := io.ReadAll(r.Body)
+		if err != nil {
+			logx.Errorf("read request body error: %v", err)
+			httpx.ErrorCtx(r.Context(), w, xerr.ErrTokenInvalid)
+			return
+		}
+		r.Body = io.NopCloser(bytes.NewReader(bodyBytes))
+
+		var userId string
+		if len(bodyBytes) > 0 {
+			var reqBody struct {
+				UserId string `json:"user_id"`
+			}
+			if err := json.Unmarshal(bodyBytes, &reqBody); err != nil {
+				logx.Errorf("parse request body error: %v", err)
+				httpx.ErrorCtx(r.Context(), w, xerr.ErrTokenInvalid)
 				return
 			}
-
-			if token, ok := body["user_token"].(string); ok {
-				userToken = token
-			}
-			if id, ok := body["user_id"].(string); ok {
-				userId = id
-			}
-		} else {
-			userToken = r.FormValue("user_token")
-			userId = r.FormValue("user_id")
+			userId = reqBody.UserId
 		}
 
-		if userToken == "" {
-			logx.Error("user_token is missing")
-			httpx.ErrorCtx(r.Context(), w, xerr.ErrTokenMissing)
-			return
-		}
-
-		if userId == "" {
-			logx.Error("user_id is missing")
-			httpx.ErrorCtx(r.Context(), w, xerr.ErrUserIdMissing)
-			return
-		}
-
-		rsp, err := m.userMgrClient.CheckUserToken(r.Context(), &user_mgr_pb.CheckUserTokenReq{
-			UserId:    userId,
-			UserToken: userToken,
-		})
-		if err != nil {
-			logx.Error("check user token rpc error:", err)
+		if userToken == "" || businessInfo == "" || userId == "" {
+			logx.Errorf("missing auth params: userToken=%s, businessInfo=%s, userId=%s", userToken, businessInfo, userId)
 			httpx.ErrorCtx(r.Context(), w, xerr.ErrTokenInvalid)
 			return
 		}
 
-		if rsp.GetValidStatus() != 1 {
-			logx.Error("user_token is invalid, status:", rsp.GetValidStatus())
+		if !util.CheckUserToken(userToken, userId, businessInfo, m.config.TokenExpireTime) {
+			logx.Error("user_token validation failed")
 			httpx.ErrorCtx(r.Context(), w, xerr.ErrTokenInvalid)
 			return
 		}
 
-		logx.Info("token validated successfully for user:", userId)
+		logx.Infof("token validated successfully for user: %s", userId)
 		next(w, r)
 	}
 }

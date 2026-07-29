@@ -13,4 +13,5 @@ type Config struct {
 	UserMgrRpcConfig    zrpc.RpcClientConf
 	AccountMgrRpcConfig zrpc.RpcClientConf
 	TradeItgRpcConfig   zrpc.RpcClientConf
+	TokenExpireTime     int64
 }

@@ -28,7 +28,7 @@ func NewServiceContext(c config.Config) *ServiceContext {
 	accountMgrClient := account_mgr_pb.NewAccountMgrClient(zrpc.MustNewClient(c.AccountMgrRpcConfig).Conn())
 	tradeItgClient := trade_itg_pb.NewTradeItgClient(zrpc.MustNewClient(c.TradeItgRpcConfig).Conn())
 
-	authInterceptor := middleware.NewAuthInterceptorMiddleware(userMgrClient)
+	authInterceptor := middleware.NewAuthInterceptorMiddleware(&c)
 
 	return &ServiceContext{
 		Config:     c,
