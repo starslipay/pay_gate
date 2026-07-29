@@ -23,8 +23,7 @@ func CheckUserToken(user_token, user_id, businessInfo string, tokenExpireTime in
 	}
 
 	// 校验timestamp是否过期
-	var expireTime int64 = tokenExpireTime // 有效期 单位秒
-	if timestampStr < strconv.FormatInt(time.Now().Unix()-expireTime, 10) {
+	if timestampStr < strconv.FormatInt(time.Now().Unix()-tokenExpireTime, 10) {
 		return false
 	}
 

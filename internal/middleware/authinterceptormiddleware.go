@@ -4,9 +4,6 @@
 package middleware
 
 import (
-	"bytes"
-	"encoding/json"
-	"io"
 	"net/http"
 
 	"github.com/starslipay/pay_gate/internal/config"
@@ -30,27 +27,7 @@ func (m *AuthInterceptorMiddleware) Handle(next http.HandlerFunc) http.HandlerFu
 	return func(w http.ResponseWriter, r *http.Request) {
 		userToken := r.Header.Get("UserToken")
 		businessInfo := r.Header.Get("BusinessInfo")
-
-		bodyBytes, err := io.ReadAll(r.Body)
-		if err != nil {
-			logx.Errorf("read request body error: %v", err)
-			httpx.ErrorCtx(r.Context(), w, xerr.ErrTokenInvalid)
-			return
-		}
-		r.Body = io.NopCloser(bytes.NewReader(bodyBytes))
-
-		var userId string
-		if len(bodyBytes) > 0 {
-			var reqBody struct {
-				UserId string `json:"user_id"`
-			}
-			if err := json.Unmarshal(bodyBytes, &reqBody); err != nil {
-				logx.Errorf("parse request body error: %v", err)
-				httpx.ErrorCtx(r.Context(), w, xerr.ErrTokenInvalid)
-				return
-			}
-			userId = reqBody.UserId
-		}
+		userId := r.Header.Get("UserId")
 
 		if userToken == "" || businessInfo == "" || userId == "" {
 			logx.Errorf("missing auth params: userToken=%s, businessInfo=%s, userId=%s", userToken, businessInfo, userId)
