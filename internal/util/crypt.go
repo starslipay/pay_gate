@@ -5,6 +5,8 @@ import (
 	"fmt"
 	"strconv"
 	"time"
+
+	"github.com/zeromicro/go-zero/core/logx"
 )
 
 func GenMD5(input string) string {
@@ -19,11 +21,13 @@ func CheckUserToken(user_token, user_id, businessInfo string, tokenExpireTime in
 	// 校验token中的签名是否正确
 	calcMd5Str := GenMD5(businessInfo + user_id + timestampStr)
 	if calcMd5Str != md5Str {
+		logx.Errorf("user_token check failed, md5Str=%s, calcMd5Str=%s", md5Str, calcMd5Str)
 		return false
 	}
 
 	// 校验timestamp是否过期
 	if timestampStr < strconv.FormatInt(time.Now().Unix()-tokenExpireTime, 10) {
+		logx.Errorf("user_token check failed, timestampStr=%s, expireTime=%d", timestampStr, tokenExpireTime)
 		return false
 	}
 
