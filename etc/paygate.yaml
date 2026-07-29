@@ -40,4 +40,4 @@ TradeItgRpcConfig:
     Key: tradeitg.rpc  # 注册到etcd的服务key，客户端要对应这个key
   Timeout: 10000  # 超时时间，单位毫秒
 
-TokenExpireTime: 60  # 有效期 单位秒
+TokenExpireTime: 3600  # 有效期 单位秒
