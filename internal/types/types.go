@@ -3,6 +3,22 @@
 
 package types
 
+type BanPayReq struct {
+	TransactionId string `json:"transaction_id,optional"`
+	OutOrderNo    string `json:"out_order_no,optional"`
+	MerchantId    string `json:"merchant_id,optional"`
+	UserId        string `json:"user_id,optional"`
+	Amount        int64  `json:"amount,optional"`
+	VerifyType    int32  `json:"verify_type,optional"`
+	Password      string `json:"Password,optional"`
+}
+
+type BanPayRsp struct {
+	TransactionId     string `json:"transaction_id"`
+	UserId            string `json:"user_id"`
+	OrderSuccessToken string `json:"order_success_token"`
+}
+
 type Bank2CDoReq struct {
 	TransactionId string `json:"transaction_id,optional"`
 	UserId        string `json:"user_id,optional"`
@@ -92,6 +108,21 @@ type GetC2CBillRsp struct {
 	Desc          string `json:"desc"`
 }
 
+type GetOrderInfoReq struct {
+	TransactionId string `json:"transaction_id"`
+}
+
+type GetOrderInfoRsp struct {
+	TransactionId string `json:"transaction_id"`
+	OutOrderNo    string `json:"out_order_no"`
+	MerchantId    string `json:"merchant_id"`
+	MerchantName  string `json:"merchant_name"`
+	UserId        string `json:"user_id"`
+	Amount        int64  `json:"amount"`
+	PayTime       string `json:"pay_time"`
+	TradeState    int32  `json:"trade_state"`
+}
+
 type GetUserBalanceInfoReq struct {
 	UserId string `json:"user_id,optional"`
 }
@@ -146,6 +177,16 @@ type HealthReq struct {
 }
 
 type HealthRsp struct {
+}
+
+type PayPreReq struct {
+	UserId     string `json:"user_id,optional"`
+	MerchantId string `json:"merchant_id,optional"`
+}
+
+type PayPreRsp struct {
+	UserId        string `json:"user_id"`
+	TransactionId string `json:"transaction_id"`
 }
 
 type RegUserReq struct {

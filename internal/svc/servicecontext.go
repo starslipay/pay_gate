@@ -7,6 +7,7 @@ import (
 	"net/http"
 
 	"github.com/starslipay/account_mgr/account_mgr_pb"
+	"github.com/starslipay/order_mgr/order_mgr_pb"
 	"github.com/starslipay/pay_gate/internal/config"
 	"github.com/starslipay/pay_gate/internal/middleware"
 	"github.com/starslipay/trade_itg/trade_itg_pb"
@@ -20,6 +21,7 @@ type ServiceContext struct {
 	UserMgr         user_mgr_pb.UserMgrClient
 	AccountMgr      account_mgr_pb.AccountMgrClient
 	TradeItg        trade_itg_pb.TradeItgClient
+	OrderMgr        order_mgr_pb.OrderMgrClient
 	AuthInterceptor rest.Middleware
 }
 
@@ -27,6 +29,7 @@ func NewServiceContext(c config.Config) *ServiceContext {
 	userMgrClient := user_mgr_pb.NewUserMgrClient(zrpc.MustNewClient(c.UserMgrRpcConfig).Conn())
 	accountMgrClient := account_mgr_pb.NewAccountMgrClient(zrpc.MustNewClient(c.AccountMgrRpcConfig).Conn())
 	tradeItgClient := trade_itg_pb.NewTradeItgClient(zrpc.MustNewClient(c.TradeItgRpcConfig).Conn())
+	orderMgrClient := order_mgr_pb.NewOrderMgrClient(zrpc.MustNewClient(c.OrderMgrRpcConfig).Conn())
 
 	authInterceptor := middleware.NewAuthInterceptorMiddleware(&c)
 
@@ -35,6 +38,7 @@ func NewServiceContext(c config.Config) *ServiceContext {
 		UserMgr:    userMgrClient,
 		AccountMgr: accountMgrClient,
 		TradeItg:   tradeItgClient,
+		OrderMgr:   orderMgrClient,
 		AuthInterceptor: func(next http.HandlerFunc) http.HandlerFunc {
 			return authInterceptor.Handle(next)
 		},

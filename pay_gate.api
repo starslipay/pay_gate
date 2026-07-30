@@ -171,6 +171,41 @@ type (
 		UserId        string `json:"user_id"`
 		IsRepeat      int32  `json:"is_repeat"`
 	}
+	PayPreReq {
+		UserId     string `json:"user_id,optional"`
+		MerchantId string `json:"merchant_id,optional"`
+	}
+	PayPreRsp {
+		UserId        string `json:"user_id"`
+		TransactionId string `json:"transaction_id"`
+	}
+	BanPayReq {
+		TransactionId string `json:"transaction_id,optional"`
+		OutOrderNo    string `json:"out_order_no,optional"`
+		MerchantId    string `json:"merchant_id,optional"`
+		UserId        string `json:"user_id,optional"`
+		Amount        int64  `json:"amount,optional"`
+		VerifyType    int32  `json:"verify_type,optional"`
+		Password      string `json:"Password,optional"`
+	}
+	BanPayRsp {
+		TransactionId     string `json:"transaction_id"`
+		UserId            string `json:"user_id"`
+		OrderSuccessToken string `json:"order_success_token"`
+	}
+	GetOrderInfoReq {
+		TransactionId string `json:"transaction_id"`
+	}
+	GetOrderInfoRsp {
+		TransactionId string `json:"transaction_id"`
+		OutOrderNo    string `json:"out_order_no"`
+		MerchantId    string `json:"merchant_id"`
+		MerchantName  string `json:"merchant_name"`
+		UserId        string `json:"user_id"`
+		Amount        int64  `json:"amount"`
+		PayTime       string `json:"pay_time"`
+		TradeState    int32  `json:"trade_state"`
+	}
 )
 
 @server (
@@ -226,5 +261,14 @@ service pay_gate {
 
 	@handler c2bank_do
 	post /c2bank_do (C2BankDoReq) returns (C2BankDoRsp)
+
+	@handler pay_pre
+	post /pay_re (PayPreReq) returns (PayPreRsp)
+
+	@handler ban_pay
+	post /ban_pay (BanPayReq) returns (BanPayRsp)
+
+	@handler get_order_info
+	post /get_order_info (GetOrderInfoReq) returns (GetOrderInfoRsp)
 }
 

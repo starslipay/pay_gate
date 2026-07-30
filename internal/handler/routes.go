@@ -40,6 +40,11 @@ func RegisterHandlers(server *rest.Server, serverCtx *svc.ServiceContext) {
 			[]rest.Route{
 				{
 					Method:  http.MethodPost,
+					Path:    "/ban_pay",
+					Handler: pay_gate.Ban_payHandler(serverCtx),
+				},
+				{
+					Method:  http.MethodPost,
 					Path:    "/bank2c_do",
 					Handler: pay_gate.Bank2c_doHandler(serverCtx),
 				},
@@ -75,6 +80,11 @@ func RegisterHandlers(server *rest.Server, serverCtx *svc.ServiceContext) {
 				},
 				{
 					Method:  http.MethodPost,
+					Path:    "/get_order_info",
+					Handler: pay_gate.Get_order_infoHandler(serverCtx),
+				},
+				{
+					Method:  http.MethodPost,
 					Path:    "/get_user_balance_info",
 					Handler: pay_gate.Get_user_balance_infoHandler(serverCtx),
 				},
@@ -87,6 +97,11 @@ func RegisterHandlers(server *rest.Server, serverCtx *svc.ServiceContext) {
 					Method:  http.MethodPost,
 					Path:    "/get_user_info",
 					Handler: pay_gate.Get_user_infoHandler(serverCtx),
+				},
+				{
+					Method:  http.MethodPost,
+					Path:    "/pay_re",
+					Handler: pay_gate.Pay_preHandler(serverCtx),
 				},
 				{
 					Method:  http.MethodPost,

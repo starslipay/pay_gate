@@ -15,6 +15,73 @@
   },
   "basePath": "/",
   "paths": {
+    "/api/pay_gate/ban_pay": {
+      "post": {
+        "consumes": [
+          "application/json"
+        ],
+        "produces": [
+          "application/json"
+        ],
+        "schemes": [
+          "https"
+        ],
+        "summary": "ban_pay",
+        "operationId": "payGateBanPay",
+        "parameters": [
+          {
+            "name": "body",
+            "in": "body",
+            "required": true,
+            "schema": {
+              "type": "object",
+              "properties": {
+                "Password": {
+                  "type": "string"
+                },
+                "amount": {
+                  "type": "integer"
+                },
+                "merchant_id": {
+                  "type": "string"
+                },
+                "out_order_no": {
+                  "type": "string"
+                },
+                "transaction_id": {
+                  "type": "string"
+                },
+                "user_id": {
+                  "type": "string"
+                },
+                "verify_type": {
+                  "type": "integer"
+                }
+              }
+            }
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "",
+            "schema": {
+              "type": "object",
+              "properties": {
+                "order_success_token": {
+                  "type": "string"
+                },
+                "transaction_id": {
+                  "type": "string"
+                },
+                "user_id": {
+                  "type": "string"
+                }
+              }
+            }
+          }
+        }
+      }
+    },
     "/api/pay_gate/bank2c_do": {
       "post": {
         "consumes": [
@@ -415,6 +482,73 @@
         }
       }
     },
+    "/api/pay_gate/get_order_info": {
+      "post": {
+        "consumes": [
+          "application/json"
+        ],
+        "produces": [
+          "application/json"
+        ],
+        "schemes": [
+          "https"
+        ],
+        "summary": "get_order_info",
+        "operationId": "payGateGetOrderInfo",
+        "parameters": [
+          {
+            "name": "body",
+            "in": "body",
+            "required": true,
+            "schema": {
+              "type": "object",
+              "required": [
+                "transaction_id"
+              ],
+              "properties": {
+                "transaction_id": {
+                  "type": "string"
+                }
+              }
+            }
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "",
+            "schema": {
+              "type": "object",
+              "properties": {
+                "amount": {
+                  "type": "integer"
+                },
+                "merchant_id": {
+                  "type": "string"
+                },
+                "merchant_name": {
+                  "type": "string"
+                },
+                "out_order_no": {
+                  "type": "string"
+                },
+                "pay_time": {
+                  "type": "string"
+                },
+                "trade_state": {
+                  "type": "integer"
+                },
+                "transaction_id": {
+                  "type": "string"
+                },
+                "user_id": {
+                  "type": "string"
+                }
+              }
+            }
+          }
+        }
+      }
+    },
     "/api/pay_gate/get_user_balance_info": {
       "post": {
         "consumes": [
@@ -704,6 +838,55 @@
         }
       }
     },
+    "/api/pay_gate/pay_re": {
+      "post": {
+        "consumes": [
+          "application/json"
+        ],
+        "produces": [
+          "application/json"
+        ],
+        "schemes": [
+          "https"
+        ],
+        "summary": "pay_pre",
+        "operationId": "payGatePayPre",
+        "parameters": [
+          {
+            "name": "body",
+            "in": "body",
+            "required": true,
+            "schema": {
+              "type": "object",
+              "properties": {
+                "merchant_id": {
+                  "type": "string"
+                },
+                "user_id": {
+                  "type": "string"
+                }
+              }
+            }
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "",
+            "schema": {
+              "type": "object",
+              "properties": {
+                "transaction_id": {
+                  "type": "string"
+                },
+                "user_id": {
+                  "type": "string"
+                }
+              }
+            }
+          }
+        }
+      }
+    },
     "/api/pay_gate/reg_user": {
       "post": {
         "consumes": [
@@ -842,7 +1025,7 @@
       }
     }
   },
-  "x-date": "2026-07-29 21:42:37",
+  "x-date": "2026-07-31 00:56:51",
   "x-description": "This is a goctl generated swagger file.",
   "x-github": "https://github.com/zeromicro/go-zero",
   "x-go-zero-doc": "https://go-zero.dev/",
