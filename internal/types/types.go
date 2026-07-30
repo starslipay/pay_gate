@@ -10,7 +10,7 @@ type BanPayReq struct {
 	UserId        string `json:"user_id,optional"`
 	Amount        int64  `json:"amount,optional"`
 	VerifyType    int32  `json:"verify_type,optional"`
-	Password      string `json:"Password,optional"`
+	Password      string `json:"password,optional"`
 }
 
 type BanPayRsp struct {

@@ -35,81 +35,78 @@ func RegisterHandlers(server *rest.Server, serverCtx *svc.ServiceContext) {
 	)
 
 	server.AddRoutes(
-		rest.WithMiddlewares(
-			[]rest.Middleware{serverCtx.AuthInterceptor},
-			[]rest.Route{
-				{
-					Method:  http.MethodPost,
-					Path:    "/ban_pay",
-					Handler: pay_gate.Ban_payHandler(serverCtx),
-				},
-				{
-					Method:  http.MethodPost,
-					Path:    "/bank2c_do",
-					Handler: pay_gate.Bank2c_doHandler(serverCtx),
-				},
-				{
-					Method:  http.MethodPost,
-					Path:    "/bank2c_pre",
-					Handler: pay_gate.Bank2c_preHandler(serverCtx),
-				},
-				{
-					Method:  http.MethodPost,
-					Path:    "/c2bank_do",
-					Handler: pay_gate.C2bank_doHandler(serverCtx),
-				},
-				{
-					Method:  http.MethodPost,
-					Path:    "/c2bank_pre",
-					Handler: pay_gate.C2bank_preHandler(serverCtx),
-				},
-				{
-					Method:  http.MethodPost,
-					Path:    "/c2c_transfer_do",
-					Handler: pay_gate.C2c_transfer_doHandler(serverCtx),
-				},
-				{
-					Method:  http.MethodPost,
-					Path:    "/c2c_transfer_pre",
-					Handler: pay_gate.C2c_transfer_preHandler(serverCtx),
-				},
-				{
-					Method:  http.MethodPost,
-					Path:    "/get_c2c_bill",
-					Handler: pay_gate.Get_c2c_billHandler(serverCtx),
-				},
-				{
-					Method:  http.MethodPost,
-					Path:    "/get_order_info",
-					Handler: pay_gate.Get_order_infoHandler(serverCtx),
-				},
-				{
-					Method:  http.MethodPost,
-					Path:    "/get_user_balance_info",
-					Handler: pay_gate.Get_user_balance_infoHandler(serverCtx),
-				},
-				{
-					Method:  http.MethodPost,
-					Path:    "/get_user_flow",
-					Handler: pay_gate.Get_user_flowHandler(serverCtx),
-				},
-				{
-					Method:  http.MethodPost,
-					Path:    "/get_user_info",
-					Handler: pay_gate.Get_user_infoHandler(serverCtx),
-				},
-				{
-					Method:  http.MethodPost,
-					Path:    "/pay_re",
-					Handler: pay_gate.Pay_preHandler(serverCtx),
-				},
-				{
-					Method:  http.MethodPost,
-					Path:    "/update_user_info",
-					Handler: pay_gate.Update_user_infoHandler(serverCtx),
-				},
-			}...,
-		),
+		[]rest.Route{
+			{
+				Method:  http.MethodPost,
+				Path:    "/ban_pay",
+				Handler: pay_gate.Ban_payHandler(serverCtx),
+			},
+			{
+				Method:  http.MethodPost,
+				Path:    "/bank2c_do",
+				Handler: pay_gate.Bank2c_doHandler(serverCtx),
+			},
+			{
+				Method:  http.MethodPost,
+				Path:    "/bank2c_pre",
+				Handler: pay_gate.Bank2c_preHandler(serverCtx),
+			},
+			{
+				Method:  http.MethodPost,
+				Path:    "/c2bank_do",
+				Handler: pay_gate.C2bank_doHandler(serverCtx),
+			},
+			{
+				Method:  http.MethodPost,
+				Path:    "/c2bank_pre",
+				Handler: pay_gate.C2bank_preHandler(serverCtx),
+			},
+			{
+				Method:  http.MethodPost,
+				Path:    "/c2c_transfer_do",
+				Handler: pay_gate.C2c_transfer_doHandler(serverCtx),
+			},
+			{
+				Method:  http.MethodPost,
+				Path:    "/c2c_transfer_pre",
+				Handler: pay_gate.C2c_transfer_preHandler(serverCtx),
+			},
+			{
+				Method:  http.MethodPost,
+				Path:    "/get_c2c_bill",
+				Handler: pay_gate.Get_c2c_billHandler(serverCtx),
+			},
+			{
+				Method:  http.MethodPost,
+				Path:    "/get_order_info",
+				Handler: pay_gate.Get_order_infoHandler(serverCtx),
+			},
+			{
+				Method:  http.MethodPost,
+				Path:    "/get_user_balance_info",
+				Handler: pay_gate.Get_user_balance_infoHandler(serverCtx),
+			},
+			{
+				Method:  http.MethodPost,
+				Path:    "/get_user_flow",
+				Handler: pay_gate.Get_user_flowHandler(serverCtx),
+			},
+			{
+				Method:  http.MethodPost,
+				Path:    "/get_user_info",
+				Handler: pay_gate.Get_user_infoHandler(serverCtx),
+			},
+			{
+				Method:  http.MethodPost,
+				Path:    "/pay_re",
+				Handler: pay_gate.Pay_preHandler(serverCtx),
+			},
+			{
+				Method:  http.MethodPost,
+				Path:    "/update_user_info",
+				Handler: pay_gate.Update_user_infoHandler(serverCtx),
+			},
+		},
 		rest.WithPrefix("/api/pay_gate"),
 	)
 }

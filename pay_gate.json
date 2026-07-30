@@ -36,9 +36,6 @@
             "schema": {
               "type": "object",
               "properties": {
-                "Password": {
-                  "type": "string"
-                },
                 "amount": {
                   "type": "integer"
                 },
@@ -46,6 +43,9 @@
                   "type": "string"
                 },
                 "out_order_no": {
+                  "type": "string"
+                },
+                "password": {
                   "type": "string"
                 },
                 "transaction_id": {
@@ -1025,7 +1025,7 @@
       }
     }
   },
-  "x-date": "2026-07-31 00:56:51",
+  "x-date": "2026-07-31 01:05:05",
   "x-description": "This is a goctl generated swagger file.",
   "x-github": "https://github.com/zeromicro/go-zero",
   "x-go-zero-doc": "https://go-zero.dev/",
