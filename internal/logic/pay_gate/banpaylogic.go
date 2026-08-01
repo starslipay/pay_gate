@@ -42,8 +42,12 @@ func (l *Ban_payLogic) Ban_pay(req *types.BanPayReq) (resp *types.BanPayRsp, err
 		return nil, xerr.HandleRPCError(err, "TradeItg.BanPay")
 	}
 	return &types.BanPayRsp{
-		UserId:            banPayRsp.UserId,
 		TransactionId:     banPayRsp.TransactionId,
+		OutOrderNo:        banPayRsp.OutOrderNo,
+		UserId:            banPayRsp.UserId,
+		MerchantId:        banPayRsp.MerchantId,
+		Amount:            banPayRsp.Amount,
+		PayTime:           banPayRsp.PayTime,
 		OrderSuccessToken: banPayRsp.OrderSuccessToken,
 	}, nil
 }

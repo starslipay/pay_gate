@@ -15,7 +15,11 @@ type BanPayReq struct {
 
 type BanPayRsp struct {
 	TransactionId     string `json:"transaction_id"`
+	OutOrderNo        string `json:"out_order_no"`
+	MerchantId        string `json:"merchant_id"`
 	UserId            string `json:"user_id"`
+	Amount            int64  `json:"amount"`
+	PayTime           string `json:"pay_time"`
 	OrderSuccessToken string `json:"order_success_token"`
 }
 
@@ -95,6 +99,25 @@ type C2CTransferPreRsp struct {
 	TransactionId string `json:"transaction_id"`
 }
 
+type CloseOrSupplyOrderReq struct {
+	TransactionId string `json:"transaction_id,optional"`
+	OutOrderNo    string `json:"out_order_no,optional"`
+	MerchantId    string `json:"merchant_id,optional"`
+	UserId        string `json:"user_id,optional"`
+	Amount        int64  `json:"amount,optional"`
+}
+
+type CloseOrSupplyOrderRsp struct {
+	ResultCode        int32  `json:"result_code"`
+	TransactionId     string `json:"transaction_id"`
+	OutOrderNo        string `json:"out_order_no"`
+	MerchantId        string `json:"merchant_id"`
+	UserId            string `json:"user_id"`
+	Amount            int64  `json:"amount"`
+	PayTime           string `json:"pay_time"`
+	OrderSuccessToken string `json:"order_success_token"`
+}
+
 type GetC2CBillReq struct {
 	TransactionId string `json:"transaction_id,optional"`
 }
@@ -109,7 +132,7 @@ type GetC2CBillRsp struct {
 }
 
 type GetOrderInfoReq struct {
-	TransactionId string `json:"transaction_id"`
+	TransactionId string `json:"transaction_id,optional"`
 }
 
 type GetOrderInfoRsp struct {

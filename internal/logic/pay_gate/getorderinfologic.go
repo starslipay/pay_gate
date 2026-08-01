@@ -43,6 +43,7 @@ func (l *Get_order_infoLogic) Get_order_info(req *types.GetOrderInfoReq) (resp *
 		UserId:        queryResp.OrderInfo.UserId,
 		Amount:        queryResp.OrderInfo.Amount,
 		PayTime:       queryResp.OrderInfo.PayTime,
+		TradeState:    queryResp.OrderInfo.TradeState,
 	}
 	return
 }

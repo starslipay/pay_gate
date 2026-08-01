@@ -73,6 +73,11 @@ func RegisterHandlers(server *rest.Server, serverCtx *svc.ServiceContext) {
 			},
 			{
 				Method:  http.MethodPost,
+				Path:    "/close_or_supply_order",
+				Handler: pay_gate.Close_or_supply_orderHandler(serverCtx),
+			},
+			{
+				Method:  http.MethodPost,
 				Path:    "/get_c2c_bill",
 				Handler: pay_gate.Get_c2c_billHandler(serverCtx),
 			},

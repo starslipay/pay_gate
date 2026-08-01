@@ -190,11 +190,15 @@ type (
 	}
 	BanPayRsp {
 		TransactionId     string `json:"transaction_id"`
+		OutOrderNo        string `json:"out_order_no"`
+		MerchantId        string `json:"merchant_id"`
 		UserId            string `json:"user_id"`
+		Amount            int64  `json:"amount"`
+		PayTime           string `json:"pay_time"`
 		OrderSuccessToken string `json:"order_success_token"`
 	}
 	GetOrderInfoReq {
-		TransactionId string `json:"transaction_id"`
+		TransactionId string `json:"transaction_id,optional"`
 	}
 	GetOrderInfoRsp {
 		TransactionId string `json:"transaction_id"`
@@ -205,6 +209,23 @@ type (
 		Amount        int64  `json:"amount"`
 		PayTime       string `json:"pay_time"`
 		TradeState    int32  `json:"trade_state"`
+	}
+	CloseOrSupplyOrderReq {
+		TransactionId string `json:"transaction_id,optional"`
+		OutOrderNo    string `json:"out_order_no,optional"`
+		MerchantId    string `json:"merchant_id,optional"`
+		UserId        string `json:"user_id,optional"`
+		Amount        int64  `json:"amount,optional"`
+	}
+	CloseOrSupplyOrderRsp {
+		ResultCode        int32  `json:"result_code"`
+		TransactionId     string `json:"transaction_id"`
+		OutOrderNo        string `json:"out_order_no"`
+		MerchantId        string `json:"merchant_id"`
+		UserId            string `json:"user_id"`
+		Amount            int64  `json:"amount"`
+		PayTime           string `json:"pay_time"`
+		OrderSuccessToken string `json:"order_success_token"`
 	}
 )
 
@@ -270,5 +291,8 @@ service pay_gate {
 
 	@handler get_order_info
 	post /get_order_info (GetOrderInfoReq) returns (GetOrderInfoRsp)
+
+	@handler close_or_supply_order
+	post /close_or_supply_order (CloseOrSupplyOrderReq) returns (CloseOrSupplyOrderRsp)
 }
 
