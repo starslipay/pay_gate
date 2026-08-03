@@ -28,10 +28,13 @@ func main() {
 	server := rest.MustNewServer(c.RestConf)
 	defer server.Stop()
 
+	ctx := svc.NewServiceContext(c)
+
 	// 全局中间件: 把请求路径注入 ctx, 供 metrics 打点使用
 	server.Use(middleware.MetricMethodMiddleware)
+	// 全局中间件: 接口维度令牌桶限流(基于 Redis, 多网关实例全局共享配额)
+	server.Use(ctx.RateLimiter)
 
-	ctx := svc.NewServiceContext(c)
 	handler.RegisterHandlers(server, ctx)
 
 	fmt.Printf("Starting server at %s:%d...\n", c.Host, c.Port)

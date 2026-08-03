@@ -4,14 +4,13 @@
 package svc
 
 import (
-	"net/http"
-
 	"github.com/starslipay/account_mgr/account_mgr_pb"
 	"github.com/starslipay/order_mgr/order_mgr_pb"
 	"github.com/starslipay/pay_gate/internal/config"
 	"github.com/starslipay/pay_gate/internal/middleware"
 	"github.com/starslipay/trade_itg/trade_itg_pb"
 	"github.com/starslipay/user_mgr/user_mgr_pb"
+	"github.com/zeromicro/go-zero/core/stores/redis"
 	"github.com/zeromicro/go-zero/rest"
 	"github.com/zeromicro/go-zero/zrpc"
 )
@@ -23,6 +22,7 @@ type ServiceContext struct {
 	TradeItg        trade_itg_pb.TradeItgClient
 	OrderMgr        order_mgr_pb.OrderMgrClient
 	AuthInterceptor rest.Middleware
+	RateLimiter     rest.Middleware
 }
 
 func NewServiceContext(c config.Config) *ServiceContext {
@@ -33,14 +33,17 @@ func NewServiceContext(c config.Config) *ServiceContext {
 
 	authInterceptor := middleware.NewAuthInterceptorMiddleware(&c)
 
+	// 令牌桶限流: 令牌状态存 Redis, 多网关实例全局共享配额
+	redisStore := redis.MustNewRedis(c.Redis)
+	rateLimiter := middleware.NewRateLimitMiddleware(redisStore, c.RateLimit)
+
 	return &ServiceContext{
-		Config:     c,
-		UserMgr:    userMgrClient,
-		AccountMgr: accountMgrClient,
-		TradeItg:   tradeItgClient,
-		OrderMgr:   orderMgrClient,
-		AuthInterceptor: func(next http.HandlerFunc) http.HandlerFunc {
-			return authInterceptor.Handle(next)
-		},
+		Config:          c,
+		UserMgr:         userMgrClient,
+		AccountMgr:      accountMgrClient,
+		TradeItg:        tradeItgClient,
+		OrderMgr:        orderMgrClient,
+		AuthInterceptor: authInterceptor.Handle,
+		RateLimiter:     rateLimiter.Handle,
 	}
 }

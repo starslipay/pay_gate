@@ -247,7 +247,7 @@ service pay_gate {
 @server (
 	group:  pay_gate
 	prefix: /api/pay_gate
-// middleware: AuthInterceptor
+	middleware: AuthInterceptor
 )
 service pay_gate {
 	@handler update_user_info

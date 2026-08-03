@@ -53,6 +53,24 @@ OrderMgrRpcConfig:
 
 TokenExpireTime: 3600  # 有效期 单位秒
 
+# Redis: 令牌桶限流的存储, 令牌状态存在 Redis 实现多网关实例全局共享限流
+Redis:
+  Host: redis:6379   # docker-compose 中的 redis 服务名
+  Type: node
+
+# RateLimit: 接口维度令牌桶限流
+RateLimit:
+  Enable: true
+  # Default: 未在 Rules 中单独配置的接口, 每个接口各自独立享有这份较大的默认配额
+  Default:
+    Rate: 1000    # 每秒补充 1000 个令牌
+    Burst: 2000   # 桶容量 2000, 允许瞬时突发
+  # Rules: 按接口路径单独配置限流(示例, 按实际接口路径调整)
+  Rules:
+    - Path: /api/pay_gate/get_user_balance_info
+      Rate: 10
+      Burst: 20
+
 # Prometheus 指标采集：go-zero 会另起一个独立 HTTP 端口暴露 /metrics
 Prometheus:
   Host: 0.0.0.0

@@ -35,12 +35,14 @@ var (
 	CodeErrTokenMissing                            = ModuleErrorBase + 1005
 	CodeErrTokenInvalid                            = ModuleErrorBase + 1006
 	CodeErrUserIdMissing                           = ModuleErrorBase + 1007
+	CodeErrTooManyRequests                         = ModuleErrorBase + 1008
 )
 
 var (
-	ErrTokenInvalid  = NewError(CodeErrTokenInvalid, "token invalid")
-	ErrUserIdMissing = NewError(CodeErrUserIdMissing, "user id missing")
-	ErrTokenMissing  = NewError(CodeErrTokenMissing, "token missing")
+	ErrTokenInvalid    = NewError(CodeErrTokenInvalid, "token invalid")
+	ErrUserIdMissing   = NewError(CodeErrUserIdMissing, "user id missing")
+	ErrTokenMissing    = NewError(CodeErrTokenMissing, "token missing")
+	ErrTooManyRequests = NewError(CodeErrTooManyRequests, "too many requests")
 )
 
 func NewError(code int64, msg string) *CodeMsg {
