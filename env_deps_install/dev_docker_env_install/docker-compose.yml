@@ -111,3 +111,35 @@ services:
     user: root
     networks:
       - dev_pay_net
+
+  # Prometheus 指标采集
+  prometheus:
+    image: prom/prometheus:v2.53.0
+    container_name: prometheus
+    restart: always
+    ports:
+      - "9091:9090"  # 宿主机访问 http://localhost:9091
+    volumes:
+      - ./prometheus/prometheus.yml:/etc/prometheus/prometheus.yml:ro
+      - prom_data:/prometheus
+    networks:
+      - dev_pay_net
+
+  # Grafana 可视化面板
+  grafana:
+    image: grafana/grafana:11.1.0
+    container_name: grafana
+    restart: always
+    ports:
+      - "3000:3000"  # 宿主机访问 http://localhost:3000
+    environment:
+      TZ: Asia/Shanghai
+      GF_SECURITY_ADMIN_USER: admin
+      GF_SECURITY_ADMIN_PASSWORD: admin123
+    volumes:
+      - graf_data:/var/lib/grafana
+      - ./grafana/provisioning:/etc/grafana/provisioning:ro
+    depends_on:
+      - prometheus
+    networks:
+      - dev_pay_net

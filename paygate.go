@@ -9,6 +9,7 @@ import (
 
 	"github.com/starslipay/pay_gate/internal/config"
 	"github.com/starslipay/pay_gate/internal/handler"
+	"github.com/starslipay/pay_gate/internal/middleware"
 	_ "github.com/starslipay/pay_gate/internal/response"
 	"github.com/starslipay/pay_gate/internal/svc"
 
@@ -26,6 +27,9 @@ func main() {
 
 	server := rest.MustNewServer(c.RestConf)
 	defer server.Stop()
+
+	// 全局中间件: 把请求路径注入 ctx, 供 metrics 打点使用
+	server.Use(middleware.MetricMethodMiddleware)
 
 	ctx := svc.NewServiceContext(c)
 	handler.RegisterHandlers(server, ctx)

@@ -4,6 +4,8 @@ import (
 	"context"
 	"net/http"
 
+	"github.com/starslipay/pay_gate/internal/metrics"
+	"github.com/starslipay/pay_gate/internal/middleware"
 	"github.com/starslipay/pay_gate/internal/xerr"
 	"github.com/zeromicro/go-zero/core/logx"
 	"github.com/zeromicro/go-zero/rest/httpx"
@@ -20,6 +22,8 @@ func init() {
 	// 当调用httpx.OkJson/OkJsonCtx时，传入的v会先经过这个函数处理
 	// 这里将业务数据v包装成统一格式{code, msg, data}
 	httpx.SetOkHandler(func(ctx context.Context, v interface{}) interface{} {
+		// 成功打点: code=0
+		metrics.ReportCode(middleware.MethodFromCtx(ctx), 0)
 		return Response{
 			Code: 0,
 			Msg:  "success",
@@ -45,6 +49,8 @@ func init() {
 	httpx.SetErrorHandlerCtx(func(ctx context.Context, err error) (int, interface{}) {
 		logx.WithContext(ctx).Errorf("http error ctx: %v", err)
 		ce := xerr.FromError(err)
+		// 失败打点: 上报真实错误码
+		metrics.ReportCode(middleware.MethodFromCtx(ctx), ce.Code)
 		return http.StatusOK, Response{
 			Code: ce.Code,
 			Msg:  ce.Msg,

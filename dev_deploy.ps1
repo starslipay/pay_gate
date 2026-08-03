@@ -5,7 +5,7 @@ $IMAGE_NAME = "${MODULE_NAME}:${VERSION}"
 docker rm -f $MODULE_NAME
 docker rmi -f $IMAGE_NAME
 docker build -t $IMAGE_NAME .
-docker run -d --name $MODULE_NAME --network dev_pay_net -p 30888:8888 $IMAGE_NAME
+docker run -d --name $MODULE_NAME --network dev_pay_net -p 30888:8888 -p 9090:9090 $IMAGE_NAME
 # docker run -d --name pay_gate --network dev_pay_net -p 30888:8888 pay_gate:v1.0.0
 
 docker ps

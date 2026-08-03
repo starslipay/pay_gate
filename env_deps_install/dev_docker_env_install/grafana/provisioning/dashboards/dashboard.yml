@@ -1,0 +1,12 @@
+apiVersion: 1
+
+providers:
+  - name: 'starslipay'
+    orgId: 1
+    folder: 'starslipay'
+    type: file
+    disableDeletion: false
+    editable: true
+    options:
+      # dashboards json 文件所在目录
+      path: /etc/grafana/provisioning/dashboards

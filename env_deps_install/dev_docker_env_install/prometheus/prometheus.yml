@@ -1,0 +1,52 @@
+global:
+  scrape_interval: 5s      # 每 5 秒抓取一次
+  evaluation_interval: 5s
+
+scrape_configs:
+  # 网关 (HTTP)
+  - job_name: 'pay-gate'
+    metrics_path: /metrics
+    static_configs:
+      - targets: ['pay_gate:9090']
+        labels:
+          module: 'pay_gate'
+
+  # 用户管理 (RPC)
+  - job_name: 'user-mgr'
+    metrics_path: /metrics
+    static_configs:
+      - targets: ['user_mgr:9090']
+        labels:
+          module: 'user_mgr'
+
+  # 账户管理 (RPC)
+  - job_name: 'account-mgr'
+    metrics_path: /metrics
+    static_configs:
+      - targets: ['account_mgr:9090']
+        labels:
+          module: 'account_mgr'
+
+  # 交易编排 (RPC)
+  - job_name: 'trade-itg'
+    metrics_path: /metrics
+    static_configs:
+      - targets: ['trade_itg:9090']
+        labels:
+          module: 'trade_itg'
+
+  # 订单管理 (RPC)
+  - job_name: 'order-mgr'
+    metrics_path: /metrics
+    static_configs:
+      - targets: ['order_mgr:9090']
+        labels:
+          module: 'order_mgr'
+
+  # 交易ID生成 (RPC)
+  - job_name: 'trade-id-mgr'
+    metrics_path: /metrics
+    static_configs:
+      - targets: ['trade_id_mgr:9090']
+        labels:
+          module: 'trade_id_mgr'

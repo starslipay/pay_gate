@@ -52,3 +52,9 @@ OrderMgrRpcConfig:
 
 
 TokenExpireTime: 3600  # 有效期 单位秒
+
+# Prometheus 指标采集：go-zero 会另起一个独立 HTTP 端口暴露 /metrics
+Prometheus:
+  Host: 0.0.0.0
+  Port: 9090
+  Path: /metrics
