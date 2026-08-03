@@ -19,6 +19,8 @@ UserMgrRpcConfig:
     # - etcd-2.etcd.pay-ns.svc.cluster.local:2379
     Key: usermgr.rpc  # 注册到etcd的服务key，客户端要对应这个key
   Timeout: 10000  # 超时时间，单位毫秒
+  Middlewares:
+    Breaker: false  # 关闭客户端熔断
 
 AccountMgrRpcConfig:
   Etcd:
@@ -29,6 +31,8 @@ AccountMgrRpcConfig:
     # - etcd-2.etcd.pay-ns.svc.cluster.local:2379
     Key: accountmgr.rpc  # 注册到etcd的服务key，客户端要对应这个key
   Timeout: 10000  # 超时时间，单位毫秒
+  Middlewares:
+    Breaker: false  # 关闭客户端熔断
 
 TradeItgRpcConfig:
   Etcd:
@@ -39,6 +43,8 @@ TradeItgRpcConfig:
     # - etcd-2.etcd.pay-ns.svc.cluster.local:2379
     Key: tradeitg.rpc  # 注册到etcd的服务key，客户端要对应这个key
   Timeout: 10000  # 超时时间，单位毫秒
+  Middlewares:
+    Breaker: false  # 关闭客户端熔断
 
 OrderMgrRpcConfig:
   Etcd:
@@ -49,6 +55,8 @@ OrderMgrRpcConfig:
     # - etcd-2.etcd.pay-ns.svc.cluster.local:2379
     Key: ordermgr.rpc  # 注册到etcd的服务key，客户端要对应这个key
   Timeout: 10000  # 超时时间，单位毫秒
+  Middlewares:
+    Breaker: false  # 关闭客户端熔断
 
 
 TokenExpireTime: 3600  # 有效期 单位秒
