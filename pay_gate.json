@@ -37,24 +37,31 @@
               "type": "object",
               "properties": {
                 "amount": {
+                  "description": "支付金额, 单位分",
                   "type": "integer"
                 },
                 "merchant_id": {
+                  "description": "商户ID",
                   "type": "string"
                 },
                 "out_order_no": {
+                  "description": "商户订单号",
                   "type": "string"
                 },
                 "password": {
+                  "description": "支付密码",
                   "type": "string"
                 },
                 "transaction_id": {
+                  "description": "交易流水号(由预交易接口返回)",
                   "type": "string"
                 },
                 "user_id": {
+                  "description": "用户ID",
                   "type": "string"
                 },
                 "verify_type": {
+                  "description": "验证方式: 1密码 2短信 3指纹 4人脸",
                   "type": "integer"
                 }
               }
@@ -68,24 +75,31 @@
               "type": "object",
               "properties": {
                 "amount": {
+                  "description": "支付金额, 单位分",
                   "type": "integer"
                 },
                 "merchant_id": {
+                  "description": "商户ID",
                   "type": "string"
                 },
                 "order_success_token": {
+                  "description": "支付成功凭证token",
                   "type": "string"
                 },
                 "out_order_no": {
+                  "description": "商户订单号",
                   "type": "string"
                 },
                 "pay_time": {
+                  "description": "支付完成时间",
                   "type": "string"
                 },
                 "transaction_id": {
+                  "description": "交易流水号",
                   "type": "string"
                 },
                 "user_id": {
+                  "description": "用户ID",
                   "type": "string"
                 }
               }
@@ -116,24 +130,31 @@
               "type": "object",
               "properties": {
                 "amount": {
+                  "description": "充值金额, 单位分",
                   "type": "integer"
                 },
                 "bank_type": {
+                  "description": "银行类型/银行编码",
                   "type": "integer"
                 },
                 "desc": {
+                  "description": "交易备注/描述",
                   "type": "string"
                 },
                 "password": {
+                  "description": "支付密码",
                   "type": "string"
                 },
                 "transaction_id": {
+                  "description": "交易流水号(由预交易接口返回)",
                   "type": "string"
                 },
                 "user_id": {
+                  "description": "用户ID",
                   "type": "string"
                 },
                 "verify_type": {
+                  "description": "验证方式: 1密码 2短信 3指纹 4人脸",
                   "type": "integer"
                 }
               }
@@ -147,12 +168,15 @@
               "type": "object",
               "properties": {
                 "is_repeat": {
+                  "description": "是否重复请求: 0否 1是(幂等命中)",
                   "type": "integer"
                 },
                 "transaction_id": {
+                  "description": "交易流水号",
                   "type": "string"
                 },
                 "user_id": {
+                  "description": "用户ID",
                   "type": "string"
                 }
               }
@@ -183,6 +207,7 @@
               "type": "object",
               "properties": {
                 "user_id": {
+                  "description": "用户ID",
                   "type": "string"
                 }
               }
@@ -196,9 +221,11 @@
               "type": "object",
               "properties": {
                 "transaction_id": {
+                  "description": "预交易生成的交易流水号",
                   "type": "string"
                 },
                 "user_id": {
+                  "description": "用户ID",
                   "type": "string"
                 }
               }
@@ -229,24 +256,31 @@
               "type": "object",
               "properties": {
                 "amount": {
+                  "description": "提现金额, 单位分",
                   "type": "integer"
                 },
                 "bank_type": {
+                  "description": "银行类型/银行编码",
                   "type": "integer"
                 },
                 "desc": {
+                  "description": "交易备注/描述",
                   "type": "string"
                 },
                 "password": {
+                  "description": "支付密码",
                   "type": "string"
                 },
                 "transaction_id": {
+                  "description": "交易流水号(由预交易接口返回)",
                   "type": "string"
                 },
                 "user_id": {
+                  "description": "用户ID",
                   "type": "string"
                 },
                 "verify_type": {
+                  "description": "验证方式: 1密码 2短信 3指纹 4人脸",
                   "type": "integer"
                 }
               }
@@ -260,12 +294,15 @@
               "type": "object",
               "properties": {
                 "is_repeat": {
+                  "description": "是否重复请求: 0否 1是(幂等命中)",
                   "type": "integer"
                 },
                 "transaction_id": {
+                  "description": "交易流水号",
                   "type": "string"
                 },
                 "user_id": {
+                  "description": "用户ID",
                   "type": "string"
                 }
               }
@@ -296,6 +333,7 @@
               "type": "object",
               "properties": {
                 "user_id": {
+                  "description": "用户ID",
                   "type": "string"
                 }
               }
@@ -309,9 +347,11 @@
               "type": "object",
               "properties": {
                 "transaction_id": {
+                  "description": "预交易生成的交易流水号",
                   "type": "string"
                 },
                 "user_id": {
+                  "description": "用户ID",
                   "type": "string"
                 }
               }
@@ -342,25 +382,31 @@
               "type": "object",
               "properties": {
                 "amount": {
+                  "description": "转账金额, 单位分",
                   "type": "integer"
                 },
                 "buyer_user_id": {
+                  "description": "付款方用户ID",
                   "type": "string"
                 },
                 "password": {
+                  "description": "支付密码",
                   "type": "string"
                 },
                 "seller_user_id": {
+                  "description": "收款方用户ID",
                   "type": "string"
                 },
                 "transaction_id": {
-                  "description": "交易单号",
+                  "description": "交易流水号(由预交易接口返回)",
                   "type": "string"
                 },
                 "verify_type": {
+                  "description": "验证方式: 1密码 2短信 3指纹 4人脸",
                   "type": "integer"
                 },
                 "version": {
+                  "description": "乐观锁版本号(防重复/并发)",
                   "type": "integer"
                 }
               }
@@ -374,15 +420,19 @@
               "type": "object",
               "properties": {
                 "buyer_user_id": {
+                  "description": "付款方用户ID",
                   "type": "string"
                 },
                 "is_repeat": {
+                  "description": "是否重复请求: 0否 1是(幂等命中)",
                   "type": "integer"
                 },
                 "seller_user_id": {
+                  "description": "收款方用户ID",
                   "type": "string"
                 },
                 "transaction_id": {
+                  "description": "交易流水号",
                   "type": "string"
                 }
               }
@@ -413,6 +463,7 @@
               "type": "object",
               "properties": {
                 "buyer_user_id": {
+                  "description": "付款方用户ID",
                   "type": "string"
                 }
               }
@@ -426,9 +477,11 @@
               "type": "object",
               "properties": {
                 "buyer_user_id": {
+                  "description": "付款方用户ID",
                   "type": "string"
                 },
                 "transaction_id": {
+                  "description": "预交易生成的交易流水号",
                   "type": "string"
                 }
               }
@@ -459,18 +512,23 @@
               "type": "object",
               "properties": {
                 "amount": {
+                  "description": "订单金额, 单位分",
                   "type": "integer"
                 },
                 "merchant_id": {
+                  "description": "商户ID",
                   "type": "string"
                 },
                 "out_order_no": {
+                  "description": "商户订单号",
                   "type": "string"
                 },
                 "transaction_id": {
+                  "description": "交易流水号",
                   "type": "string"
                 },
                 "user_id": {
+                  "description": "用户ID",
                   "type": "string"
                 }
               }
@@ -484,27 +542,35 @@
               "type": "object",
               "properties": {
                 "amount": {
+                  "description": "订单金额, 单位分",
                   "type": "integer"
                 },
                 "merchant_id": {
+                  "description": "商户ID",
                   "type": "string"
                 },
                 "order_success_token": {
+                  "description": "支付成功凭证token",
                   "type": "string"
                 },
                 "out_order_no": {
+                  "description": "商户订单号",
                   "type": "string"
                 },
                 "pay_time": {
+                  "description": "支付完成时间",
                   "type": "string"
                 },
                 "result_code": {
+                  "description": "处理结果码: 0成功 非0失败",
                   "type": "integer"
                 },
                 "transaction_id": {
+                  "description": "交易流水号",
                   "type": "string"
                 },
                 "user_id": {
+                  "description": "用户ID",
                   "type": "string"
                 }
               }
@@ -535,6 +601,7 @@
               "type": "object",
               "properties": {
                 "transaction_id": {
+                  "description": "交易流水号",
                   "type": "string"
                 }
               }
@@ -548,21 +615,27 @@
               "type": "object",
               "properties": {
                 "amount": {
+                  "description": "交易金额, 单位分",
                   "type": "integer"
                 },
                 "buyer_user_id": {
+                  "description": "付款方用户ID",
                   "type": "string"
                 },
                 "desc": {
+                  "description": "交易备注/描述",
                   "type": "string"
                 },
                 "pay_time": {
+                  "description": "支付时间",
                   "type": "string"
                 },
                 "seller_user_id": {
+                  "description": "收款方用户ID",
                   "type": "string"
                 },
                 "transaction_id": {
+                  "description": "交易流水号",
                   "type": "string"
                 }
               }
@@ -593,6 +666,7 @@
               "type": "object",
               "properties": {
                 "transaction_id": {
+                  "description": "交易流水号",
                   "type": "string"
                 }
               }
@@ -606,27 +680,35 @@
               "type": "object",
               "properties": {
                 "amount": {
+                  "description": "订单金额, 单位分",
                   "type": "integer"
                 },
                 "merchant_id": {
+                  "description": "商户ID",
                   "type": "string"
                 },
                 "merchant_name": {
+                  "description": "商户名称",
                   "type": "string"
                 },
                 "out_order_no": {
+                  "description": "商户订单号",
                   "type": "string"
                 },
                 "pay_time": {
+                  "description": "支付完成时间",
                   "type": "string"
                 },
                 "trade_state": {
+                  "description": "交易状态: 如待支付/成功/关闭/退款",
                   "type": "integer"
                 },
                 "transaction_id": {
+                  "description": "交易流水号",
                   "type": "string"
                 },
                 "user_id": {
+                  "description": "用户ID",
                   "type": "string"
                 }
               }
@@ -657,6 +739,7 @@
               "type": "object",
               "properties": {
                 "user_id": {
+                  "description": "用户ID",
                   "type": "string"
                 }
               }
@@ -670,12 +753,15 @@
               "type": "object",
               "properties": {
                 "balance": {
+                  "description": "账户余额, 单位分",
                   "type": "integer"
                 },
                 "cur_type": {
+                  "description": "币种: 1人民币",
                   "type": "integer"
                 },
                 "user_id": {
+                  "description": "用户ID",
                   "type": "string"
                 }
               }
@@ -706,12 +792,15 @@
               "type": "object",
               "properties": {
                 "limit": {
+                  "description": "单页返回条数",
                   "type": "integer"
                 },
                 "offset": {
+                  "description": "分页偏移量(从0开始)",
                   "type": "integer"
                 },
                 "user_id": {
+                  "description": "用户ID",
                   "type": "string"
                 }
               }
@@ -725,6 +814,7 @@
               "type": "object",
               "properties": {
                 "UserFlowList": {
+                  "description": "流水列表",
                   "type": "array",
                   "items": {
                     "type": "object",
@@ -741,42 +831,54 @@
                     ],
                     "properties": {
                       "amount": {
+                        "description": "交易金额, 单位分",
                         "type": "integer"
                       },
                       "balance": {
+                        "description": "交易后余额, 单位分",
                         "type": "integer"
                       },
                       "biz_type": {
+                        "description": "业务类型: 如转账/充值/提现/消费",
                         "type": "integer"
                       },
                       "counterparty_user_id": {
+                        "description": "交易对手方用户ID",
                         "type": "string"
                       },
                       "create_time": {
+                        "description": "交易时间",
                         "type": "string"
                       },
                       "desc": {
+                        "description": "交易备注/描述",
                         "type": "string"
                       },
                       "inout_type": {
+                        "description": "收支类型: 1收入 2支出",
                         "type": "integer"
                       },
                       "transaction_id": {
+                        "description": "交易流水号",
                         "type": "string"
                       },
                       "user_id": {
+                        "description": "用户ID",
                         "type": "string"
                       }
                     }
                   }
                 },
                 "end_flag": {
+                  "description": "是否到末页: 0否 1是",
                   "type": "integer"
                 },
                 "next_offset": {
+                  "description": "下一页偏移量",
                   "type": "integer"
                 },
                 "user_id": {
+                  "description": "用户ID",
                   "type": "string"
                 }
               }
@@ -807,6 +909,7 @@
               "type": "object",
               "properties": {
                 "user_id": {
+                  "description": "用户ID",
                   "type": "string"
                 }
               }
@@ -820,30 +923,39 @@
               "type": "object",
               "properties": {
                 "address": {
+                  "description": "联系地址",
                   "type": "string"
                 },
                 "age": {
+                  "description": "年龄",
                   "type": "integer"
                 },
                 "email": {
+                  "description": "邮箱",
                   "type": "string"
                 },
                 "gender": {
+                  "description": "性别: 0未知 1男 2女",
                   "type": "integer"
                 },
                 "id_card": {
+                  "description": "证件号码",
                   "type": "string"
                 },
                 "id_type": {
+                  "description": "证件类型: 1身份证 2护照 3港澳台通行证",
                   "type": "integer"
                 },
                 "name": {
+                  "description": "用户姓名",
                   "type": "string"
                 },
                 "phone": {
+                  "description": "手机号",
                   "type": "string"
                 },
                 "user_id": {
+                  "description": "用户ID",
                   "type": "string"
                 }
               }
@@ -874,12 +986,15 @@
               "type": "object",
               "properties": {
                 "business_info": {
+                  "description": "业务信息(申请token的业务上下文)",
                   "type": "string"
                 },
                 "password": {
+                  "description": "支付密码",
                   "type": "string"
                 },
                 "user_id": {
+                  "description": "用户ID",
                   "type": "string"
                 }
               }
@@ -893,9 +1008,11 @@
               "type": "object",
               "properties": {
                 "user_id": {
+                  "description": "用户ID",
                   "type": "string"
                 },
                 "user_token": {
+                  "description": "用户支付token(后续免密支付凭证)",
                   "type": "string"
                 }
               }
@@ -946,9 +1063,11 @@
               "type": "object",
               "properties": {
                 "merchant_id": {
+                  "description": "商户ID",
                   "type": "string"
                 },
                 "user_id": {
+                  "description": "用户ID",
                   "type": "string"
                 }
               }
@@ -962,9 +1081,11 @@
               "type": "object",
               "properties": {
                 "transaction_id": {
+                  "description": "预交易生成的交易流水号",
                   "type": "string"
                 },
                 "user_id": {
+                  "description": "用户ID",
                   "type": "string"
                 }
               }
@@ -995,33 +1116,43 @@
               "type": "object",
               "properties": {
                 "address": {
+                  "description": "联系地址",
                   "type": "string"
                 },
                 "age": {
+                  "description": "年龄",
                   "type": "integer"
                 },
                 "email": {
+                  "description": "邮箱",
                   "type": "string"
                 },
                 "gender": {
+                  "description": "性别: 0未知 1男 2女",
                   "type": "integer"
                 },
                 "id_card": {
+                  "description": "证件号码",
                   "type": "string"
                 },
                 "id_type": {
+                  "description": "证件类型: 1身份证 2护照 3港澳台通行证",
                   "type": "integer"
                 },
                 "name": {
+                  "description": "用户姓名",
                   "type": "string"
                 },
                 "password": {
+                  "description": "支付密码",
                   "type": "string"
                 },
                 "phone": {
+                  "description": "手机号",
                   "type": "string"
                 },
                 "user_id": {
+                  "description": "用户ID",
                   "type": "string"
                 }
               }
@@ -1035,6 +1166,7 @@
               "type": "object",
               "properties": {
                 "user_id": {
+                  "description": "注册成功后的用户ID",
                   "type": "string"
                 }
               }
@@ -1065,30 +1197,39 @@
               "type": "object",
               "properties": {
                 "address": {
+                  "description": "联系地址",
                   "type": "string"
                 },
                 "age": {
+                  "description": "年龄",
                   "type": "integer"
                 },
                 "email": {
+                  "description": "邮箱",
                   "type": "string"
                 },
                 "gender": {
+                  "description": "性别: 0未知 1男 2女",
                   "type": "integer"
                 },
                 "id_card": {
+                  "description": "证件号码",
                   "type": "string"
                 },
                 "id_type": {
+                  "description": "证件类型: 1身份证 2护照 3港澳台通行证",
                   "type": "integer"
                 },
                 "name": {
+                  "description": "用户姓名",
                   "type": "string"
                 },
                 "phone": {
+                  "description": "手机号",
                   "type": "string"
                 },
                 "user_id": {
+                  "description": "用户ID",
                   "type": "string"
                 }
               }
@@ -1102,6 +1243,7 @@
               "type": "object",
               "properties": {
                 "user_id": {
+                  "description": "用户ID",
                   "type": "string"
                 }
               }
@@ -1111,7 +1253,7 @@
       }
     }
   },
-  "x-date": "2026-08-05 00:26:32",
+  "x-date": "2026-08-05 00:30:39",
   "x-description": "This is a goctl generated swagger file.",
   "x-github": "https://github.com/zeromicro/go-zero",
   "x-go-zero-doc": "https://go-zero.dev/",
