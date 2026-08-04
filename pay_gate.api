@@ -115,7 +115,7 @@ type (
 		TransactionId string `json:"transaction_id"`
 	}
 	C2CTransferDoReq {
-		TransactionId string `json:"transaction_id,optional"`
+		TransactionId string `json:"transaction_id,optional"` // 交易单号
 		BuyerUserId   string `json:"buyer_user_id,optional"`
 		SellerUserId  string `json:"seller_user_id,optional"`
 		Amount        int64  `json:"amount,optional"`
@@ -245,8 +245,8 @@ service pay_gate {
 }
 
 @server (
-	group:  pay_gate
-	prefix: /api/pay_gate
+	group:      pay_gate
+	prefix:     /api/pay_gate
 	middleware: AuthInterceptor
 )
 service pay_gate {

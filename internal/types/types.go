@@ -74,7 +74,7 @@ type C2BankPreRsp struct {
 }
 
 type C2CTransferDoReq struct {
-	TransactionId string `json:"transaction_id,optional"`
+	TransactionId string `json:"transaction_id,optional"` // 交易单号
 	BuyerUserId   string `json:"buyer_user_id,optional"`
 	SellerUserId  string `json:"seller_user_id,optional"`
 	Amount        int64  `json:"amount,optional"`
