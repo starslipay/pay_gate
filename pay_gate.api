@@ -15,85 +15,85 @@ type (
 	HealthReq  {}
 	HealthRsp  {}
 	UpdateUserInfoReq {
-		UserId  string `json:"user_id,optional"`  // 用户ID
-		Name    string `json:"name,optional"`     // 用户姓名
-		Gender  int32  `json:"gender,optional"`   // 性别: 1男 2女
-		Age     int32  `json:"age,optional"`      // 年龄
-		Address string `json:"address,optional"`  // 地址
-		Phone   string `json:"phone,optional"`    // 手机号
-		Email   string `json:"email,optional"`    // 邮箱
-		IdType  int32  `json:"id_type,optional"`  // 证件类型: 1身份证
-		IdCard  string `json:"id_card,optional"`  // 证件号码
+		UserId  string `json:"user_id,optional"` // 用户ID
+		Name    string `json:"name,optional"` // 用户姓名
+		Gender  int32  `json:"gender,optional"` // 性别: 1男 2女
+		Age     int32  `json:"age,optional"` // 年龄
+		Address string `json:"address,optional"` // 地址
+		Phone   string `json:"phone,optional"` // 手机号
+		Email   string `json:"email,optional"` // 邮箱
+		IdType  int32  `json:"id_type,optional"` // 证件类型: 1身份证
+		IdCard  string `json:"id_card,optional"` // 证件号码
 	}
 	UpdateUserInfoRsp {
-		UserId string `json:"user_id"`  // 用户ID
+		UserId string `json:"user_id"` // 用户ID
 	}
 	RegUserReq {
-		UserId   string `json:"user_id,optional"`   // 用户ID
-		Password string `json:"password,optional"`  // 支付密码
-		Name     string `json:"name,optional"`      // 用户姓名
-		Gender   int32  `json:"gender,optional"`    // 性别: 1男 2女
-		Age      int32  `json:"age,optional"`       // 年龄
-		Address  string `json:"address,optional"`   // 联系地址
-		Phone    string `json:"phone,optional"`     // 手机号
-		Email    string `json:"email,optional"`     // 邮箱
-		IdType   int32  `json:"id_type,optional"`   // 证件类型: 1身份证
-		IdCard   string `json:"id_card,optional"`   // 证件号码
+		UserId   string `json:"user_id,optional"` // 用户ID
+		Password string `json:"password,optional"` // 支付密码
+		Name     string `json:"name,optional"` // 用户姓名
+		Gender   int32  `json:"gender,optional"` // 性别: 1男 2女
+		Age      int32  `json:"age,optional"` // 年龄
+		Address  string `json:"address,optional"` // 联系地址
+		Phone    string `json:"phone,optional"` // 手机号
+		Email    string `json:"email,optional"` // 邮箱
+		IdType   int32  `json:"id_type,optional"` // 证件类型: 1身份证
+		IdCard   string `json:"id_card,optional"` // 证件号码
 	}
 	RegUserRsp {
-		UserId string `json:"user_id"`  // 用户ID
+		UserId string `json:"user_id"` // 用户ID
 	}
 	GetUserInfoReq {
-		UserId string `json:"user_id,optional"`  // 用户ID
+		UserId string `json:"user_id,optional"` // 用户ID
 	}
 	GetUserInfoRsp {
-		UserId  string `json:"user_id"`  // 用户ID
-		Name    string `json:"name"`     // 用户姓名
-		Gender  int32  `json:"gender"`   // 性别: 1男 2女
-		Age     int32  `json:"age"`      // 年龄
-		Address string `json:"address"`  // 联系地址
-		Phone   string `json:"phone"`    // 手机号
-		Email   string `json:"email"`    // 邮箱
-		IdType  int32  `json:"id_type"`  // 证件类型: 1身份证
-		IdCard  string `json:"id_card"`  // 证件号码
+		UserId  string `json:"user_id"` // 用户ID
+		Name    string `json:"name"` // 用户姓名
+		Gender  int32  `json:"gender"` // 性别: 1男 2女
+		Age     int32  `json:"age"` // 年龄
+		Address string `json:"address"` // 联系地址
+		Phone   string `json:"phone"` // 手机号
+		Email   string `json:"email"` // 邮箱
+		IdType  int32  `json:"id_type"` // 证件类型: 1身份证
+		IdCard  string `json:"id_card"` // 证件号码
 	}
 	GetUserBalanceInfoReq {
-		UserId string `json:"user_id,optional"`  // 用户ID
+		UserId string `json:"user_id,optional"` // 用户ID
 	}
 	GetUserBalanceInfoRsp {
-		UserId  string `json:"user_id"`  // 用户ID
-		Balance int64  `json:"balance"`  // 账户余额, 单位分
+		UserId  string `json:"user_id"` // 用户ID
+		Balance int64  `json:"balance"` // 账户余额, 单位分
 		CurType int32  `json:"cur_type"` // 币种: 1人民币
 	}
 	GetUserTokenReq {
-		UserId       string `json:"user_id,optional"`       // 用户ID
-		Password     string `json:"password,optional"`      // 支付密码
+		UserId       string `json:"user_id,optional"` // 用户ID
+		Password     string `json:"password,optional"` // 支付密码
 		BusinessInfo string `json:"business_info,optional"` // 业务信息(申请token的业务上下文)
 	}
 	GetUserTokenRsp {
-		UserId    string `json:"user_id"`    // 用户ID
+		UserId    string `json:"user_id"` // 用户ID
 		UserToken string `json:"user_token"` // 用户token(后续登录凭证，时效1小时)
 	}
 	GetUserFlowReq {
 		UserId string `json:"user_id,optional"` // 用户ID
-		Offset int32  `json:"offset,optional"`  // 分页偏移量(从0开始)
-		Limit  int32  `json:"limit,optional"`   // 单页返回条数
+		Offset int32  `json:"offset,optional"` // 分页偏移量(从0开始)
+		Limit  int32  `json:"limit,optional"` // 单页返回条数
 	}
 	UserFlow {
-		TransactionId      string `json:"transaction_id"`       // 交易单号
-		UserId             string `json:"user_id"`              // 用户ID
+		TransactionId      string `json:"transaction_id"` // 交易单号
+		UserId             string `json:"user_id"` // 用户ID
 		CounterpartyUserId string `json:"counterparty_user_id"` // 交易对手方用户ID
-		InoutType          int32  `json:"inout_type"`           // 收支类型: 1收入 2支出
-		BizType            int32  `json:"biz_type"`             // 业务类型: 1充值/2转账/3提现/4支付消费
-		Amount             int64  `json:"amount"`               // 交易金额, 单位分
-		Balance            int64  `json:"balance"`              // 交易后余额, 单位分
-		Desc               string `json:"desc"`                 // 交易备注/描述
-		CreateTime         string `json:"create_time"`          // 交易时间
+		InoutType          int32  `json:"inout_type"` // 收支类型: 1收入 2支出
+		BizType            int32  `json:"biz_type"` // 业务类型: 1充值/2转账/3提现/4支付消费
+		Amount             int64  `json:"amount"` // 交易金额, 单位分
+		Balance            int64  `json:"balance"` // 交易后余额, 单位分
+		Desc               string `json:"desc"` // 交易备注/描述
+		CreateTime         string `json:"create_time"` // 交易时间
 	}
 	GetUserFlowRsp {
-		UserId       string     `json:"user_id"`      // 用户ID
-		NextOffset   int32      `json:"next_offset"`  // 下一页偏移量
-		EndFlag      int32      `json:"end_flag"`     // 是否到末页: 0否 1是
+		UserId       string     `json:"user_id"` // 用户ID
+		NextOffset   int32      `json:"next_offset"` // 下一页偏移量
+		EndFlag      int32      `json:"end_flag"` // 是否到末页: 0否 1是
 		UserFlowList []UserFlow `json:"UserFlowList"` // 流水列表
 	}
 	GetC2CBillReq {
@@ -101,100 +101,100 @@ type (
 	}
 	GetC2CBillRsp {
 		TransactionId string `json:"transaction_id"` // 交易单号
-		BuyerUserId   string `json:"buyer_user_id"`  // 付款方用户ID
+		BuyerUserId   string `json:"buyer_user_id"` // 付款方用户ID
 		SellerUserId  string `json:"seller_user_id"` // 收款方用户ID
-		PayTime       string `json:"pay_time"`       // 支付时间
-		Amount        int64  `json:"amount"`         // 交易金额, 单位分
-		Desc          string `json:"desc"`           // 交易备注/描述
+		PayTime       string `json:"pay_time"` // 支付时间
+		Amount        int64  `json:"amount"` // 交易金额, 单位分
+		Desc          string `json:"desc"` // 交易备注/描述
 	}
 	C2CTransferPreReq {
 		BuyerUserId string `json:"buyer_user_id,optional"` // 付款方用户ID
 	}
 	C2CTransferPreRsp {
-		BuyerUserId   string `json:"buyer_user_id"`  // 付款方用户ID
+		BuyerUserId   string `json:"buyer_user_id"` // 付款方用户ID
 		TransactionId string `json:"transaction_id"` // 预交易生成的交易单号
 	}
 	C2CTransferDoReq {
 		TransactionId string `json:"transaction_id,optional"` // 交易单号(由预交易接口返回)
-		BuyerUserId   string `json:"buyer_user_id,optional"`  // 付款方用户ID
+		BuyerUserId   string `json:"buyer_user_id,optional"` // 付款方用户ID
 		SellerUserId  string `json:"seller_user_id,optional"` // 收款方用户ID
-		Amount        int64  `json:"amount,optional"`         // 转账金额, 单位分
-		VerifyType    int32  `json:"verify_type,optional"`    // 验证方式: 1密码
-		Password      string `json:"password,optional"`       // 支付密码
-		Version       int32  `json:"version,optional"`        // 版本控制
+		Amount        int64  `json:"amount,optional"` // 转账金额, 单位分
+		VerifyType    int32  `json:"verify_type,optional"` // 验证方式: 1密码
+		Password      string `json:"password,optional"` // 支付密码
+		Version       int32  `json:"version,optional"` // 版本控制
 	}
 	C2CTransferDoRsp {
 		TransactionId string `json:"transaction_id"` // 交易单号
-		BuyerUserId   string `json:"buyer_user_id"`  // 付款方用户ID
+		BuyerUserId   string `json:"buyer_user_id"` // 付款方用户ID
 		SellerUserId  string `json:"seller_user_id"` // 收款方用户ID
-		IsRepeat      int32  `json:"is_repeat"`      // 成功且重入: 0否 1是(幂等命中)
+		IsRepeat      int32  `json:"is_repeat"` // 成功且重入: 0否 1是(幂等命中)
 	}
 	Bank2CPreReq {
 		UserId string `json:"user_id,optional"` // 用户ID
 	}
 	Bank2CPreRsp {
-		UserId        string `json:"user_id"`        // 用户ID
+		UserId        string `json:"user_id"` // 用户ID
 		TransactionId string `json:"transaction_id"` // 预交易生成的交易单号
 	}
 	Bank2CDoReq {
 		TransactionId string `json:"transaction_id,optional"` // 交易单号(由预交易接口返回)
-		UserId        string `json:"user_id,optional"`        // 用户ID
-		BankType      int32  `json:"bank_type,optional"`      // 银行类型/银行编码
-		Amount        int64  `json:"amount,optional"`         // 充值金额, 单位分
-		Desc          string `json:"desc,optional"`           // 交易备注/描述
-		VerifyType    int32  `json:"verify_type,optional"`    // 验证方式: 1密码
-		Password      string `json:"password,optional"`       // 支付密码
+		UserId        string `json:"user_id,optional"` // 用户ID
+		BankType      int32  `json:"bank_type,optional"` // 银行类型/银行编码
+		Amount        int64  `json:"amount,optional"` // 充值金额, 单位分
+		Desc          string `json:"desc,optional"` // 交易备注/描述
+		VerifyType    int32  `json:"verify_type,optional"` // 验证方式: 1密码
+		Password      string `json:"password,optional"` // 支付密码
 	}
 	Bank2CDoRsp {
 		TransactionId string `json:"transaction_id"` // 交易单号
-		UserId        string `json:"user_id"`        // 用户ID
-		IsRepeat      int32  `json:"is_repeat"`      // 是否成功且重入: 0否 1是(幂等命中)
+		UserId        string `json:"user_id"` // 用户ID
+		IsRepeat      int32  `json:"is_repeat"` // 是否成功且重入: 0否 1是(幂等命中)
 	}
 	C2BankPreReq {
 		UserId string `json:"user_id,optional"` // 用户ID
 	}
 	C2BankPreRsp {
-		UserId        string `json:"user_id"`        // 用户ID
+		UserId        string `json:"user_id"` // 用户ID
 		TransactionId string `json:"transaction_id"` // 预交易生成的交易单号
 	}
 	C2BankDoReq {
 		TransactionId string `json:"transaction_id,optional"` // 交易单号(由预交易接口返回)
-		UserId        string `json:"user_id,optional"`        // 用户ID
-		BankType      int32  `json:"bank_type,optional"`      // 银行类型/银行编码
-		Amount        int64  `json:"amount,optional"`         // 提现金额, 单位分
-		Desc          string `json:"desc,optional"`           // 交易备注/描述
-		VerifyType    int32  `json:"verify_type,optional"`    // 验证方式: 1密码
-		Password      string `json:"password,optional"`       // 支付密码
+		UserId        string `json:"user_id,optional"` // 用户ID
+		BankType      int32  `json:"bank_type,optional"` // 银行类型/银行编码
+		Amount        int64  `json:"amount,optional"` // 提现金额, 单位分
+		Desc          string `json:"desc,optional"` // 交易备注/描述
+		VerifyType    int32  `json:"verify_type,optional"` // 验证方式: 1密码
+		Password      string `json:"password,optional"` // 支付密码
 	}
 	C2BankDoRsp {
 		TransactionId string `json:"transaction_id"` // 交易单号
-		UserId        string `json:"user_id"`        // 用户ID
-		IsRepeat      int32  `json:"is_repeat"`      // 成功且重入: 0否 1是(幂等命中)
+		UserId        string `json:"user_id"` // 用户ID
+		IsRepeat      int32  `json:"is_repeat"` // 成功且重入: 0否 1是(幂等命中)
 	}
 	PayPreReq {
-		UserId     string `json:"user_id,optional"`     // 用户ID
+		UserId     string `json:"user_id,optional"` // 用户ID
 		MerchantId string `json:"merchant_id,optional"` // 商户ID
 	}
 	PayPreRsp {
-		UserId        string `json:"user_id"`        // 用户ID
+		UserId        string `json:"user_id"` // 用户ID
 		TransactionId string `json:"transaction_id"` // 预交易生成的交易单号
 	}
 	BanPayReq {
 		TransactionId string `json:"transaction_id,optional"` // 交易单号(由预交易接口返回)
-		OutOrderNo    string `json:"out_order_no,optional"`   // 商户订单号
-		MerchantId    string `json:"merchant_id,optional"`    // 商户ID
-		UserId        string `json:"user_id,optional"`        // 用户ID
-		Amount        int64  `json:"amount,optional"`         // 支付金额, 单位分
-		VerifyType    int32  `json:"verify_type,optional"`    // 验证方式: 1密码
-		Password      string `json:"password,optional"`       // 支付密码
+		OutOrderNo    string `json:"out_order_no,optional"` // 商户订单号
+		MerchantId    string `json:"merchant_id,optional"` // 商户ID
+		UserId        string `json:"user_id,optional"` // 用户ID
+		Amount        int64  `json:"amount,optional"` // 支付金额, 单位分
+		VerifyType    int32  `json:"verify_type,optional"` // 验证方式: 1密码
+		Password      string `json:"password,optional"` // 支付密码
 	}
 	BanPayRsp {
-		TransactionId     string `json:"transaction_id"`      // 交易单号
-		OutOrderNo        string `json:"out_order_no"`        // 商户订单号
-		MerchantId        string `json:"merchant_id"`         // 商户ID
-		UserId            string `json:"user_id"`             // 用户ID
-		Amount            int64  `json:"amount"`              // 支付金额, 单位分
-		PayTime           string `json:"pay_time"`            // 支付完成时间
+		TransactionId     string `json:"transaction_id"` // 交易单号
+		OutOrderNo        string `json:"out_order_no"` // 商户订单号
+		MerchantId        string `json:"merchant_id"` // 商户ID
+		UserId            string `json:"user_id"` // 用户ID
+		Amount            int64  `json:"amount"` // 支付金额, 单位分
+		PayTime           string `json:"pay_time"` // 支付完成时间
 		OrderSuccessToken string `json:"order_success_token"` // 支付成功凭证token
 	}
 	GetOrderInfoReq {
@@ -202,29 +202,29 @@ type (
 	}
 	GetOrderInfoRsp {
 		TransactionId string `json:"transaction_id"` // 交易单号
-		OutOrderNo    string `json:"out_order_no"`   // 商户订单号
-		MerchantId    string `json:"merchant_id"`    // 商户ID
-		MerchantName  string `json:"merchant_name"`  // 商户名称
-		UserId        string `json:"user_id"`        // 用户ID
-		Amount        int64  `json:"amount"`         // 订单金额, 单位分
-		PayTime       string `json:"pay_time"`       // 支付完成时间
-		TradeState    int32  `json:"trade_state"`    // 交易状态: 如待支付/成功/关闭/退款
+		OutOrderNo    string `json:"out_order_no"` // 商户订单号
+		MerchantId    string `json:"merchant_id"` // 商户ID
+		MerchantName  string `json:"merchant_name"` // 商户名称
+		UserId        string `json:"user_id"` // 用户ID
+		Amount        int64  `json:"amount"` // 订单金额, 单位分
+		PayTime       string `json:"pay_time"` // 支付完成时间
+		TradeState    int32  `json:"trade_state"` // 交易状态: 如待支付/成功/关闭/退款
 	}
 	CloseOrSupplyOrderReq {
 		TransactionId string `json:"transaction_id,optional"` // 交易单号
-		OutOrderNo    string `json:"out_order_no,optional"`   // 商户订单号
-		MerchantId    string `json:"merchant_id,optional"`    // 商户ID
-		UserId        string `json:"user_id,optional"`        // 用户ID
-		Amount        int64  `json:"amount,optional"`         // 订单金额, 单位分
+		OutOrderNo    string `json:"out_order_no,optional"` // 商户订单号
+		MerchantId    string `json:"merchant_id,optional"` // 商户ID
+		UserId        string `json:"user_id,optional"` // 用户ID
+		Amount        int64  `json:"amount,optional"` // 订单金额, 单位分
 	}
 	CloseOrSupplyOrderRsp {
-		ResultCode        int32  `json:"result_code"`         // 处理结果码: 1订单成功 2订单关闭
-		TransactionId     string `json:"transaction_id"`      // 交易单号
-		OutOrderNo        string `json:"out_order_no"`        // 商户订单号
-		MerchantId        string `json:"merchant_id"`         // 商户ID
-		UserId            string `json:"user_id"`             // 用户ID
-		Amount            int64  `json:"amount"`              // 订单金额, 单位分
-		PayTime           string `json:"pay_time"`            // 支付完成时间
+		ResultCode        int32  `json:"result_code"` // 处理结果码: 1订单成功 2订单关闭
+		TransactionId     string `json:"transaction_id"` // 交易单号
+		OutOrderNo        string `json:"out_order_no"` // 商户订单号
+		MerchantId        string `json:"merchant_id"` // 商户ID
+		UserId            string `json:"user_id"` // 用户ID
+		Amount            int64  `json:"amount"` // 订单金额, 单位分
+		PayTime           string `json:"pay_time"` // 支付完成时间
 		OrderSuccessToken string `json:"order_success_token"` // 支付成功凭证token
 	}
 )
@@ -250,48 +250,63 @@ service pay_gate {
 	middleware: AuthInterceptor
 )
 service pay_gate {
+	// 更新用户信息
 	@handler update_user_info
 	post /update_user_info (UpdateUserInfoReq) returns (UpdateUserInfoRsp)
 
+	// 获取用户信息
 	@handler get_user_info
 	post /get_user_info (GetUserInfoReq) returns (GetUserInfoRsp)
 
+	// 获取余额信息
 	@handler get_user_balance_info
 	post /get_user_balance_info (GetUserBalanceInfoReq) returns (GetUserBalanceInfoRsp)
 
+	// 获取用户流水
 	@handler get_user_flow
 	post /get_user_flow (GetUserFlowReq) returns (GetUserFlowRsp)
 
+	// 获取c2c单据
 	@handler get_c2c_bill
 	post /get_c2c_bill (GetC2CBillReq) returns (GetC2CBillRsp)
 
+	// c2c下单
 	@handler c2c_transfer_pre
 	post /c2c_transfer_pre (C2CTransferPreReq) returns (C2CTransferPreRsp)
 
+	// c2c确认
 	@handler c2c_transfer_do
 	post /c2c_transfer_do (C2CTransferDoReq) returns (C2CTransferDoRsp)
 
+	// 快捷充值下单
 	@handler bank2c_pre
 	post /bank2c_pre (Bank2CPreReq) returns (Bank2CPreRsp)
 
+	// 快捷充值确认
 	@handler bank2c_do
 	post /bank2c_do (Bank2CDoReq) returns (Bank2CDoRsp)
 
+	// 快捷提现下单
 	@handler c2bank_pre
 	post /c2bank_pre (C2BankPreReq) returns (C2BankPreRsp)
 
+	// 快捷提现确认
 	@handler c2bank_do
 	post /c2bank_do (C2BankDoReq) returns (C2BankDoRsp)
 
+	// 支付下单
 	@handler pay_pre
 	post /pay_re (PayPreReq) returns (PayPreRsp)
 
+	// 支付确认
 	@handler ban_pay
 	post /ban_pay (BanPayReq) returns (BanPayRsp)
 
+	// 查询支付订单信息
 	@handler get_order_info
 	post /get_order_info (GetOrderInfoReq) returns (GetOrderInfoRsp)
 
+	// 支付关单或补单
 	@handler close_or_supply_order
 	post /close_or_supply_order (CloseOrSupplyOrderReq) returns (CloseOrSupplyOrderRsp)
 }

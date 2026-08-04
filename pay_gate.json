@@ -53,7 +53,7 @@
                   "type": "string"
                 },
                 "transaction_id": {
-                  "description": "交易流水号(由预交易接口返回)",
+                  "description": "交易单号(由预交易接口返回)",
                   "type": "string"
                 },
                 "user_id": {
@@ -61,7 +61,7 @@
                   "type": "string"
                 },
                 "verify_type": {
-                  "description": "验证方式: 1密码 2短信 3指纹 4人脸",
+                  "description": "验证方式: 1密码",
                   "type": "integer"
                 }
               }
@@ -95,7 +95,7 @@
                   "type": "string"
                 },
                 "transaction_id": {
-                  "description": "交易流水号",
+                  "description": "交易单号",
                   "type": "string"
                 },
                 "user_id": {
@@ -146,7 +146,7 @@
                   "type": "string"
                 },
                 "transaction_id": {
-                  "description": "交易流水号(由预交易接口返回)",
+                  "description": "交易单号(由预交易接口返回)",
                   "type": "string"
                 },
                 "user_id": {
@@ -154,7 +154,7 @@
                   "type": "string"
                 },
                 "verify_type": {
-                  "description": "验证方式: 1密码 2短信 3指纹 4人脸",
+                  "description": "验证方式: 1密码",
                   "type": "integer"
                 }
               }
@@ -168,11 +168,11 @@
               "type": "object",
               "properties": {
                 "is_repeat": {
-                  "description": "是否重复请求: 0否 1是(幂等命中)",
+                  "description": "是否成功且重入: 0否 1是(幂等命中)",
                   "type": "integer"
                 },
                 "transaction_id": {
-                  "description": "交易流水号",
+                  "description": "交易单号",
                   "type": "string"
                 },
                 "user_id": {
@@ -221,7 +221,7 @@
               "type": "object",
               "properties": {
                 "transaction_id": {
-                  "description": "预交易生成的交易流水号",
+                  "description": "预交易生成的交易单号",
                   "type": "string"
                 },
                 "user_id": {
@@ -272,7 +272,7 @@
                   "type": "string"
                 },
                 "transaction_id": {
-                  "description": "交易流水号(由预交易接口返回)",
+                  "description": "交易单号(由预交易接口返回)",
                   "type": "string"
                 },
                 "user_id": {
@@ -280,7 +280,7 @@
                   "type": "string"
                 },
                 "verify_type": {
-                  "description": "验证方式: 1密码 2短信 3指纹 4人脸",
+                  "description": "验证方式: 1密码",
                   "type": "integer"
                 }
               }
@@ -294,11 +294,11 @@
               "type": "object",
               "properties": {
                 "is_repeat": {
-                  "description": "是否重复请求: 0否 1是(幂等命中)",
+                  "description": "成功且重入: 0否 1是(幂等命中)",
                   "type": "integer"
                 },
                 "transaction_id": {
-                  "description": "交易流水号",
+                  "description": "交易单号",
                   "type": "string"
                 },
                 "user_id": {
@@ -347,7 +347,7 @@
               "type": "object",
               "properties": {
                 "transaction_id": {
-                  "description": "预交易生成的交易流水号",
+                  "description": "预交易生成的交易单号",
                   "type": "string"
                 },
                 "user_id": {
@@ -398,15 +398,15 @@
                   "type": "string"
                 },
                 "transaction_id": {
-                  "description": "交易流水号(由预交易接口返回)",
+                  "description": "交易单号(由预交易接口返回)",
                   "type": "string"
                 },
                 "verify_type": {
-                  "description": "验证方式: 1密码 2短信 3指纹 4人脸",
+                  "description": "验证方式: 1密码",
                   "type": "integer"
                 },
                 "version": {
-                  "description": "乐观锁版本号(防重复/并发)",
+                  "description": "版本控制",
                   "type": "integer"
                 }
               }
@@ -424,7 +424,7 @@
                   "type": "string"
                 },
                 "is_repeat": {
-                  "description": "是否重复请求: 0否 1是(幂等命中)",
+                  "description": "成功且重入: 0否 1是(幂等命中)",
                   "type": "integer"
                 },
                 "seller_user_id": {
@@ -432,7 +432,7 @@
                   "type": "string"
                 },
                 "transaction_id": {
-                  "description": "交易流水号",
+                  "description": "交易单号",
                   "type": "string"
                 }
               }
@@ -481,7 +481,7 @@
                   "type": "string"
                 },
                 "transaction_id": {
-                  "description": "预交易生成的交易流水号",
+                  "description": "预交易生成的交易单号",
                   "type": "string"
                 }
               }
@@ -524,7 +524,7 @@
                   "type": "string"
                 },
                 "transaction_id": {
-                  "description": "交易流水号",
+                  "description": "交易单号",
                   "type": "string"
                 },
                 "user_id": {
@@ -562,11 +562,11 @@
                   "type": "string"
                 },
                 "result_code": {
-                  "description": "处理结果码: 0成功 非0失败",
+                  "description": "处理结果码: 1订单成功 2订单关闭",
                   "type": "integer"
                 },
                 "transaction_id": {
-                  "description": "交易流水号",
+                  "description": "交易单号",
                   "type": "string"
                 },
                 "user_id": {
@@ -601,7 +601,7 @@
               "type": "object",
               "properties": {
                 "transaction_id": {
-                  "description": "交易流水号",
+                  "description": "交易单号",
                   "type": "string"
                 }
               }
@@ -635,7 +635,7 @@
                   "type": "string"
                 },
                 "transaction_id": {
-                  "description": "交易流水号",
+                  "description": "交易单号",
                   "type": "string"
                 }
               }
@@ -666,7 +666,7 @@
               "type": "object",
               "properties": {
                 "transaction_id": {
-                  "description": "交易流水号",
+                  "description": "交易单号",
                   "type": "string"
                 }
               }
@@ -704,7 +704,7 @@
                   "type": "integer"
                 },
                 "transaction_id": {
-                  "description": "交易流水号",
+                  "description": "交易单号",
                   "type": "string"
                 },
                 "user_id": {
@@ -839,7 +839,7 @@
                         "type": "integer"
                       },
                       "biz_type": {
-                        "description": "业务类型: 如转账/充值/提现/消费",
+                        "description": "业务类型: 1充值/2转账/3提现/4支付消费",
                         "type": "integer"
                       },
                       "counterparty_user_id": {
@@ -859,7 +859,7 @@
                         "type": "integer"
                       },
                       "transaction_id": {
-                        "description": "交易流水号",
+                        "description": "交易单号",
                         "type": "string"
                       },
                       "user_id": {
@@ -935,7 +935,7 @@
                   "type": "string"
                 },
                 "gender": {
-                  "description": "性别: 0未知 1男 2女",
+                  "description": "性别: 1男 2女",
                   "type": "integer"
                 },
                 "id_card": {
@@ -943,7 +943,7 @@
                   "type": "string"
                 },
                 "id_type": {
-                  "description": "证件类型: 1身份证 2护照 3港澳台通行证",
+                  "description": "证件类型: 1身份证",
                   "type": "integer"
                 },
                 "name": {
@@ -1012,7 +1012,7 @@
                   "type": "string"
                 },
                 "user_token": {
-                  "description": "用户支付token(后续免密支付凭证)",
+                  "description": "用户token(后续登录凭证，时效1小时)",
                   "type": "string"
                 }
               }
@@ -1081,7 +1081,7 @@
               "type": "object",
               "properties": {
                 "transaction_id": {
-                  "description": "预交易生成的交易流水号",
+                  "description": "预交易生成的交易单号",
                   "type": "string"
                 },
                 "user_id": {
@@ -1128,7 +1128,7 @@
                   "type": "string"
                 },
                 "gender": {
-                  "description": "性别: 0未知 1男 2女",
+                  "description": "性别: 1男 2女",
                   "type": "integer"
                 },
                 "id_card": {
@@ -1136,7 +1136,7 @@
                   "type": "string"
                 },
                 "id_type": {
-                  "description": "证件类型: 1身份证 2护照 3港澳台通行证",
+                  "description": "证件类型: 1身份证",
                   "type": "integer"
                 },
                 "name": {
@@ -1166,7 +1166,7 @@
               "type": "object",
               "properties": {
                 "user_id": {
-                  "description": "注册成功后的用户ID",
+                  "description": "用户ID",
                   "type": "string"
                 }
               }
@@ -1197,7 +1197,7 @@
               "type": "object",
               "properties": {
                 "address": {
-                  "description": "联系地址",
+                  "description": "地址",
                   "type": "string"
                 },
                 "age": {
@@ -1209,7 +1209,7 @@
                   "type": "string"
                 },
                 "gender": {
-                  "description": "性别: 0未知 1男 2女",
+                  "description": "性别: 1男 2女",
                   "type": "integer"
                 },
                 "id_card": {
@@ -1217,7 +1217,7 @@
                   "type": "string"
                 },
                 "id_type": {
-                  "description": "证件类型: 1身份证 2护照 3港澳台通行证",
+                  "description": "证件类型: 1身份证",
                   "type": "integer"
                 },
                 "name": {
@@ -1253,7 +1253,7 @@
       }
     }
   },
-  "x-date": "2026-08-05 00:30:39",
+  "x-date": "2026-08-05 00:42:24",
   "x-description": "This is a goctl generated swagger file.",
   "x-github": "https://github.com/zeromicro/go-zero",
   "x-go-zero-doc": "https://go-zero.dev/",
