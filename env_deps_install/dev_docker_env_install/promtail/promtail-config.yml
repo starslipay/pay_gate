@@ -1,0 +1,30 @@
+# Promtail 配置 - 采集 Docker 容器日志
+server:
+  http_listen_port: 9080
+  grpc_listen_port: 0
+
+positions:
+  filename: /tmp/positions.yaml
+
+clients:
+  - url: http://loki:3100/loki/api/v1/push
+
+scrape_configs:
+  # 采集所有 Docker 容器日志
+  - job_name: docker
+    docker_sd_configs:
+      - host: unix:///var/run/docker.sock
+    relabel_configs:
+      # 提取容器名作为标签
+      - source_labels: [__meta_docker_container_name]
+        target_label: container
+        regex: '/(.*)'
+      # 提取日志流类型（stdout/stderr）
+      - source_labels: [__meta_docker_container_log_stream]
+        target_label: stream
+      # 提取 compose 服务名（如果是 compose 启动的）
+      - source_labels: [__meta_docker_container_label_com_docker_compose_service]
+        target_label: compose_service
+      # 提取 compose 项目名（如果是 compose 启动的）
+      - source_labels: [__meta_docker_container_label_com_docker_compose_project]
+        target_label: compose_project

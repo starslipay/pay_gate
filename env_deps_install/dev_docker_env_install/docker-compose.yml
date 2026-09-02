@@ -18,6 +18,8 @@ volumes:
   zk_data:
   prom_data:  # prometheus时序数据持久化
   graf_data:  # grafana面板配置持久化
+  loki_data:  # loki日志数据持久化
+  promtail_data:  # promtail采集位置持久化
 
 services:
   # MySQL 8.0
@@ -141,5 +143,41 @@ services:
       - ./grafana/provisioning:/etc/grafana/provisioning:ro
     depends_on:
       - prometheus
+      - loki
+    networks:
+      - dev_pay_net
+
+  # Loki 日志存储
+  loki:
+    image: grafana/loki:2.9.10
+    container_name: loki
+    restart: always
+    ports:
+      - "3100:3100"  # Loki API
+    environment:
+      TZ: Asia/Shanghai
+    volumes:
+      - ./loki/loki-config.yml:/etc/loki/local-config.yaml:ro
+      - loki_data:/loki
+    command: -config.file=/etc/loki/local-config.yaml
+    networks:
+      - dev_pay_net
+
+  # Promtail 日志采集
+  promtail:
+    image: grafana/promtail:2.9.10
+    container_name: promtail
+    restart: always
+    ports:
+      - "9080:9080"  # Promtail Web UI
+    environment:
+      TZ: Asia/Shanghai
+    volumes:
+      - ./promtail/promtail-config.yml:/etc/promtail/config.yml:ro
+      - promtail_data:/tmp
+      - /var/run/docker.sock:/var/run/docker.sock:ro
+    command: -config.file=/etc/promtail/config.yml
+    depends_on:
+      - loki
     networks:
       - dev_pay_net
