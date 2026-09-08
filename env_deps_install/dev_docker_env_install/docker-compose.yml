@@ -133,7 +133,7 @@ services:
     container_name: grafana
     restart: always
     ports:
-      - "3000:3000"  # 宿主机访问 http://localhost:3000
+      - "31000:3000"  # 宿主机访问 http://localhost:3000
     environment:
       TZ: Asia/Shanghai
       GF_SECURITY_ADMIN_USER: admin
