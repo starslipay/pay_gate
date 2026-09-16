@@ -20,6 +20,7 @@ volumes:
   graf_data:  # grafana面板配置持久化
   loki_data:  # loki日志数据持久化
   promtail_data:  # promtail采集位置持久化
+  tempo_data:  # tempo链路追踪数据持久化
 
 services:
   # MySQL 8.0
@@ -179,5 +180,21 @@ services:
     command: -config.file=/etc/promtail/config.yml
     depends_on:
       - loki
+    networks:
+      - dev_pay_net
+
+  # Tempo 链路追踪
+  tempo:
+    image: grafana/tempo:2.6.0
+    container_name: tempo
+    restart: always
+    command: ["-config.file=/etc/tempo/tempo.yml"]
+    ports:
+      - "3200:3200"  # Tempo API (查询接口)
+      - "4317:4317"  # OTLP gRPC (go-zero 发送 trace)
+      - "4318:4318"  # OTLP HTTP (go-zero 发送 trace)
+    volumes:
+      - ./tempo/tempo.yml:/etc/tempo/tempo.yml:ro
+      - tempo_data:/var/tempo
     networks:
       - dev_pay_net

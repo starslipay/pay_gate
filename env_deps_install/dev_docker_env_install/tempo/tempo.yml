@@ -1,0 +1,33 @@
+# Tempo 配置 - 链路追踪存储后端
+# 接收 OTLP 协议数据，存储到本地文件系统
+server:
+  http_listen_port: 3200
+  log_level: info
+
+# 分发器：接收 OTLP trace 数据
+distributor:
+  receivers:
+    otlp:
+      protocols:
+        grpc:
+          endpoint: 0.0.0.0:4317
+        http:
+          endpoint: 0.0.0.0:4318
+
+# 摄取器：将 trace 数据写入存储
+ingester:
+  max_block_duration: 5m
+
+# 存储：开发环境使用本地文件系统
+storage:
+  trace:
+    backend: local
+    local:
+      path: /var/tempo/traces
+    wal:
+      path: /var/tempo/wal
+
+# 压缩器：定期合并和清理旧数据
+compactor:
+  compaction:
+    block_retention: 48h

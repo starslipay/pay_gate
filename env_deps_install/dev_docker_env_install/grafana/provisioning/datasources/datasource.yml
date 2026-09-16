@@ -19,3 +19,33 @@ datasources:
     editable: true
     jsonData:
       maxLines: 1000
+      # Loki 日志中的 trace 字段跳转到 Tempo 查看链路详情
+      derivedFields:
+        - name: TraceID
+          datasourceUid: tempo
+          matcherRegex: '"trace":"(\w+)"'
+          url: '$${__value.raw}'
+
+  - name: Tempo
+    type: tempo
+    uid: tempo
+    access: proxy
+    # 在同一 docker 网络内通过容器名访问 tempo
+    url: http://tempo:3200
+    editable: true
+    jsonData:
+      # 从 Tempo 链路跳转到 Prometheus 查看服务指标
+      tracesToMetrics:
+        datasourceUid: prometheus
+        tags:
+          - key: service.name
+            value: service
+      # 从 Tempo 链路跳转到 Loki 查看服务日志
+      tracesToLogs:
+        datasourceUid: loki
+        tags:
+          - key: service.name
+            value: service
+      # 服务图谱数据源（展示模块调用关系）
+      serviceMap:
+        datasourceUid: prometheus
