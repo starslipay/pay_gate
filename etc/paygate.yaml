@@ -88,6 +88,6 @@ Prometheus:
 # 链路追踪：go-zero 通过 OTLP 协议发送 trace 到 Tempo
 Telemetry:
   Name: pay_gate           # 服务名，在 Grafana 中标识来源服务
-  Endpoint: http://tempo:4318  # Tempo OTLP HTTP 接收地址
+  Endpoint: tempo:4318  # Tempo OTLP HTTP 接收地址（不要带 http:// 前缀，go-zero 会自动添加）
   Batcher: otlphttp            # 使用 OTLP 协议
   Sampler: 1.0             # 采样率 1.0 = 全量采样
