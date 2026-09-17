@@ -34,7 +34,7 @@ func (l *C2bank_doLogic) C2bank_do(req *types.C2BankDoReq) (resp *types.C2BankDo
 		UserId:        req.UserId,
 		BankType:      req.BankType,
 		Amount:        req.Amount,
-		Desc:          req.Desc,
+		Memo:          req.Memo,
 		VerifyType:    req.VerifyType,
 		Password:      req.Password,
 	})

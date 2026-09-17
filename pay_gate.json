@@ -138,7 +138,7 @@
                   "type": "integer"
                 },
                 "desc": {
-                  "description": "交易备注/描述",
+                  "description": "交易备注",
                   "type": "string"
                 },
                 "password": {
@@ -263,8 +263,8 @@
                   "description": "银行类型/银行编码",
                   "type": "integer"
                 },
-                "desc": {
-                  "description": "交易备注/描述",
+                "memo": {
+                  "description": "交易备注",
                   "type": "string"
                 },
                 "password": {
@@ -387,6 +387,10 @@
                 },
                 "buyer_user_id": {
                   "description": "付款方用户ID",
+                  "type": "string"
+                },
+                "memo": {
+                  "description": "备注",
                   "type": "string"
                 },
                 "password": {
@@ -623,7 +627,11 @@
                   "type": "string"
                 },
                 "desc": {
-                  "description": "交易备注/描述",
+                  "description": "交易描述",
+                  "type": "string"
+                },
+                "memo": {
+                  "description": "交易备注",
                   "type": "string"
                 },
                 "pay_time": {
@@ -827,6 +835,7 @@
                       "amount",
                       "balance",
                       "desc",
+                      "memo",
                       "create_time"
                     ],
                     "properties": {
@@ -851,12 +860,16 @@
                         "type": "string"
                       },
                       "desc": {
-                        "description": "交易备注/描述",
+                        "description": "交易描述",
                         "type": "string"
                       },
                       "inout_type": {
                         "description": "收支类型: 1收入 2支出",
                         "type": "integer"
+                      },
+                      "memo": {
+                        "description": "交易备注",
+                        "type": "string"
                       },
                       "transaction_id": {
                         "description": "交易单号",
@@ -1253,7 +1266,7 @@
       }
     }
   },
-  "x-date": "2026-08-05 00:42:24",
+  "x-date": "2026-09-17 10:43:39",
   "x-description": "This is a goctl generated swagger file.",
   "x-github": "https://github.com/zeromicro/go-zero",
   "x-go-zero-doc": "https://go-zero.dev/",

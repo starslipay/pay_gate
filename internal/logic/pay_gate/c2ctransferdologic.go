@@ -37,6 +37,7 @@ func (l *C2c_transfer_doLogic) C2c_transfer_do(req *types.C2CTransferDoReq) (res
 		VerifyType:    req.VerifyType,
 		Password:      req.Password,
 		Version:       req.Version,
+		Memo:          req.Memo,
 	})
 	if err != nil {
 		return nil, xerr.HandleRPCError(err, "TradeItg.C2CTransferDo")

@@ -28,9 +28,9 @@ type Bank2CDoReq struct {
 	UserId        string `json:"user_id,optional"`        // 用户ID
 	BankType      int32  `json:"bank_type,optional"`      // 银行类型/银行编码
 	Amount        int64  `json:"amount,optional"`         // 充值金额, 单位分
-	Desc          string `json:"desc,optional"`           // 交易备注/描述
 	VerifyType    int32  `json:"verify_type,optional"`    // 验证方式: 1密码
 	Password      string `json:"password,optional"`       // 支付密码
+	Memo          string `json:"desc,optional"`           // 交易备注
 }
 
 type Bank2CDoRsp struct {
@@ -53,9 +53,9 @@ type C2BankDoReq struct {
 	UserId        string `json:"user_id,optional"`        // 用户ID
 	BankType      int32  `json:"bank_type,optional"`      // 银行类型/银行编码
 	Amount        int64  `json:"amount,optional"`         // 提现金额, 单位分
-	Desc          string `json:"desc,optional"`           // 交易备注/描述
 	VerifyType    int32  `json:"verify_type,optional"`    // 验证方式: 1密码
 	Password      string `json:"password,optional"`       // 支付密码
+	Memo          string `json:"memo,optional"`           // 交易备注
 }
 
 type C2BankDoRsp struct {
@@ -81,6 +81,7 @@ type C2CTransferDoReq struct {
 	VerifyType    int32  `json:"verify_type,optional"`    // 验证方式: 1密码
 	Password      string `json:"password,optional"`       // 支付密码
 	Version       int32  `json:"version,optional"`        // 版本控制
+	Memo          string `json:"memo,optional"`           // 备注
 }
 
 type C2CTransferDoRsp struct {
@@ -128,7 +129,8 @@ type GetC2CBillRsp struct {
 	SellerUserId  string `json:"seller_user_id"` // 收款方用户ID
 	PayTime       string `json:"pay_time"`       // 支付时间
 	Amount        int64  `json:"amount"`         // 交易金额, 单位分
-	Desc          string `json:"desc"`           // 交易备注/描述
+	Desc          string `json:"desc"`           // 交易描述
+	Memo          string `json:"memo"`           // 交易备注
 }
 
 type GetOrderInfoReq struct {
@@ -253,6 +255,7 @@ type UserFlow struct {
 	BizType            int32  `json:"biz_type"`             // 业务类型: 1充值/2转账/3提现/4支付消费
 	Amount             int64  `json:"amount"`               // 交易金额, 单位分
 	Balance            int64  `json:"balance"`              // 交易后余额, 单位分
-	Desc               string `json:"desc"`                 // 交易备注/描述
+	Desc               string `json:"desc"`                 // 交易描述
+	Memo               string `json:"memo"`                 // 交易备注
 	CreateTime         string `json:"create_time"`          // 交易时间
 }

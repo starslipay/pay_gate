@@ -140,6 +140,8 @@ github.com/starslipay/account_mgr v1.0.7 h1:QhDMy4hY0tGObktnP6rAzmRz/mAF6FUEmvwW
 github.com/starslipay/account_mgr v1.0.7/go.mod h1:lh/dYd3haVkRse8BJ5mJV+RIxXSsaQPJYHVKtGUGlnc=
 github.com/starslipay/account_mgr v1.1.1 h1:1tCi5fmENPMBqizKFEVdarB7hUjBBhilSqMWjCmHjjk=
 github.com/starslipay/account_mgr v1.1.1/go.mod h1:KaWJzNLnDVh+aymOt9XkRBxfEJJPgS0ofQC4/r+fdkg=
+github.com/starslipay/account_mgr v1.1.5 h1:9CIzKrRKobPPOzYdXif0Iqq3QOjcw3GW0dKdJ/tkIR4=
+github.com/starslipay/account_mgr v1.1.5/go.mod h1:OXnmEHr8+5pF2uJowykpgHA/rgzVldnTrr/UtXlyY70=
 github.com/starslipay/order_mgr v1.0.1 h1:JuKBfFsG+IsF75AjalwH7+7FV5mAr1TmYI3ZMby/PYw=
 github.com/starslipay/order_mgr v1.0.1/go.mod h1:VC3G3I5+O7xKr0GuKeLsIkVihrW3Sq8F4O4Bb0RfU5M=
 github.com/starslipay/order_mgr v1.0.2 h1:s2b97JNMspeUjgjlymwBHicVN7RLl4BJaS703qBXWeg=
@@ -158,6 +160,8 @@ github.com/starslipay/trade_itg v1.0.9 h1:XTQBZXZt6sUrkJ0aurEEn2ogNj5ABgsLRDK89S
 github.com/starslipay/trade_itg v1.0.9/go.mod h1:2pHoTPkPsSD3XxEmluxRvC+2eVZmu+8fAete2Ex0r/A=
 github.com/starslipay/trade_itg v1.1.0 h1:mYCO1ySvl+nZoDffoJXm/no9WpRDiZ6Np2HKxVRUNnU=
 github.com/starslipay/trade_itg v1.1.0/go.mod h1:2pHoTPkPsSD3XxEmluxRvC+2eVZmu+8fAete2Ex0r/A=
+github.com/starslipay/trade_itg v1.1.1 h1:LtMWJW7mK5P6vCAkgLNNY5z3cGJLLB/6IC7aUUVl5D8=
+github.com/starslipay/trade_itg v1.1.1/go.mod h1:gy5JSiOk+d1ZbdiezFAwLIgSpvC9Y6+Bod20nWrk0XU=
 github.com/starslipay/user_mgr v1.0.5 h1:jZyP434iKCwYLDpwksC5/wEi4MA9u3Ayu4eHQMfUnkM=
 github.com/starslipay/user_mgr v1.0.5/go.mod h1:RrynEGjqkCaGUohhRmfYAbwhQMNvFUS8xduYUB1Gzig=
 github.com/starslipay/user_mgr v1.0.6 h1:bTtz1Wktk+r499HOLmK5nAdrErzXKgCsCqtUCIGMdK0=
