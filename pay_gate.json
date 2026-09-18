@@ -137,7 +137,7 @@
                   "description": "银行类型/银行编码",
                   "type": "integer"
                 },
-                "desc": {
+                "memo": {
                   "description": "交易备注",
                   "type": "string"
                 },
@@ -1266,7 +1266,7 @@
       }
     }
   },
-  "x-date": "2026-09-17 10:43:39",
+  "x-date": "2026-09-18 09:23:33",
   "x-description": "This is a goctl generated swagger file.",
   "x-github": "https://github.com/zeromicro/go-zero",
   "x-go-zero-doc": "https://go-zero.dev/",

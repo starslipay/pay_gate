@@ -62,6 +62,7 @@ func (l *Get_user_flowLogic) Get_user_flow(req *types.GetUserFlowReq) (resp *typ
 			Balance:            userFlowTmp.Balance,
 			Amount:             userFlowTmp.Amount,
 			Desc:               userFlowTmp.Desc,
+			Memo:               userFlowTmp.Memo,
 			CreateTime:         userFlowTmp.CreateTime,
 		}
 		resp.UserFlowList = append(resp.UserFlowList, *userFlow)
