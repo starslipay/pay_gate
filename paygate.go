@@ -34,6 +34,12 @@ func main() {
 	server.Use(middleware.MetricMethodMiddleware)
 	// 全局中间件: 接口维度令牌桶限流(基于 Redis, 多网关实例全局共享配额)
 	server.Use(ctx.RateLimiter)
+	// 全局中间件: 请求/响应日志记录(按字段名脱敏)
+	if c.AccessLog.Enable {
+		server.Use(middleware.AccessLogMiddleware(
+			middleware.NewSensitiveFields(c.AccessLog.SensitiveFields),
+		))
+	}
 
 	handler.RegisterHandlers(server, ctx)
 

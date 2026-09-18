@@ -91,3 +91,15 @@ Telemetry:
   Endpoint: tempo:4318  # Tempo OTLP HTTP 接收地址（不要带 http:// 前缀，go-zero 会自动添加）
   Batcher: otlphttp            # 使用 OTLP 协议
   Sampler: 1.0             # 采样率 1.0 = 全量采样
+
+# AccessLog: 请求/响应日志记录(按字段名脱敏)
+AccessLog:
+  Enable: true
+  # SensitiveFields: 需要脱敏的字段名列表(不区分大小写)
+  SensitiveFields:
+    - password
+    - user_token
+    - UserToken
+    - old_password
+    - new_password
+    - pay_password

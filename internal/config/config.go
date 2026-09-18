@@ -21,6 +21,17 @@ type Config struct {
 	Redis redis.RedisConf
 	// RateLimit 接口维度限流配置
 	RateLimit RateLimitConf
+
+	// AccessLog 请求/响应日志脱敏配置
+	AccessLog AccessLogConf
+}
+
+// AccessLogConf 访问日志配置
+type AccessLogConf struct {
+	// Enable 是否开启请求/响应日志, 默认开启
+	Enable bool `json:",default=true"`
+	// SensitiveFields 需要脱敏的字段名列表(不区分大小写)
+	SensitiveFields []string `json:",optional"`
 }
 
 // RateLimitConf 网关限流配置
