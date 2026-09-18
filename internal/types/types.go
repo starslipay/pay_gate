@@ -11,6 +11,7 @@ type BanPayReq struct {
 	Amount        int64  `json:"amount,optional"`         // 支付金额, 单位分
 	VerifyType    int32  `json:"verify_type,optional"`    // 验证方式: 1密码
 	Password      string `json:"password,optional"`       // 支付密码
+	Memo          string `json:"memo,optional"`           // 交易备注
 }
 
 type BanPayRsp struct {

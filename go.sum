@@ -164,6 +164,10 @@ github.com/starslipay/trade_itg v1.1.1 h1:LtMWJW7mK5P6vCAkgLNNY5z3cGJLLB/6IC7aUU
 github.com/starslipay/trade_itg v1.1.1/go.mod h1:gy5JSiOk+d1ZbdiezFAwLIgSpvC9Y6+Bod20nWrk0XU=
 github.com/starslipay/trade_itg v1.1.2 h1:HAvDfJf32XNI4KQAvFuj5gD031jHWKqsugyOMvhZVAU=
 github.com/starslipay/trade_itg v1.1.2/go.mod h1:gy5JSiOk+d1ZbdiezFAwLIgSpvC9Y6+Bod20nWrk0XU=
+github.com/starslipay/trade_itg v1.1.3 h1:bpikmVdxWCj71gHOwGZfYRyEg7/BJq1IyQrAzyKMRXE=
+github.com/starslipay/trade_itg v1.1.3/go.mod h1:gy5JSiOk+d1ZbdiezFAwLIgSpvC9Y6+Bod20nWrk0XU=
+github.com/starslipay/trade_itg v1.1.4 h1:Tlg7kEc+LmYz0MzPRnE+5JrVvrhi0/K5/OKBEz3JZTQ=
+github.com/starslipay/trade_itg v1.1.4/go.mod h1:gy5JSiOk+d1ZbdiezFAwLIgSpvC9Y6+Bod20nWrk0XU=
 github.com/starslipay/user_mgr v1.0.5 h1:jZyP434iKCwYLDpwksC5/wEi4MA9u3Ayu4eHQMfUnkM=
 github.com/starslipay/user_mgr v1.0.5/go.mod h1:RrynEGjqkCaGUohhRmfYAbwhQMNvFUS8xduYUB1Gzig=
 github.com/starslipay/user_mgr v1.0.6 h1:bTtz1Wktk+r499HOLmK5nAdrErzXKgCsCqtUCIGMdK0=

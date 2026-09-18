@@ -37,6 +37,7 @@ func (l *Ban_payLogic) Ban_pay(req *types.BanPayReq) (resp *types.BanPayRsp, err
 		Amount:        req.Amount,
 		VerifyType:    req.VerifyType,
 		Password:      req.Password,
+		Memo:          req.Memo,
 	})
 	if err != nil {
 		return nil, xerr.HandleRPCError(err, "TradeItg.BanPay")

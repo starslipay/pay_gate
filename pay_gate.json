@@ -40,6 +40,10 @@
                   "description": "支付金额, 单位分",
                   "type": "integer"
                 },
+                "memo": {
+                  "description": "交易备注",
+                  "type": "string"
+                },
                 "merchant_id": {
                   "description": "商户ID",
                   "type": "string"
@@ -1266,7 +1270,7 @@
       }
     }
   },
-  "x-date": "2026-09-18 09:23:33",
+  "x-date": "2026-09-18 09:54:15",
   "x-description": "This is a goctl generated swagger file.",
   "x-github": "https://github.com/zeromicro/go-zero",
   "x-go-zero-doc": "https://go-zero.dev/",
