@@ -60,7 +60,7 @@
   "timezone": "browser",
   "title": "Starslipay 全模块监控总览",
   "uid": "starslipay-overview",
-  "version": 2,
+  "version": 9,
   "panels": [
     {
       "type": "row",
@@ -133,18 +133,22 @@
     },
     {
       "type": "timeseries",
-      "title": "$module - 错误码速率 (按 code)",
+      "title": "$module - 请求码速率 (按 code, code=0 为成功)",
+      "description": "展示所有请求码，包括成功请求 code=0 与各类非 0 错误码；不再只过滤 error。",
       "datasource": { "type": "prometheus", "uid": "prometheus" },
       "gridPos": { "h": 7, "w": 8, "x": 0, "y": 8 },
       "fieldConfig": {
         "defaults": { "custom": { "drawStyle": "line", "fillOpacity": 10, "lineWidth": 2 }, "unit": "reqps" },
-        "overrides": []
+        "overrides": [
+          { "matcher": { "id": "byRegexp", "options": ".*code 0$" }, "properties": [ { "id": "color", "value": { "mode": "fixed", "fixedColor": "green" } } ] },
+          { "matcher": { "id": "byRegexp", "options": "^(?!.*code 0$).*$" }, "properties": [ { "id": "color", "value": { "mode": "fixed", "fixedColor": "red" } } ] }
+        ]
       },
       "options": { "legend": { "displayMode": "table", "placement": "bottom", "calcs": ["mean"] }, "tooltip": { "mode": "multi" } },
       "targets": [
         {
           "datasource": { "type": "prometheus", "uid": "prometheus" },
-          "expr": "sum by (method, code) (rate(pay_biz_code_total{result=\"error\", module=~\"$module\", method=~\"$method\"}[1m]))",
+          "expr": "sum by (method, code) (rate(pay_biz_code_total{module=~\"$module\", method=~\"$method\"}[1m]))",
           "legendFormat": "{{method}} - code {{code}}",
           "refId": "A"
         }
@@ -191,6 +195,93 @@
           "expr": "histogram_quantile(0.99, sum by (le, method) (rate(rpc_server_requests_duration_ms_bucket{module=~\"$module\", method=~\"$method\"}[1m])))",
           "legendFormat": "{{method}} p99",
           "refId": "B"
+        }
+      ]
+    },
+    {
+      "type": "row",
+      "title": "延迟明细: 平均耗时 / 最高耗时 (5m 窗口)",
+      "gridPos": { "h": 1, "w": 24, "x": 0, "y": 15 },
+      "collapsed": false,
+      "panels": []
+    },
+    {
+      "type": "timeseries",
+      "title": "$module - HTTP 平均耗时 (ms)",
+      "description": "平均耗时 = 窗口内总耗时增量 / 请求次数增量，即 rate(histogram_sum) / rate(histogram_count)。",
+      "datasource": { "type": "prometheus", "uid": "prometheus" },
+      "gridPos": { "h": 7, "w": 12, "x": 0, "y": 16 },
+      "fieldConfig": {
+        "defaults": { "custom": { "drawStyle": "line", "fillOpacity": 10, "lineWidth": 2 }, "unit": "ms" },
+        "overrides": []
+      },
+      "options": { "legend": { "displayMode": "table", "placement": "bottom", "calcs": ["mean", "max"] }, "tooltip": { "mode": "multi" } },
+      "targets": [
+        {
+          "datasource": { "type": "prometheus", "uid": "prometheus" },
+          "expr": "sum by (path) (rate(http_server_requests_duration_ms_sum{module=~\"$module\"}[5m])) / sum by (path) (rate(http_server_requests_duration_ms_count{module=~\"$module\"}[5m]))",
+          "legendFormat": "{{path}}",
+          "refId": "A"
+        }
+      ]
+    },
+    {
+      "type": "timeseries",
+      "title": "$module - RPC 平均耗时 (ms)",
+      "description": "平均耗时 = 窗口内总耗时增量 / 请求次数增量，即 rate(histogram_sum) / rate(histogram_count)。",
+      "datasource": { "type": "prometheus", "uid": "prometheus" },
+      "gridPos": { "h": 7, "w": 12, "x": 12, "y": 16 },
+      "fieldConfig": {
+        "defaults": { "custom": { "drawStyle": "line", "fillOpacity": 10, "lineWidth": 2 }, "unit": "ms" },
+        "overrides": []
+      },
+      "options": { "legend": { "displayMode": "table", "placement": "bottom", "calcs": ["mean", "max"] }, "tooltip": { "mode": "multi" } },
+      "targets": [
+        {
+          "datasource": { "type": "prometheus", "uid": "prometheus" },
+          "expr": "sum by (method) (rate(rpc_server_requests_duration_ms_sum{module=~\"$module\", method=~\"$method\"}[5m])) / sum by (method) (rate(rpc_server_requests_duration_ms_count{module=~\"$module\", method=~\"$method\"}[5m]))",
+          "legendFormat": "{{method}}",
+          "refId": "A"
+        }
+      ]
+    },
+    {
+      "type": "timeseries",
+      "title": "$module - HTTP 最高耗时 (ms, p100 近似)",
+      "description": "经典 Histogram 不记录真实最大值，此面板用 histogram_quantile(1.0) 取最高非空 bucket 的上界作为最高耗时近似值。",
+      "datasource": { "type": "prometheus", "uid": "prometheus" },
+      "gridPos": { "h": 7, "w": 12, "x": 0, "y": 23 },
+      "fieldConfig": {
+        "defaults": { "custom": { "drawStyle": "line", "fillOpacity": 10, "lineWidth": 2 }, "unit": "ms" },
+        "overrides": []
+      },
+      "options": { "legend": { "displayMode": "table", "placement": "bottom", "calcs": ["mean", "max"] }, "tooltip": { "mode": "multi" } },
+      "targets": [
+        {
+          "datasource": { "type": "prometheus", "uid": "prometheus" },
+          "expr": "histogram_quantile(1.0, sum by (le, path) (rate(http_server_requests_duration_ms_bucket{module=~\"$module\"}[5m])))",
+          "legendFormat": "{{path}}",
+          "refId": "A"
+        }
+      ]
+    },
+    {
+      "type": "timeseries",
+      "title": "$module - RPC 最高耗时 (ms, p100 近似)",
+      "description": "经典 Histogram 不记录真实最大值，此面板用 histogram_quantile(1.0) 取最高非空 bucket 的上界作为最高耗时近似值。",
+      "datasource": { "type": "prometheus", "uid": "prometheus" },
+      "gridPos": { "h": 7, "w": 12, "x": 12, "y": 23 },
+      "fieldConfig": {
+        "defaults": { "custom": { "drawStyle": "line", "fillOpacity": 10, "lineWidth": 2 }, "unit": "ms" },
+        "overrides": []
+      },
+      "options": { "legend": { "displayMode": "table", "placement": "bottom", "calcs": ["mean", "max"] }, "tooltip": { "mode": "multi" } },
+      "targets": [
+        {
+          "datasource": { "type": "prometheus", "uid": "prometheus" },
+          "expr": "histogram_quantile(1.0, sum by (le, method) (rate(rpc_server_requests_duration_ms_bucket{module=~\"$module\", method=~\"$method\"}[5m])))",
+          "legendFormat": "{{method}}",
+          "refId": "A"
         }
       ]
     }
