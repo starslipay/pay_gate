@@ -11,7 +11,9 @@ networks:
 
 # 持久化数据卷
 volumes:
-  mysql_data:
+  mysql_master_data:  # MySQL 主库数据
+  mysql_slave1_data:  # MySQL 从库1数据
+  mysql_slave2_data:  # MySQL 从库2数据
   redis_data:
   etcd_data:
   kafka_data:
@@ -23,22 +25,103 @@ volumes:
   tempo_data:  # tempo链路追踪数据持久化
 
 services:
-  # MySQL 8.0
-  mysql:
+  # MySQL 8.0 主库 (半同步复制 - 主端)
+  mysql-master:
     image: mysql:8.0
-    container_name: mysql8
+    container_name: mysql-master
     restart: always
     ports:
       - "3306:3306"
     environment:
-      TZ: Asia/Shanghai  
+      TZ: Asia/Shanghai
       MYSQL_ROOT_PASSWORD: root123456
       MYSQL_DATABASE: user_db
       MYSQL_USER: starslipay
       MYSQL_PASSWORD: starslipay123456
     volumes:
-      - mysql_data:/var/lib/mysql
-    command: --default-authentication-plugin=mysql_native_password --transaction-isolation=READ-COMMITTED
+      - mysql_master_data:/var/lib/mysql
+      - ./mysql/init/master:/docker-entrypoint-initdb.d:ro
+      - ./mysql/runtime/semi_sync_master.sql:/etc/mysql/semi_sync_init.sql:ro
+    # Windows 下挂载 cnf 文件会因权限过宽被 MySQL 忽略, 故全部用 command 参数
+    # 半同步插件通过 init SQL 的 INSTALL PLUGIN 安装, 变量通过 --init-file 每次启动时设置
+    command: >
+      --default-authentication-plugin=mysql_native_password
+      --transaction-isolation=READ-COMMITTED
+      --server-id=1
+      --log-bin=mysql-bin
+      --binlog-format=ROW
+      --gtid-mode=ON
+      --enforce-gtid-consistency=ON
+      --init-file=/etc/mysql/semi_sync_init.sql
+    healthcheck:
+      test: ["CMD", "mysqladmin", "ping", "-h", "localhost", "-uroot", "-proot123456"]
+      interval: 5s
+      timeout: 3s
+      retries: 30
+      start_period: 30s
+    networks:
+      - dev_pay_net
+
+  # MySQL 8.0 从库1 (半同步复制 - 从端, 只读)
+  mysql-slave1:
+    image: mysql:8.0
+    container_name: mysql-slave1
+    restart: always
+    ports:
+      - "3307:3306"
+    environment:
+      TZ: Asia/Shanghai
+      MYSQL_ROOT_PASSWORD: root123456
+      # 从库不设置 MYSQL_DATABASE/MYSQL_USER, 所有数据通过复制从主库同步
+    volumes:
+      - mysql_slave1_data:/var/lib/mysql
+      - ./mysql/init/slave:/docker-entrypoint-initdb.d:ro
+      - ./mysql/runtime/semi_sync_slave.sql:/etc/mysql/semi_sync_init.sql:ro
+    command: >
+      --default-authentication-plugin=mysql_native_password
+      --transaction-isolation=READ-COMMITTED
+      --server-id=2
+      --log-bin=mysql-bin
+      --binlog-format=ROW
+      --gtid-mode=ON
+      --enforce-gtid-consistency=ON
+      --read-only=1
+      --super-read-only=1
+      --init-file=/etc/mysql/semi_sync_init.sql
+    depends_on:
+      mysql-master:
+        condition: service_healthy
+    networks:
+      - dev_pay_net
+
+  # MySQL 8.0 从库2 (半同步复制 - 从端, 只读)
+  mysql-slave2:
+    image: mysql:8.0
+    container_name: mysql-slave2
+    restart: always
+    ports:
+      - "3308:3306"
+    environment:
+      TZ: Asia/Shanghai
+      MYSQL_ROOT_PASSWORD: root123456
+    volumes:
+      - mysql_slave2_data:/var/lib/mysql
+      - ./mysql/init/slave:/docker-entrypoint-initdb.d:ro
+      - ./mysql/runtime/semi_sync_slave.sql:/etc/mysql/semi_sync_init.sql:ro
+    command: >
+      --default-authentication-plugin=mysql_native_password
+      --transaction-isolation=READ-COMMITTED
+      --server-id=3
+      --log-bin=mysql-bin
+      --binlog-format=ROW
+      --gtid-mode=ON
+      --enforce-gtid-consistency=ON
+      --read-only=1
+      --super-read-only=1
+      --init-file=/etc/mysql/semi_sync_init.sql
+    depends_on:
+      mysql-master:
+        condition: service_healthy
     networks:
       - dev_pay_net
 
