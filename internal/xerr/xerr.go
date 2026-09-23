@@ -18,24 +18,23 @@ func (c *CodeMsg) Error() string {
 }
 
 var (
-	ModuleId        = int64(455901)
-	ModuleErrorBase = ModuleId * 1000
+	ModuleId = int64(455901)
 )
 
 var (
-	CodeErrUnknown        = ModuleErrorBase + 0
-	CodeErrServerInternal = ModuleErrorBase + 1
-	CodeErrCallRpc        = ModuleErrorBase + 2
+	CodeErrUnknown        = int64(455901000)
+	CodeErrServerInternal = int64(455901001)
+	CodeErrCallRpc        = int64(455901002)
 
-	CodeErrParam                                   = ModuleErrorBase + 100
-	CodeErrUserNotExist                            = ModuleErrorBase + 101
-	CodeErrPasswordWrong                           = ModuleErrorBase + 102
-	CodeErrUserAlreadyRegistered                   = ModuleErrorBase + 103
-	CodeErrRelationStateNotRegisteringOrRegistered = ModuleErrorBase + 104
-	CodeErrTokenMissing                            = ModuleErrorBase + 105
-	CodeErrTokenInvalid                            = ModuleErrorBase + 106
-	CodeErrUserIdMissing                           = ModuleErrorBase + 107
-	CodeErrTooManyRequests                         = ModuleErrorBase + 108
+	CodeErrParam                                   = int64(455901100)
+	CodeErrUserNotExist                            = int64(455901101)
+	CodeErrPasswordWrong                           = int64(455901102)
+	CodeErrUserAlreadyRegistered                   = int64(455901103)
+	CodeErrRelationStateNotRegisteringOrRegistered = int64(455901104)
+	CodeErrTokenMissing                            = int64(455901105)
+	CodeErrTokenInvalid                            = int64(455901106)
+	CodeErrUserIdMissing                           = int64(455901107)
+	CodeErrTooManyRequests                         = int64(455901108)
 )
 
 var (
