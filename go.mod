@@ -4,7 +4,7 @@ go 1.25.4
 
 require (
 	github.com/starslipay/account_mgr v1.1.5
-	github.com/starslipay/paycomm v1.0.1
+	github.com/starslipay/paycomm v1.0.2
 	github.com/starslipay/trade_itg v1.1.4
 	github.com/starslipay/user_mgr v1.0.6
 	github.com/stretchr/testify v1.11.1
