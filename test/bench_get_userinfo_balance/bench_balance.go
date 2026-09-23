@@ -19,11 +19,14 @@ import (
 // BaseURL pay_gate 服务地址（Docker 映射端口 30888）
 const BaseURL = "http://localhost:30888"
 
-// Concurrency 并发协程数（通过此变量调整并发压测强度）
-const Concurrency = 500
+// RegUserCount 注册用户数（用户池大小）
+const RegUserCount = 10
 
-// RequestsPerWorker 每个协程发送的请求数
-const RequestsPerWorker = 200
+// Concurrency 并发查询协程数（从用户池中随机选用户发起查询）
+const Concurrency = 1000
+
+// Duration 压测持续时长，时间内一直发起并发查询请求
+const Duration = 10 * time.Second
 
 // Password 注册用户使用的支付密码
 const Password = "123456"
@@ -111,21 +114,24 @@ type userInfo struct {
 }
 
 func main() {
+	maxConn := Concurrency
+	if RegUserCount > Concurrency {
+		maxConn = RegUserCount
+	}
 	client := &http.Client{
 		Timeout: HTTPTimeout,
 		Transport: &http.Transport{
-			MaxIdleConns:        Concurrency + 10,
-			MaxIdleConnsPerHost: Concurrency + 10,
+			MaxIdleConns:        maxConn + 10,
+			MaxIdleConnsPerHost: maxConn + 10,
 			IdleConnTimeout:     30 * time.Second,
 		},
 	}
 
-	// ---------- 第一阶段：注册用户 ----------
-	fmt.Printf("=== 第一阶段: 注册 %d 个用户 ===\n", Concurrency)
-	users := make([]userInfo, Concurrency)
+	// ---------- 第一阶段：注册用户，构建用户池 ----------
+	fmt.Printf("=== 第一阶段: 注册 %d 个用户 ===\n", RegUserCount)
+	users := make([]userInfo, 0, RegUserCount)
 	uidPrefix := time.Now().UnixMilli()
-	for i := 0; i < Concurrency; i++ {
-		// 生成唯一 user_id 和填充所有必填字段
+	for i := 0; i < RegUserCount; i++ {
 		userId := fmt.Sprintf("bench_%d_%d", uidPrefix, i)
 		body := regUserReq{
 			UserId:   userId,
@@ -153,22 +159,18 @@ func main() {
 			fmt.Printf("  注册用户 %d 业务失败: code=%d, msg=%s\n", i, rsp.Code, rsp.Msg)
 			continue
 		}
-		users[i].userId = rsp.Data.UserId
+		users = append(users, userInfo{userId: rsp.Data.UserId})
 	}
-	regCount := 0
-	for _, u := range users {
-		if u.userId != "" {
-			regCount++
-		}
+	fmt.Printf("  注册成功: %d/%d\n\n", len(users), RegUserCount)
+
+	if len(users) == 0 {
+		fmt.Println("没有有效用户，退出压测")
+		return
 	}
-	fmt.Printf("  注册成功: %d/%d\n\n", regCount, Concurrency)
 
 	// ---------- 第二阶段：获取用户 token ----------
-	fmt.Printf("=== 第二阶段: 获取 %d 个用户 token ===\n", regCount)
-	for i := 0; i < Concurrency; i++ {
-		if users[i].userId == "" {
-			continue
-		}
+	fmt.Printf("=== 第二阶段: 获取 %d 个用户 token ===\n", len(users))
+	for i := range users {
 		body := getUserTokenReq{
 			UserId:   users[i].userId,
 			Password: Password,
@@ -195,44 +197,35 @@ func main() {
 			tokenCount++
 		}
 	}
-	fmt.Printf("  获取 token 成功: %d/%d\n\n", tokenCount, regCount)
+	fmt.Printf("  获取 token 成功: %d/%d\n\n", tokenCount, len(users))
 
-	// 过滤出有效用户
-	validUsers := make([]userInfo, 0, Concurrency)
-	for _, u := range users {
-		if u.userId != "" {
-			validUsers = append(validUsers, u)
-		}
-	}
-	if len(validUsers) == 0 {
-		fmt.Println("没有有效用户，退出压测")
-		return
-	}
-
-	// ---------- 第三阶段：并发查询余额 ----------
-	totalRequests := Concurrency * RequestsPerWorker
-	fmt.Printf("=== 第三阶段: 并发压测查询余额 (并发=%d, 每协程请求数=%d, 总请求数=%d) ===\n",
-		Concurrency, RequestsPerWorker, totalRequests)
+	// ---------- 第三阶段：并发查询余额（基于时间窗口） ----------
+	fmt.Printf("=== 第三阶段: 并发压测查询余额 (用户池=%d, 并发=%d, 持续=%s) ===\n",
+		len(users), Concurrency, Duration)
 
 	var (
-		successCnt   int64
-		failCnt      int64
-		totalLatency int64 // 纳秒
-		maxLatency   int64 // 纳秒
-		latencies    = make([]int64, 0, totalRequests)
-		latMu        sync.Mutex
+		successCnt int64
+		failCnt    int64
 	)
 
 	startTime := time.Now()
+	deadline := startTime.Add(Duration)
 	var wg sync.WaitGroup
+
+	// 每个 worker 用本地 slice 收集延迟，避免全局锁竞争
+	localLatencies := make([][]int64, Concurrency)
+	for i := range localLatencies {
+		localLatencies[i] = make([]int64, 0, 1024)
+	}
 
 	for w := 0; w < Concurrency; w++ {
 		wg.Add(1)
 		go func(workerId int) {
 			defer wg.Done()
-			for r := 0; r < RequestsPerWorker; r++ {
-				// 随机选一个有效用户查询
-				u := validUsers[rand.Intn(len(validUsers))]
+			local := localLatencies[workerId]
+			for time.Now().Before(deadline) {
+				// 随机选一个用户查询
+				u := users[rand.Intn(len(users))]
 				body := getUserBalanceReq{UserId: u.userId}
 				headers := map[string]string{}
 				if u.token != "" {
@@ -241,12 +234,11 @@ func main() {
 
 				reqStart := time.Now()
 				respData, _, err := httpPost(client, BaseURL+"/api/pay_gate/get_user_balance_info", body, headers)
-				latency := time.Since(reqStart).Nanoseconds()
+				latency := time.Since(reqStart)
 
 				if err != nil {
 					atomic.AddInt64(&failCnt, 1)
 				} else {
-					// 解析响应判断业务码
 					var rsp getUserBalanceRsp
 					if json.Unmarshal(respData, &rsp) == nil && rsp.Code == 0 {
 						atomic.AddInt64(&successCnt, 1)
@@ -255,41 +247,49 @@ func main() {
 					}
 				}
 
-				atomic.AddInt64(&totalLatency, latency)
-				latMu.Lock()
-				latencies = append(latencies, latency)
-				if latency > atomic.LoadInt64(&maxLatency) {
-					atomic.StoreInt64(&maxLatency, latency)
-				}
-				latMu.Unlock()
+				local = append(local, latency.Nanoseconds())
 			}
+			localLatencies[workerId] = local
 		}(w)
 	}
 
 	wg.Wait()
 	totalTime := time.Since(startTime)
 
+	// 合并各 worker 的本地延迟数据
+	totalReq := atomic.LoadInt64(&successCnt) + atomic.LoadInt64(&failCnt)
+	latencies := make([]int64, 0, totalReq)
+	var totalLatency int64
+	var maxLatency int64
+	for _, local := range localLatencies {
+		latencies = append(latencies, local...)
+		for _, l := range local {
+			totalLatency += l
+			if l > maxLatency {
+				maxLatency = l
+			}
+		}
+	}
+
 	// ---------- 统计结果 ----------
-	total := atomic.LoadInt64(&successCnt) + atomic.LoadInt64(&failCnt)
 	fmt.Printf("\n=== 压测结果 ===\n")
-	fmt.Printf("  总请求数:   %d\n", total)
+	fmt.Printf("  总请求数:   %d\n", totalReq)
 	fmt.Printf("  成功:       %d\n", atomic.LoadInt64(&successCnt))
 	fmt.Printf("  失败:       %d\n", atomic.LoadInt64(&failCnt))
 	fmt.Printf("  总耗时:     %.2f s\n", totalTime.Seconds())
-	fmt.Printf("  QPS:        %.2f\n", float64(total)/totalTime.Seconds())
+	fmt.Printf("  QPS:        %.2f\n", float64(totalReq)/totalTime.Seconds())
 
 	if len(latencies) > 0 {
-		avgLatencyMs := float64(atomic.LoadInt64(&totalLatency)) / float64(len(latencies)) / 1e6
-		maxLatencyMs := float64(atomic.LoadInt64(&maxLatency)) / 1e6
+		avgLatencyMs := float64(totalLatency) / float64(len(latencies)) / 1e6
+		maxLatencyMs := float64(maxLatency) / 1e6
 
-		// 计算分位数
-		sortedLatencies := make([]int64, len(latencies))
-		copy(sortedLatencies, latencies)
-		sortLatencies(sortedLatencies)
+		sort.Slice(latencies, func(i, j int) bool {
+			return latencies[i] < latencies[j]
+		})
 
-		p50 := float64(sortedLatencies[len(sortedLatencies)*50/100]) / 1e6
-		p90 := float64(sortedLatencies[len(sortedLatencies)*90/100]) / 1e6
-		p99 := float64(sortedLatencies[len(sortedLatencies)*99/100]) / 1e6
+		p50 := float64(latencies[len(latencies)*50/100]) / 1e6
+		p90 := float64(latencies[len(latencies)*90/100]) / 1e6
+		p99 := float64(latencies[len(latencies)*99/100]) / 1e6
 
 		fmt.Printf("  平均延迟:   %.2f ms\n", avgLatencyMs)
 		fmt.Printf("  P50 延迟:   %.2f ms\n", p50)
@@ -297,11 +297,4 @@ func main() {
 		fmt.Printf("  P99 延迟:   %.2f ms\n", p99)
 		fmt.Printf("  最大延迟:   %.2f ms\n", maxLatencyMs)
 	}
-}
-
-// sortLatencies 对延迟切片进行排序
-func sortLatencies(arr []int64) {
-	sort.Slice(arr, func(i, j int) bool {
-		return arr[i] < arr[j]
-	})
 }
