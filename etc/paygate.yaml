@@ -75,8 +75,8 @@ RateLimit:
   Enable: true
   # Default: 未在 Rules 中单独配置的接口, 每个接口各自独立享有这份较大的默认配额
   Default:
-    Rate: 1000    # 每秒补充 1000 个令牌
-    Burst: 2000   # 桶容量 2000, 允许瞬时突发
+    Rate: 10000    # 每秒补充 1000 个令牌
+    Burst: 20000   # 桶容量 2000, 允许瞬时突发
   # Rules: 按接口路径单独配置限流(示例, 按实际接口路径调整)
   Rules:
     - Path: /api/pay_gate/get_user_balance_info
