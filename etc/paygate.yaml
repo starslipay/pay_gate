@@ -9,6 +9,10 @@ Etcd:
     # - etcd-1.etcd.pay-ns.svc.cluster.local:2379
     # - etcd-2.etcd.pay-ns.svc.cluster.local:2379
   Key: pay_gate.api
+Middlewares:
+  Breaker: false  # 关闭服务端熔断
+  Shedding: false # 关闭自适应降载（service overloaded，不是熔断，一并关掉）
+CpuThreshold: 0 # 0 关闭CPU过载降载兜底保护
 
 UserMgrRpcConfig:
   NonBlock: true  # 非阻塞连接，etcd中服务未注册时不阻塞启动，调用时再报错
@@ -63,7 +67,7 @@ OrderMgrRpcConfig:
     Breaker: false  # 关闭客户端熔断
 
 
-TokenExpireTime: 3600  # 有效期 单位秒
+TokenExpireTime: 3600  # token有效期 单位秒
 
 # Redis: 令牌桶限流的存储, 令牌状态存在 Redis 实现多网关实例全局共享限流
 Redis:
