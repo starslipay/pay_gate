@@ -11,18 +11,19 @@ networks:
 
 # 持久化数据卷
 volumes:
-  mysql_master_data:  # MySQL 主库数据
-  mysql_slave1_data:  # MySQL 从库1数据
-  mysql_slave2_data:  # MySQL 从库2数据
+  mysql_master_data: # MySQL 主库数据
+  mysql_slave1_data: # MySQL 从库1数据
+  mysql_slave2_data: # MySQL 从库2数据
   redis_data:
   etcd_data:
   kafka_data:
   zk_data:
-  prom_data:  # prometheus时序数据持久化
-  graf_data:  # grafana面板配置持久化
-  loki_data:  # loki日志数据持久化
-  promtail_data:  # promtail采集位置持久化
-  tempo_data:  # tempo链路追踪数据持久化
+  prom_data: # prometheus时序数据持久化
+  graf_data: # grafana面板配置持久化
+  loki_data: # loki日志数据持久化
+  promtail_data: # promtail采集位置持久化
+  tempo_data:
+    # tempo链路追踪数据持久化
 
 services:
   # MySQL 8.0 主库 (半同步复制 - 主端)
@@ -45,16 +46,9 @@ services:
     # Windows 下挂载 cnf 文件会因权限过宽被 MySQL 忽略, 故全部用 command 参数
     # 半同步插件通过 init SQL 的 INSTALL PLUGIN 安装, 变量通过 --init-file 每次启动时设置
     command: >
-      --default-authentication-plugin=mysql_native_password
-      --transaction-isolation=READ-COMMITTED
-      --server-id=1
-      --log-bin=mysql-bin
-      --binlog-format=ROW
-      --gtid-mode=ON
-      --enforce-gtid-consistency=ON
-      --init-file=/etc/mysql/semi_sync_init.sql
+      --default-authentication-plugin=mysql_native_password --transaction-isolation=READ-COMMITTED --server-id=1 --log-bin=mysql-bin --binlog-format=ROW --gtid-mode=ON --enforce-gtid-consistency=ON --init-file=/etc/mysql/semi_sync_init.sql
     healthcheck:
-      test: ["CMD", "mysqladmin", "ping", "-h", "localhost", "-uroot", "-proot123456"]
+      test: [ "CMD", "mysqladmin", "ping", "-h", "localhost", "-uroot", "-proot123456" ]
       interval: 5s
       timeout: 3s
       retries: 30
@@ -78,16 +72,7 @@ services:
       - ./mysql/init/slave:/docker-entrypoint-initdb.d:ro
       - ./mysql/runtime/semi_sync_slave.sql:/etc/mysql/semi_sync_init.sql:ro
     command: >
-      --default-authentication-plugin=mysql_native_password
-      --transaction-isolation=READ-COMMITTED
-      --server-id=2
-      --log-bin=mysql-bin
-      --binlog-format=ROW
-      --gtid-mode=ON
-      --enforce-gtid-consistency=ON
-      --read-only=1
-      --super-read-only=1
-      --init-file=/etc/mysql/semi_sync_init.sql
+      --default-authentication-plugin=mysql_native_password --transaction-isolation=READ-COMMITTED --server-id=2 --log-bin=mysql-bin --binlog-format=ROW --gtid-mode=ON --enforce-gtid-consistency=ON --read-only=1 --super-read-only=1 --init-file=/etc/mysql/semi_sync_init.sql
     depends_on:
       mysql-master:
         condition: service_healthy
@@ -109,16 +94,7 @@ services:
       - ./mysql/init/slave:/docker-entrypoint-initdb.d:ro
       - ./mysql/runtime/semi_sync_slave.sql:/etc/mysql/semi_sync_init.sql:ro
     command: >
-      --default-authentication-plugin=mysql_native_password
-      --transaction-isolation=READ-COMMITTED
-      --server-id=3
-      --log-bin=mysql-bin
-      --binlog-format=ROW
-      --gtid-mode=ON
-      --enforce-gtid-consistency=ON
-      --read-only=1
-      --super-read-only=1
-      --init-file=/etc/mysql/semi_sync_init.sql
+      --default-authentication-plugin=mysql_native_password --transaction-isolation=READ-COMMITTED --server-id=3 --log-bin=mysql-bin --binlog-format=ROW --gtid-mode=ON --enforce-gtid-consistency=ON --read-only=1 --super-read-only=1 --init-file=/etc/mysql/semi_sync_init.sql
     depends_on:
       mysql-master:
         condition: service_healthy
@@ -204,7 +180,7 @@ services:
     container_name: prometheus
     restart: always
     ports:
-      - "9091:9090"  # 宿主机访问 http://localhost:9091
+      - "9091:9090" # 宿主机访问 http://localhost:9091
     volumes:
       - ./prometheus/prometheus.yml:/etc/prometheus/prometheus.yml:ro
       - prom_data:/prometheus
@@ -217,7 +193,7 @@ services:
     container_name: grafana
     restart: always
     ports:
-      - "31000:3000"  # 宿主机访问 http://localhost:3000
+      - "31000:3000" # 宿主机访问 http://localhost:3000
     environment:
       TZ: Asia/Shanghai
       GF_SECURITY_ADMIN_USER: admin
@@ -237,7 +213,7 @@ services:
     container_name: loki
     restart: always
     ports:
-      - "3100:3100"  # Loki API
+      - "3100:3100" # Loki API
     environment:
       TZ: Asia/Shanghai
     volumes:
@@ -253,7 +229,7 @@ services:
     container_name: promtail
     restart: always
     ports:
-      - "9080:9080"  # Promtail Web UI
+      - "9080:9080" # Promtail Web UI
     environment:
       TZ: Asia/Shanghai
     volumes:
@@ -271,11 +247,11 @@ services:
     image: grafana/tempo:2.6.0
     container_name: tempo
     restart: always
-    command: ["-config.file=/etc/tempo/tempo.yml"]
+    command: [ "-config.file=/etc/tempo/tempo.yml" ]
     ports:
-      - "3200:3200"  # Tempo API (查询接口)
-      - "4317:4317"  # OTLP gRPC (go-zero 发送 trace)
-      - "4318:4318"  # OTLP HTTP (go-zero 发送 trace)
+      - "3200:3200" # Tempo API (查询接口)
+      - "4317:4317" # OTLP gRPC (go-zero 发送 trace)
+      - "4318:4318" # OTLP HTTP (go-zero 发送 trace)
     volumes:
       - ./tempo/tempo.yml:/etc/tempo/tempo.yml:ro
       - tempo_data:/var/tempo
