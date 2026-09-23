@@ -23,7 +23,7 @@ const BaseURL = "http://localhost:30888"
 const RegUserCount = 10
 
 // Concurrency 并发支付协程数（从用户池中随机选用户发起支付）
-const Concurrency = 2000
+const Concurrency = 1000
 
 // Duration 压测持续时长，时间内一直发起并发支付请求
 const Duration = 60 * time.Second

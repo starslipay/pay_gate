@@ -11,6 +11,7 @@ Etcd:
   Key: pay_gate.api
 
 UserMgrRpcConfig:
+  NonBlock: true  # 非阻塞连接，etcd中服务未注册时不阻塞启动，调用时再报错
   Etcd:
     Hosts:
     - etcd:2379  # 本地开发环境
@@ -23,6 +24,7 @@ UserMgrRpcConfig:
     Breaker: false  # 关闭客户端熔断
 
 AccountMgrRpcConfig:
+  NonBlock: true  # 非阻塞连接，etcd中服务未注册时不阻塞启动，调用时再报错
   Etcd:
     Hosts:
     - etcd:2379  # 本地开发环境
@@ -35,6 +37,7 @@ AccountMgrRpcConfig:
     Breaker: false  # 关闭客户端熔断
 
 TradeItgRpcConfig:
+  NonBlock: true  # 非阻塞连接，etcd中服务未注册时不阻塞启动，调用时再报错
   Etcd:
     Hosts:
     - etcd:2379  # 本地开发环境
@@ -47,6 +50,7 @@ TradeItgRpcConfig:
     Breaker: false  # 关闭客户端熔断
 
 OrderMgrRpcConfig:
+  NonBlock: true  # 非阻塞连接，etcd中服务未注册时不阻塞启动，调用时再报错
   Etcd:
     Hosts:
     - etcd:2379  # 本地开发环境
