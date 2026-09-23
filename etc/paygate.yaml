@@ -76,8 +76,8 @@ RateLimit:
   # Rules: 按接口路径单独配置限流(示例, 按实际接口路径调整)
   Rules:
     - Path: /api/pay_gate/get_user_balance_info
-      Rate: 10
-      Burst: 20
+      Rate: 10000
+      Burst: 20000
 
 # Prometheus 指标采集：go-zero 会另起一个独立 HTTP 端口暴露 /metrics
 Prometheus:
