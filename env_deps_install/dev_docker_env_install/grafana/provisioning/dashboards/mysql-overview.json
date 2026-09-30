@@ -1,0 +1,155 @@
+{
+  "annotations": { "list": [] },
+  "editable": true,
+  "graphTooltip": 1,
+  "id": null,
+  "refresh": "5s",
+  "schemaVersion": 39,
+  "tags": ["starslipay", "mysql"],
+  "time": { "from": "now-15m", "to": "now" },
+  "title": "MySQL 监控",
+  "uid": "mysql-overview",
+  "panels": [
+    {
+      "type": "stat",
+      "title": "MySQL 状态",
+      "gridPos": { "h": 4, "w": 4, "x": 0, "y": 0 },
+      "datasource": { "type": "prometheus", "uid": "prometheus" },
+      "targets": [{ "expr": "mysql_up", "legendFormat": "", "refId": "A" }],
+      "fieldConfig": {
+        "defaults": {
+          "mappings": [{ "options": { "0": { "text": "DOWN", "color": "red" }, "1": { "text": "UP", "color": "green" } }, "type": "value" }],
+          "thresholds": { "mode": "absolute", "steps": [{ "color": "red" }, { "value": 1, "color": "green" }] }
+        }
+      }
+    },
+    {
+      "type": "stat",
+      "title": "当前连接数 / 最大连接数",
+      "gridPos": { "h": 4, "w": 4, "x": 4, "y": 0 },
+      "datasource": { "type": "prometheus", "uid": "prometheus" },
+      "targets": [
+        { "expr": "mysql_global_status_threads_connected", "legendFormat": "当前连接", "refId": "A" },
+        { "expr": "mysql_global_variables_max_connections", "legendFormat": "最大连接", "refId": "B" }
+      ]
+    },
+    {
+      "type": "stat",
+      "title": "活跃线程数",
+      "gridPos": { "h": 4, "w": 4, "x": 8, "y": 0 },
+      "datasource": { "type": "prometheus", "uid": "prometheus" },
+      "targets": [{ "expr": "mysql_global_status_threads_running", "legendFormat": "Threads Running", "refId": "A" }]
+    },
+    {
+      "type": "stat",
+      "title": "慢查询(累计)",
+      "gridPos": { "h": 4, "w": 4, "x": 12, "y": 0 },
+      "datasource": { "type": "prometheus", "uid": "prometheus" },
+      "targets": [{ "expr": "mysql_global_status_slow_queries", "legendFormat": "Slow Queries", "refId": "A" }],
+      "fieldConfig": { "defaults": { "thresholds": { "mode": "absolute", "steps": [{ "color": "green" }, { "value": 10, "color": "yellow" }, { "value": 100, "color": "red" }] } } }
+    },
+    {
+      "type": "stat",
+      "title": "缓冲池命中率",
+      "gridPos": { "h": 4, "w": 4, "x": 16, "y": 0 },
+      "datasource": { "type": "prometheus", "uid": "prometheus" },
+      "targets": [{
+        "expr": "100 * (1 - rate(mysql_global_status_buffer_pool_reads[1m]) / clamp_min(rate(mysql_global_status_buffer_pool_read_requests[1m]), 1))",
+        "legendFormat": "Hit Rate",
+        "refId": "A"
+      }],
+      "fieldConfig": {
+        "defaults": {
+          "unit": "percent",
+          "thresholds": { "mode": "absolute", "steps": [{ "color": "red" }, { "value": 95, "color": "yellow" }, { "value": 99, "color": "green" }] }
+        }
+      }
+    },
+    {
+      "type": "timeseries",
+      "title": "MySQL QPS",
+      "gridPos": { "h": 8, "w": 12, "x": 0, "y": 4 },
+      "datasource": { "type": "prometheus", "uid": "prometheus" },
+      "targets": [{ "expr": "rate(mysql_global_status_questions[1m])", "legendFormat": "QPS", "refId": "A" }],
+      "fieldConfig": { "defaults": { "unit": "ops", "custom": { "drawStyle": "line", "fillOpacity": 10 } } }
+    },
+    {
+      "type": "timeseries",
+      "title": "连接数趋势",
+      "gridPos": { "h": 8, "w": 12, "x": 12, "y": 4 },
+      "datasource": { "type": "prometheus", "uid": "prometheus" },
+      "targets": [
+        { "expr": "mysql_global_status_threads_connected", "legendFormat": "已连接", "refId": "A" },
+        { "expr": "mysql_global_status_threads_running", "legendFormat": "活跃", "refId": "B" },
+        { "expr": "mysql_global_status_max_used_connections", "legendFormat": "历史峰值", "refId": "C" },
+        { "expr": "mysql_global_variables_max_connections", "legendFormat": "最大配置", "refId": "D" }
+      ],
+      "fieldConfig": { "defaults": { "custom": { "drawStyle": "line", "fillOpacity": 10 } } }
+    },
+    {
+      "type": "timeseries",
+      "title": "InnoDB 行锁等待次数 (每分钟新增)",
+      "gridPos": { "h": 8, "w": 8, "x": 0, "y": 12 },
+      "datasource": { "type": "prometheus", "uid": "prometheus" },
+      "targets": [{ "expr": "increase(mysql_global_status_innodb_row_lock_waits[1m])", "legendFormat": "锁等待次数/min", "refId": "A" }],
+      "fieldConfig": { "defaults": { "unit": "short", "custom": { "drawStyle": "bars", "fillOpacity": 50 } } }
+    },
+    {
+      "type": "timeseries",
+      "title": "InnoDB 行锁平均等待时间",
+      "gridPos": { "h": 8, "w": 8, "x": 8, "y": 12 },
+      "datasource": { "type": "prometheus", "uid": "prometheus" },
+      "targets": [{ "expr": "mysql_global_status_innodb_row_lock_time_avg / 1000", "legendFormat": "平均等待(ms)", "refId": "A" }],
+      "fieldConfig": { "defaults": { "unit": "ms", "custom": { "drawStyle": "line", "fillOpacity": 10 } } }
+    },
+    {
+      "type": "timeseries",
+      "title": "InnoDB 行锁最大等待时间",
+      "gridPos": { "h": 8, "w": 8, "x": 16, "y": 12 },
+      "datasource": { "type": "prometheus", "uid": "prometheus" },
+      "targets": [{ "expr": "mysql_global_status_innodb_row_lock_time_max / 1000", "legendFormat": "最大等待(ms)", "refId": "A" }],
+      "fieldConfig": { "defaults": { "unit": "ms", "custom": { "drawStyle": "line", "fillOpacity": 10 } } }
+    },
+    {
+      "type": "timeseries",
+      "title": "慢查询增长 (每分钟)",
+      "gridPos": { "h": 8, "w": 12, "x": 0, "y": 20 },
+      "datasource": { "type": "prometheus", "uid": "prometheus" },
+      "targets": [{ "expr": "increase(mysql_global_status_slow_queries[1m])", "legendFormat": "慢查询/min", "refId": "A" }],
+      "fieldConfig": { "defaults": { "unit": "short", "custom": { "drawStyle": "bars", "fillOpacity": 50 } } }
+    },
+    {
+      "type": "timeseries",
+      "title": "网络流量 (字节/秒)",
+      "gridPos": { "h": 8, "w": 12, "x": 12, "y": 20 },
+      "datasource": { "type": "prometheus", "uid": "prometheus" },
+      "targets": [
+        { "expr": "rate(mysql_global_status_bytes_received[1m])", "legendFormat": "接收", "refId": "A" },
+        { "expr": "rate(mysql_global_status_bytes_sent[1m])", "legendFormat": "发送", "refId": "B" }
+      ],
+      "fieldConfig": { "defaults": { "unit": "Bps", "custom": { "drawStyle": "line", "fillOpacity": 10 } } }
+    },
+    {
+      "type": "timeseries",
+      "title": "InnoDB 读写行数 (每秒)",
+      "gridPos": { "h": 8, "w": 12, "x": 0, "y": 28 },
+      "datasource": { "type": "prometheus", "uid": "prometheus" },
+      "targets": [
+        { "expr": "rate(mysql_global_status_innodb_data_reads[1m])", "legendFormat": "读", "refId": "A" },
+        { "expr": "rate(mysql_global_status_innodb_data_writes[1m])", "legendFormat": "写", "refId": "B" }
+      ],
+      "fieldConfig": { "defaults": { "unit": "ops", "custom": { "drawStyle": "line", "fillOpacity": 10 } } }
+    },
+    {
+      "type": "timeseries",
+      "title": "缓冲池读写请求 (每秒)",
+      "gridPos": { "h": 8, "w": 12, "x": 12, "y": 28 },
+      "datasource": { "type": "prometheus", "uid": "prometheus" },
+      "targets": [
+        { "expr": "rate(mysql_global_status_buffer_pool_read_requests[1m])", "legendFormat": "缓冲池请求", "refId": "A" },
+        { "expr": "rate(mysql_global_status_buffer_pool_reads[1m])", "legendFormat": "磁盘读", "refId": "B" }
+      ],
+      "fieldConfig": { "defaults": { "unit": "ops", "custom": { "drawStyle": "line", "fillOpacity": 10 } } }
+    }
+  ]
+}

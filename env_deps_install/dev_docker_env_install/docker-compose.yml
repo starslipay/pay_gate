@@ -101,6 +101,24 @@ services:
     networks:
       - dev_pay_net
 
+  # mysqld-exporter MySQL 指标导出（连接 mysql-master）
+  mysqld-exporter:
+    image: prom/mysqld-exporter:v0.15.1
+    container_name: mysqld-exporter
+    restart: always
+    ports:
+      - "9104:9104"
+    environment:
+      TZ: Asia/Shanghai
+    command:
+      - --mysqld.address=mysql-master:3306
+      - --mysqld.username=exporter:exporter123456
+    depends_on:
+      mysql-master:
+        condition: service_healthy
+    networks:
+      - dev_pay_net
+
   # Redis 6
   redis:
     image: redis:6-alpine

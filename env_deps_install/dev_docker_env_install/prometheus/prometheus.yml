@@ -50,3 +50,10 @@ scrape_configs:
       - targets: ['trade_id_mgr:9090']
         labels:
           module: 'trade_id_mgr'
+
+  # MySQL 指标采集 (mysqld-exporter)
+  - job_name: 'mysql'
+    static_configs:
+      - targets: ['mysqld-exporter:9104']
+        labels:
+          module: 'mysql'
