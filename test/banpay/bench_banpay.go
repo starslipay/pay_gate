@@ -23,10 +23,10 @@ const BaseURL = "http://localhost:30888"
 const RegUserCount = 10
 
 // Concurrency 并发支付协程数（从用户池中随机选用户发起支付）
-const Concurrency = 20
+const Concurrency = 200
 
 // Duration 压测持续时长，时间内一直发起并发支付请求
-const Duration = 60 * time.Second
+const Duration = 30 * time.Second
 
 // Password 注册用户使用的支付密码
 const Password = "123456"
@@ -232,16 +232,15 @@ func main() {
 	}
 	fmt.Printf("  获取 token 成功: %d/%d\n\n", tokenCount, len(users))
 
-	// ---------- 第三阶段：充值（确保余额充足） ----------
+	// ---------- 第三阶段：充值（确保余额充足，失败即退出） ----------
 	fmt.Printf("=== 第三阶段: 为 %d 个用户充值 %d 分 ===\n", len(users), RechargeAmount)
-	rechargeOk := 0
 	for i := range users {
 		// bank2c_pre 获取 transaction_id
 		preBody := bank2cPreReq{UserId: users[i].userId}
 		ok, data := postAndCheck(client, BaseURL+"/api/pay_gate/bank2c_pre", preBody, nil)
 		if !ok {
-			fmt.Printf("  用户 %d bank2c_pre 失败: %s\n", i, string(data))
-			continue
+			fmt.Printf("  用户 %s bank2c_pre 失败: %s\n", users[i].userId, string(data))
+			return
 		}
 		var preRsp struct {
 			UserId        string `json:"user_id"`
@@ -261,12 +260,11 @@ func main() {
 		}
 		ok, data = postAndCheck(client, BaseURL+"/api/pay_gate/bank2c_do", doBody, nil)
 		if !ok {
-			fmt.Printf("  用户 %d bank2c_do 失败: %s\n", i, string(data))
-			continue
+			fmt.Printf("  用户 %s bank2c_do 失败: %s\n", users[i].userId, string(data))
+			return
 		}
-		rechargeOk++
 	}
-	fmt.Printf("  充值成功: %d/%d\n\n", rechargeOk, len(users))
+	fmt.Printf("  充值成功: %d/%d\n\n", len(users), len(users))
 
 	// ---------- 第四阶段：并发支付（基于时间窗口） ----------
 	fmt.Printf("=== 第四阶段: 并发压测支付 (用户池=%d, 并发=%d, 持续=%s) ===\n",
