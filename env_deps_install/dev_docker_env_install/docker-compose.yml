@@ -46,7 +46,7 @@ services:
     # Windows 下挂载 cnf 文件会因权限过宽被 MySQL 忽略, 故全部用 command 参数
     # 半同步插件通过 init SQL 的 INSTALL PLUGIN 安装, 变量通过 --init-file 每次启动时设置
     command: >
-      --default-authentication-plugin=mysql_native_password --transaction-isolation=READ-COMMITTED --server-id=1 --log-bin=mysql-bin --binlog-format=ROW --gtid-mode=ON --enforce-gtid-consistency=ON --init-file=/etc/mysql/semi_sync_init.sql
+      --default-authentication-plugin=mysql_native_password --transaction-isolation=READ-COMMITTED --server-id=1 --log-bin=mysql-bin --binlog-format=ROW --gtid-mode=ON --enforce-gtid-consistency=ON --max-connections=1000 --init-file=/etc/mysql/semi_sync_init.sql
     healthcheck:
       test: [ "CMD", "mysqladmin", "ping", "-h", "localhost", "-uroot", "-proot123456" ]
       interval: 5s
@@ -72,7 +72,7 @@ services:
       - ./mysql/init/slave:/docker-entrypoint-initdb.d:ro
       - ./mysql/runtime/semi_sync_slave.sql:/etc/mysql/semi_sync_init.sql:ro
     command: >
-      --default-authentication-plugin=mysql_native_password --transaction-isolation=READ-COMMITTED --server-id=2 --log-bin=mysql-bin --binlog-format=ROW --gtid-mode=ON --enforce-gtid-consistency=ON --read-only=1 --super-read-only=1 --init-file=/etc/mysql/semi_sync_init.sql
+      --default-authentication-plugin=mysql_native_password --transaction-isolation=READ-COMMITTED --server-id=2 --log-bin=mysql-bin --binlog-format=ROW --gtid-mode=ON --enforce-gtid-consistency=ON --max-connections=1000 --read-only=1 --super-read-only=1 --init-file=/etc/mysql/semi_sync_init.sql
     depends_on:
       mysql-master:
         condition: service_healthy
@@ -94,7 +94,7 @@ services:
       - ./mysql/init/slave:/docker-entrypoint-initdb.d:ro
       - ./mysql/runtime/semi_sync_slave.sql:/etc/mysql/semi_sync_init.sql:ro
     command: >
-      --default-authentication-plugin=mysql_native_password --transaction-isolation=READ-COMMITTED --server-id=3 --log-bin=mysql-bin --binlog-format=ROW --gtid-mode=ON --enforce-gtid-consistency=ON --read-only=1 --super-read-only=1 --init-file=/etc/mysql/semi_sync_init.sql
+      --default-authentication-plugin=mysql_native_password --transaction-isolation=READ-COMMITTED --server-id=3 --log-bin=mysql-bin --binlog-format=ROW --gtid-mode=ON --enforce-gtid-consistency=ON --max-connections=1000 --read-only=1 --super-read-only=1 --init-file=/etc/mysql/semi_sync_init.sql
     depends_on:
       mysql-master:
         condition: service_healthy
