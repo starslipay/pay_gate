@@ -69,10 +69,13 @@ OrderMgrRpcConfig:
 
 TokenExpireTime: 3600  # token有效期 单位秒
 
-# Redis: 令牌桶限流的存储, 令牌状态存在 Redis 实现多网关实例全局共享限流
+# Redis: 令牌桶限流的存储, 通过哨兵连接 1主2从集群, 主节点故障自动切换
 Redis:
-  Host: redis:6379   # docker-compose 中的 redis 服务名
-  Type: node
+  Master: mymaster   # 哨兵监控的主节点名称, 对应 sentinel.conf 中的名称
+  Addrs:             # 3 个哨兵节点地址(docker 网络内通过容器名访问)
+    - redis-sentinel1:26379
+    - redis-sentinel2:26379
+    - redis-sentinel3:26379
 
 # RateLimit: 接口维度令牌桶限流
 RateLimit:

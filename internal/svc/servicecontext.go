@@ -4,13 +4,13 @@
 package svc
 
 import (
+	goredis "github.com/redis/go-redis/v9"
 	"github.com/starslipay/account_mgr/account_mgr_pb"
 	"github.com/starslipay/order_mgr/order_mgr_pb"
 	"github.com/starslipay/pay_gate/internal/config"
 	"github.com/starslipay/pay_gate/internal/middleware"
 	"github.com/starslipay/trade_itg/trade_itg_pb"
 	"github.com/starslipay/user_mgr/user_mgr_pb"
-	"github.com/zeromicro/go-zero/core/stores/redis"
 	"github.com/zeromicro/go-zero/rest"
 	"github.com/zeromicro/go-zero/zrpc"
 )
@@ -33,9 +33,14 @@ func NewServiceContext(c config.Config) *ServiceContext {
 
 	authInterceptor := middleware.NewAuthInterceptorMiddleware(&c)
 
-	// 令牌桶限流: 令牌状态存 Redis, 多网关实例全局共享配额
-	redisStore := redis.MustNewRedis(c.Redis)
-	rateLimiter := middleware.NewRateLimitMiddleware(redisStore, c.RateLimit)
+	// 令牌桶限流: 通过哨兵发现并连接当前 Redis 主节点, 主节点故障由哨兵自动切换
+	redisClient := goredis.NewFailoverClient(&goredis.FailoverOptions{
+		MasterName:    c.Redis.Master,
+		SentinelAddrs: c.Redis.Addrs,
+		Password:      c.Redis.Password,
+		DB:            c.Redis.DB,
+	})
+	rateLimiter := middleware.NewRateLimitMiddleware(redisClient, c.RateLimit)
 
 	return &ServiceContext{
 		Config:          c,

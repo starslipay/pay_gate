@@ -51,9 +51,65 @@ scrape_configs:
         labels:
           module: 'trade_id_mgr'
 
-  # MySQL 指标采集 (mysqld-exporter)
-  - job_name: 'mysql'
+  # MySQL 主库指标采集
+  - job_name: 'mysql-master'
     static_configs:
       - targets: ['mysqld-exporter:9104']
         labels:
           module: 'mysql'
+          instance: 'master' # 覆盖 instance 标签, Grafana 中显示 master/slave1/slave2
+
+  # MySQL 从库1指标采集 (容器内 exporter 端口仍为 9104)
+  - job_name: 'mysql-slave1'
+    static_configs:
+      - targets: ['mysqld-exporter-slave1:9104']
+        labels:
+          module: 'mysql'
+          instance: 'slave1'
+
+  # MySQL 从库2指标采集
+  - job_name: 'mysql-slave2'
+    static_configs:
+      - targets: ['mysqld-exporter-slave2:9104']
+        labels:
+          module: 'mysql'
+          instance: 'slave2'
+
+  # Redis 集群(1主2从+3哨兵), redis-exporter multi-target 模式。
+  # 各节点地址作为 target, 由同一个 redis-exporter 代理抓取。
+  - job_name: 'redis'
+    metrics_path: /scrape
+    static_configs:
+      - targets:
+          - redis-master:6379
+          - redis-slave1:6379
+          - redis-slave2:6379
+          - redis-sentinel1:26379
+          - redis-sentinel2:26379
+          - redis-sentinel3:26379
+    relabel_configs:
+      # 把抓取目标地址传给 exporter 的 target 参数
+      - source_labels: [__address__]
+        target_label: __param_target
+      # 用节点地址作为 instance 标签, Grafana 中区分各节点
+      - source_labels: [__param_target]
+        target_label: instance
+      # 实际请求发往 redis-exporter
+      - target_label: __address__
+        replacement: redis-exporter:9121
+
+  # Kafka 集群指标 (kafka-exporter 一次连 3 broker)
+  - job_name: 'kafka'
+    static_configs:
+      - targets: ['kafka-exporter:9308']
+        labels:
+          module: 'kafka'
+
+  # etcd 指标采集。etcd 3.5 自带 /metrics 端点(无需额外 exporter),
+  # 直接抓取 client 端口 2379 即可获取集群状态/leader/DB/GRPC 等指标。
+  - job_name: 'etcd'
+    metrics_path: /metrics
+    static_configs:
+      - targets: ['etcd:2379']
+        labels:
+          module: 'etcd'

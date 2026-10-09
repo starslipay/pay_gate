@@ -1,0 +1,139 @@
+{
+  "annotations": { "list": [] },
+  "editable": true,
+  "graphTooltip": 1,
+  "id": null,
+  "refresh": "5s",
+  "schemaVersion": 39,
+  "tags": ["starslipay", "etcd"],
+  "time": { "from": "now-15m", "to": "now" },
+  "title": "etcd 监控",
+  "uid": "etcd-overview",
+  "panels": [
+    {
+      "type": "stat",
+      "title": "集群状态",
+      "gridPos": { "h": 4, "w": 4, "x": 0, "y": 0 },
+      "datasource": { "type": "prometheus", "uid": "prometheus" },
+      "targets": [{ "expr": "etcd_server_has", "legendFormat": "{{instance}}", "refId": "A" }],
+      "fieldConfig": {
+        "defaults": {
+          "mappings": [{ "options": { "0": { "text": "无主", "color": "red" }, "1": { "text": "有主", "color": "green" } }, "type": "value" }],
+          "thresholds": { "mode": "absolute", "steps": [{ "color": "red" }, { "value": 1, "color": "green" }] }
+        }
+      }
+    },
+    {
+      "type": "stat",
+      "title": "是否为 Leader",
+      "gridPos": { "h": 4, "w": 4, "x": 4, "y": 0 },
+      "datasource": { "type": "prometheus", "uid": "prometheus" },
+      "targets": [{ "expr": "etcd_server_is_leader", "legendFormat": "{{instance}}", "refId": "A" }],
+      "fieldConfig": {
+        "defaults": {
+          "mappings": [{ "options": { "0": { "text": "Follower", "color": "blue" }, "1": { "text": "Leader", "color": "green" } }, "type": "value" }],
+          "thresholds": { "mode": "absolute", "steps": [{ "color": "blue" }, { "value": 1, "color": "green" }] }
+        }
+      }
+    },
+    {
+      "type": "stat",
+      "title": "集群成员数",
+      "gridPos": { "h": 4, "w": 4, "x": 8, "y": 0 },
+      "datasource": { "type": "prometheus", "uid": "prometheus" },
+      "targets": [{ "expr": "count(etcd_server_id)", "legendFormat": "", "refId": "A" }],
+      "fieldConfig": { "defaults": { "thresholds": { "mode": "absolute", "steps": [{ "color": "red" }, { "value": 1, "color": "green" }] } } }
+    },
+    {
+      "type": "stat",
+      "title": "DB 数据大小",
+      "gridPos": { "h": 4, "w": 4, "x": 12, "y": 0 },
+      "datasource": { "type": "prometheus", "uid": "prometheus" },
+      "targets": [{ "expr": "etcd_mvcc_db_total_size_in_bytes", "legendFormat": "{{instance}}", "refId": "A" }],
+      "fieldConfig": { "defaults": { "unit": "bytes" } }
+    },
+    {
+      "type": "stat",
+      "title": "Leader 更换次数(累计)",
+      "gridPos": { "h": 4, "w": 4, "x": 16, "y": 0 },
+      "datasource": { "type": "prometheus", "uid": "prometheus" },
+      "targets": [{ "expr": "etcd_server_leader_changes_seen_total", "legendFormat": "{{instance}}", "refId": "A" }],
+      "fieldConfig": {
+        "defaults": {
+          "thresholds": { "mode": "absolute", "steps": [{ "color": "green" }, { "value": 1, "color": "yellow" }, { "value": 5, "color": "red" }] }
+        }
+      }
+    },
+    {
+      "type": "stat",
+      "title": "提案失败数(累计)",
+      "gridPos": { "h": 4, "w": 4, "x": 20, "y": 0 },
+      "datasource": { "type": "prometheus", "uid": "prometheus" },
+      "targets": [{ "expr": "etcd_server_proposals_failed_total", "legendFormat": "{{instance}}", "refId": "A" }],
+      "fieldConfig": {
+        "defaults": {
+          "thresholds": { "mode": "absolute", "steps": [{ "color": "green" }, { "value": 1, "color": "red" }] }
+        }
+      }
+    },
+    {
+      "type": "timeseries",
+      "title": "提案应用速率 (ops, 按节点)",
+      "gridPos": { "h": 8, "w": 12, "x": 0, "y": 4 },
+      "datasource": { "type": "prometheus", "uid": "prometheus" },
+      "targets": [{ "expr": "rate(etcd_server_proposals_applied_total[1m])", "legendFormat": "{{instance}}", "refId": "A" }],
+      "fieldConfig": { "defaults": { "unit": "ops", "custom": { "drawStyle": "line", "fillOpacity": 10 } } }
+    },
+    {
+      "type": "timeseries",
+      "title": "DB 数据大小趋势 (字节, 按节点)",
+      "gridPos": { "h": 8, "w": 12, "x": 12, "y": 4 },
+      "datasource": { "type": "prometheus", "uid": "prometheus" },
+      "targets": [{ "expr": "etcd_mvcc_db_total_size_in_bytes", "legendFormat": "{{instance}}", "refId": "A" }],
+      "fieldConfig": { "defaults": { "unit": "bytes", "custom": { "drawStyle": "line", "fillOpacity": 10 } } }
+    },
+    {
+      "type": "timeseries",
+      "title": "GRPC 请求速率 (ops, 按 RPC 方法)",
+      "gridPos": { "h": 8, "w": 12, "x": 0, "y": 12 },
+      "datasource": { "type": "prometheus", "uid": "prometheus" },
+      "targets": [{ "expr": "sum by(grpc_method)(rate(etcd_grpc_requests_total[1m]))", "legendFormat": "{{grpc_method}}", "refId": "A" }],
+      "fieldConfig": { "defaults": { "unit": "ops", "custom": { "drawStyle": "line", "fillOpacity": 10 } } }
+    },
+    {
+      "type": "timeseries",
+      "title": "磁盘 WAL fsync 延迟 (秒, 按节点)",
+      "gridPos": { "h": 8, "w": 12, "x": 12, "y": 12 },
+      "datasource": { "type": "prometheus", "uid": "prometheus" },
+      "targets": [{ "expr": "histogram_quantile(0.99, rate(etcd_disk_wal_fsync_duration_seconds_bucket[1m]))", "legendFormat": "{{instance}} p99", "refId": "A" }],
+      "fieldConfig": { "defaults": { "unit": "s", "custom": { "drawStyle": "line", "fillOpacity": 10 } } }
+    },
+    {
+      "type": "timeseries",
+      "title": "Leader 更换次数趋势 (按节点)",
+      "gridPos": { "h": 8, "w": 8, "x": 0, "y": 20 },
+      "datasource": { "type": "prometheus", "uid": "prometheus" },
+      "targets": [{ "expr": "etcd_server_leader_changes_seen_total", "legendFormat": "{{instance}}", "refId": "A" }],
+      "fieldConfig": { "defaults": { "custom": { "drawStyle": "line", "fillOpacity": 10 } } }
+    },
+    {
+      "type": "timeseries",
+      "title": "提案失败/待提交 (按节点)",
+      "gridPos": { "h": 8, "w": 8, "x": 8, "y": 20 },
+      "datasource": { "type": "prometheus", "uid": "prometheus" },
+      "targets": [
+        { "expr": "etcd_server_proposals_failed_total", "legendFormat": "{{instance}} 失败", "refId": "A" },
+        { "expr": "etcd_server_proposals_pending", "legendFormat": "{{instance}} 待提交", "refId": "B" }
+      ],
+      "fieldConfig": { "defaults": { "custom": { "drawStyle": "line", "fillOpacity": 10 } } }
+    },
+    {
+      "type": "timeseries",
+      "title": "客户端缓存响应时间 (秒, 按节点)",
+      "gridPos": { "h": 8, "w": 8, "x": 16, "y": 20 },
+      "datasource": { "type": "prometheus", "uid": "prometheus" },
+      "targets": [{ "expr": "histogram_quantile(0.99, rate(etcd_disk_backend_commit_duration_seconds_bucket[1m]))", "legendFormat": "{{instance}} p99", "refId": "A" }],
+      "fieldConfig": { "defaults": { "unit": "s", "custom": { "drawStyle": "line", "fillOpacity": 10 } } }
+    }
+  ]
+}

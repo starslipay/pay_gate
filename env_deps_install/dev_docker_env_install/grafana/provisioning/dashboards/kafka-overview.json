@@ -1,0 +1,145 @@
+{
+  "annotations": { "list": [] },
+  "editable": true,
+  "graphTooltip": 1,
+  "id": null,
+  "refresh": "5s",
+  "schemaVersion": 39,
+  "tags": ["starslipay", "kafka"],
+  "time": { "from": "now-15m", "to": "now" },
+  "title": "Kafka 监控",
+  "uid": "kafka-overview",
+  "panels": [
+    {
+      "type": "stat",
+      "title": "Kafka 集群状态",
+      "gridPos": { "h": 4, "w": 4, "x": 0, "y": 0 },
+      "datasource": { "type": "prometheus", "uid": "prometheus" },
+      "targets": [{ "expr": "kafka_up", "legendFormat": "", "refId": "A" }],
+      "fieldConfig": {
+        "defaults": {
+          "mappings": [{ "options": { "0": { "text": "DOWN", "color": "red" }, "1": { "text": "UP", "color": "green" } }, "type": "value" }],
+          "thresholds": { "mode": "absolute", "steps": [{ "color": "red" }, { "value": 1, "color": "green" }] }
+        }
+      }
+    },
+    {
+      "type": "stat",
+      "title": "Broker 数量",
+      "gridPos": { "h": 4, "w": 4, "x": 4, "y": 0 },
+      "datasource": { "type": "prometheus", "uid": "prometheus" },
+      "targets": [{ "expr": "kafka_brokers", "legendFormat": "", "refId": "A" }],
+      "fieldConfig": { "defaults": { "thresholds": { "mode": "absolute", "steps": [{ "color": "red" }, { "value": 3, "color": "green" }] } } }
+    },
+    {
+      "type": "stat",
+      "title": "Topic 数量",
+      "gridPos": { "h": 4, "w": 4, "x": 8, "y": 0 },
+      "datasource": { "type": "prometheus", "uid": "prometheus" },
+      "targets": [{ "expr": "count(count by(topic)(kafka_topic_partition_replicas))", "legendFormat": "", "refId": "A" }]
+    },
+    {
+      "type": "stat",
+      "title": "分区总数",
+      "gridPos": { "h": 4, "w": 4, "x": 12, "y": 0 },
+      "datasource": { "type": "prometheus", "uid": "prometheus" },
+      "targets": [{ "expr": "count(kafka_topic_partition_replicas)", "legendFormat": "", "refId": "A" }]
+    },
+    {
+      "type": "stat",
+      "title": "欠副本分区数(应为0)",
+      "gridPos": { "h": 4, "w": 4, "x": 16, "y": 0 },
+      "datasource": { "type": "prometheus", "uid": "prometheus" },
+      "targets": [{ "expr": "sum(kafka_topic_partition_under_replicated_partition)", "legendFormat": "", "refId": "A" }],
+      "fieldConfig": {
+        "defaults": {
+          "thresholds": { "mode": "absolute", "steps": [{ "color": "green" }, { "value": 1, "color": "red" }] }
+        }
+      }
+    },
+    {
+      "type": "timeseries",
+      "title": "消息写入速率 (按 topic, msg/s)",
+      "gridPos": { "h": 8, "w": 12, "x": 0, "y": 4 },
+      "datasource": { "type": "prometheus", "uid": "prometheus" },
+      "targets": [{
+        "expr": "sum by(topic)(rate(kafka_topic_partition_current_offset[1m]))",
+        "legendFormat": "{{topic}}",
+        "refId": "A"
+      }],
+      "fieldConfig": { "defaults": { "unit": "ops", "custom": { "drawStyle": "line", "fillOpacity": 10 } } }
+    },
+    {
+      "type": "timeseries",
+      "title": "分区最新 Offset (按 topic/分区)",
+      "gridPos": { "h": 8, "w": 12, "x": 12, "y": 4 },
+      "datasource": { "type": "prometheus", "uid": "prometheus" },
+      "targets": [{
+        "expr": "kafka_topic_partition_current_offset",
+        "legendFormat": "{{topic}}-{{partition}}",
+        "refId": "A"
+      }],
+      "fieldConfig": { "defaults": { "custom": { "drawStyle": "line", "fillOpacity": 0 } } }
+    },
+    {
+      "type": "timeseries",
+      "title": "ISR 同步副本数 (应为3, 按 topic/分区)",
+      "gridPos": { "h": 8, "w": 8, "x": 0, "y": 12 },
+      "datasource": { "type": "prometheus", "uid": "prometheus" },
+      "targets": [{
+        "expr": "kafka_topic_partition_in_sync_replica",
+        "legendFormat": "{{topic}}-{{partition}}",
+        "refId": "A"
+      }],
+      "fieldConfig": { "defaults": { "custom": { "drawStyle": "line", "fillOpacity": 10 } } }
+    },
+    {
+      "type": "timeseries",
+      "title": "欠副本分区 (1=异常)",
+      "gridPos": { "h": 8, "w": 8, "x": 8, "y": 12 },
+      "datasource": { "type": "prometheus", "uid": "prometheus" },
+      "targets": [{
+        "expr": "kafka_topic_partition_under_replicated_partition",
+        "legendFormat": "{{topic}}-{{partition}}",
+        "refId": "A"
+      }],
+      "fieldConfig": { "defaults": { "custom": { "drawStyle": "line", "fillOpacity": 0 } } }
+    },
+    {
+      "type": "timeseries",
+      "title": "分区副本总数",
+      "gridPos": { "h": 8, "w": 8, "x": 16, "y": 12 },
+      "datasource": { "type": "prometheus", "uid": "prometheus" },
+      "targets": [{
+        "expr": "kafka_topic_partition_replicas",
+        "legendFormat": "{{topic}}-{{partition}}",
+        "refId": "A"
+      }],
+      "fieldConfig": { "defaults": { "custom": { "drawStyle": "line", "fillOpacity": 0 } } }
+    },
+    {
+      "type": "timeseries",
+      "title": "消费组积压 Lag",
+      "gridPos": { "h": 8, "w": 12, "x": 0, "y": 20 },
+      "datasource": { "type": "prometheus", "uid": "prometheus" },
+      "targets": [{
+        "expr": "sum by(consumergroup,topic)(kafka_consumergroup_lag)",
+        "legendFormat": "{{consumergroup}}/{{topic}}",
+        "refId": "A"
+      }],
+      "fieldConfig": { "defaults": { "custom": { "drawStyle": "line", "fillOpacity": 10 } } }
+    },
+    {
+      "type": "timeseries",
+      "title": "消费组当前 Offset",
+      "gridPos": { "h": 8, "w": 12, "x": 12, "y": 20 },
+      "datasource": { "type": "prometheus", "uid": "prometheus" },
+      "targets": [{
+        "expr": "sum by(consumergroup,topic)(kafka_consumergroup_current_offset)",
+        "legendFormat": "{{consumergroup}}/{{topic}}",
+        "refId": "A"
+      }],
+      "fieldConfig": { "defaults": { "custom": { "drawStyle": "line", "fillOpacity": 10 } } }
+    }
+  ]
+}
