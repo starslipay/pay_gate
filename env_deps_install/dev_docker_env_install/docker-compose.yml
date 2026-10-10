@@ -17,7 +17,9 @@ volumes:
   redis_master_data: # Redis 主节点数据
   redis_slave1_data: # Redis 从节点1数据
   redis_slave2_data: # Redis 从节点2数据
-  etcd_data:
+  etcd1_data: # etcd 节点1数据
+  etcd2_data: # etcd 节点2数据
+  etcd3_data: # etcd 节点3数据
   kafka1_data: # Kafka 节点1数据
   kafka2_data: # Kafka 节点2数据
   kafka3_data: # Kafka 节点3数据
@@ -235,26 +237,84 @@ services:
       - dev_pay_net
 
   # Etcd 3.5 分布式注册中心【新增command解决报错】
+  # etcd 节点1 (3节点集群: etcd + etcd2 + etcd3, 静态发现)
   etcd:
     image: registry.aliyuncs.com/google_containers/etcd:3.5.6-0
     container_name: etcd
     restart: always
     ports:
-      - "2379:2379"
-      - "2380:2380"
+      - "2379:2379" # 客户端端口 (保持原端口, 业务服务配置不变)
+      - "2380:2380" # 节点间通信端口
     environment:
       TZ: Asia/Shanghai
       ALLOW_NONE_AUTHENTICATION: yes
-      ETCD_NAME: etcd-node1
+      ETCD_NAME: etcd1
       ETCD_DATA_DIR: /etcd/data
       ETCD_LISTEN_CLIENT_URLS: http://0.0.0.0:2379
       ETCD_LISTEN_PEER_URLS: http://0.0.0.0:2380
       ETCD_ADVERTISE_CLIENT_URLS: http://etcd:2379
       ETCD_INITIAL_ADVERTISE_PEER_URLS: http://etcd:2380
-      ETCD_INITIAL_CLUSTER: etcd-node1=http://etcd:2380
+      # 3 节点集群静态成员列表, 三个节点必须一致
+      ETCD_INITIAL_CLUSTER: etcd1=http://etcd:2380,etcd2=http://etcd2:2380,etcd3=http://etcd3:2380
+      ETCD_INITIAL_CLUSTER_STATE: new
+      ETCD_INITIAL_CLUSTER_TOKEN: etcd-cluster-dev
     volumes:
-      - etcd_data:/etcd/data
+      - etcd1_data:/etcd/data
     # 关键修复：添加etcd启动命令
+    command:
+      - /usr/local/bin/etcd
+    networks:
+      - dev_pay_net
+
+  # etcd 节点2 (宿主机端口 2479/2480)
+  etcd2:
+    image: registry.aliyuncs.com/google_containers/etcd:3.5.6-0
+    container_name: etcd2
+    restart: always
+    ports:
+      - "2479:2379"
+      - "2480:2380"
+    environment:
+      TZ: Asia/Shanghai
+      ALLOW_NONE_AUTHENTICATION: yes
+      ETCD_NAME: etcd2
+      ETCD_DATA_DIR: /etcd/data
+      ETCD_LISTEN_CLIENT_URLS: http://0.0.0.0:2379
+      ETCD_LISTEN_PEER_URLS: http://0.0.0.0:2380
+      ETCD_ADVERTISE_CLIENT_URLS: http://etcd2:2379
+      ETCD_INITIAL_ADVERTISE_PEER_URLS: http://etcd2:2380
+      ETCD_INITIAL_CLUSTER: etcd1=http://etcd:2380,etcd2=http://etcd2:2380,etcd3=http://etcd3:2380
+      ETCD_INITIAL_CLUSTER_STATE: new
+      ETCD_INITIAL_CLUSTER_TOKEN: etcd-cluster-dev
+    volumes:
+      - etcd2_data:/etcd/data
+    command:
+      - /usr/local/bin/etcd
+    networks:
+      - dev_pay_net
+
+  # etcd 节点3 (宿主机端口 2579/2580)
+  etcd3:
+    image: registry.aliyuncs.com/google_containers/etcd:3.5.6-0
+    container_name: etcd3
+    restart: always
+    ports:
+      - "2579:2379"
+      - "2580:2380"
+    environment:
+      TZ: Asia/Shanghai
+      ALLOW_NONE_AUTHENTICATION: yes
+      ETCD_NAME: etcd3
+      ETCD_DATA_DIR: /etcd/data
+      ETCD_LISTEN_CLIENT_URLS: http://0.0.0.0:2379
+      ETCD_LISTEN_PEER_URLS: http://0.0.0.0:2380
+      ETCD_ADVERTISE_CLIENT_URLS: http://etcd3:2379
+      ETCD_INITIAL_ADVERTISE_PEER_URLS: http://etcd3:2380
+      ETCD_INITIAL_CLUSTER: etcd1=http://etcd:2380,etcd2=http://etcd2:2380,etcd3=http://etcd3:2380
+      ETCD_INITIAL_CLUSTER_STATE: new
+      ETCD_INITIAL_CLUSTER_TOKEN: etcd-cluster-dev
+    volumes:
+      - etcd3_data:/etcd/data
     command:
       - /usr/local/bin/etcd
     networks:

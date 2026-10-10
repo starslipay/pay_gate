@@ -12,16 +12,17 @@
   "panels": [
     {
       "type": "stat",
-      "title": "集群状态",
+      "title": "各节点是否有 Leader",
       "gridPos": { "h": 4, "w": 4, "x": 0, "y": 0 },
       "datasource": { "type": "prometheus", "uid": "prometheus" },
-      "targets": [{ "expr": "etcd_server_has", "legendFormat": "{{instance}}", "refId": "A" }],
+      "targets": [{ "expr": "etcd_server_has_leader", "legendFormat": "{{instance}}", "refId": "A" }],
       "fieldConfig": {
         "defaults": {
           "mappings": [{ "options": { "0": { "text": "无主", "color": "red" }, "1": { "text": "有主", "color": "green" } }, "type": "value" }],
           "thresholds": { "mode": "absolute", "steps": [{ "color": "red" }, { "value": 1, "color": "green" }] }
         }
-      }
+      },
+      "options": { "reduceOptions": { "calcs": ["lastNotNull"], "fields": "", "values": false }, "orientation": "horizontal" }
     },
     {
       "type": "stat",
@@ -42,7 +43,7 @@
       "gridPos": { "h": 4, "w": 4, "x": 8, "y": 0 },
       "datasource": { "type": "prometheus", "uid": "prometheus" },
       "targets": [{ "expr": "count(etcd_server_id)", "legendFormat": "", "refId": "A" }],
-      "fieldConfig": { "defaults": { "thresholds": { "mode": "absolute", "steps": [{ "color": "red" }, { "value": 1, "color": "green" }] } } }
+      "fieldConfig": { "defaults": { "thresholds": { "mode": "absolute", "steps": [{ "color": "red" }, { "value": 3, "color": "green" }] } } }
     },
     {
       "type": "stat",
@@ -102,10 +103,10 @@
     },
     {
       "type": "timeseries",
-      "title": "磁盘 WAL fsync 延迟 (秒, 按节点)",
+      "title": "磁盘 WAL fsync 延迟 p99 (秒, 按节点)",
       "gridPos": { "h": 8, "w": 12, "x": 12, "y": 12 },
       "datasource": { "type": "prometheus", "uid": "prometheus" },
-      "targets": [{ "expr": "histogram_quantile(0.99, rate(etcd_disk_wal_fsync_duration_seconds_bucket[1m]))", "legendFormat": "{{instance}} p99", "refId": "A" }],
+      "targets": [{ "expr": "histogram_quantile(0.99, sum by(instance, le)(rate(etcd_disk_wal_fsync_duration_seconds_bucket[1m])))", "legendFormat": "{{instance}}", "refId": "A" }],
       "fieldConfig": { "defaults": { "unit": "s", "custom": { "drawStyle": "line", "fillOpacity": 10 } } }
     },
     {
@@ -129,10 +130,10 @@
     },
     {
       "type": "timeseries",
-      "title": "客户端缓存响应时间 (秒, 按节点)",
+      "title": "后端存储提交延迟 p99 (秒, 按节点)",
       "gridPos": { "h": 8, "w": 8, "x": 16, "y": 20 },
       "datasource": { "type": "prometheus", "uid": "prometheus" },
-      "targets": [{ "expr": "histogram_quantile(0.99, rate(etcd_disk_backend_commit_duration_seconds_bucket[1m]))", "legendFormat": "{{instance}} p99", "refId": "A" }],
+      "targets": [{ "expr": "histogram_quantile(0.99, sum by(instance, le)(rate(etcd_disk_backend_commit_duration_seconds_bucket[1m])))", "legendFormat": "{{instance}}", "refId": "A" }],
       "fieldConfig": { "defaults": { "unit": "s", "custom": { "drawStyle": "line", "fillOpacity": 10 } } }
     }
   ]

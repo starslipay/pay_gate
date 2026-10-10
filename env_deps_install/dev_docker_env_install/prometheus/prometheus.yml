@@ -105,11 +105,14 @@ scrape_configs:
         labels:
           module: 'kafka'
 
-  # etcd 指标采集。etcd 3.5 自带 /metrics 端点(无需额外 exporter),
-  # 直接抓取 client 端口 2379 即可获取集群状态/leader/DB/GRPC 等指标。
+  # etcd 3节点集群指标采集。etcd 3.5 自带 /metrics 端点(无需额外 exporter),
+  # 直接抓取各节点 client 端口 2379 即可获取集群状态/leader/DB/GRPC 等指标。
   - job_name: 'etcd'
     metrics_path: /metrics
     static_configs:
-      - targets: ['etcd:2379']
+      - targets:
+          - etcd:2379    # 节点1
+          - etcd2:2379   # 节点2
+          - etcd3:2379   # 节点3
         labels:
           module: 'etcd'
