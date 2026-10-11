@@ -20,10 +20,10 @@ import (
 const BaseURL = "http://localhost:30888"
 
 // RegUserCount 注册用户数（用户池大小）
-const RegUserCount = 300
+const RegUserCount = 600
 
 // Concurrency 并发支付协程数（从用户池中随机选用户发起支付）
-const Concurrency = 300
+const Concurrency = 500
 
 // Duration 压测持续时长，时间内一直发起并发支付请求
 const Duration = 30 * time.Second
@@ -39,6 +39,9 @@ const PayAmount = 1
 
 // Merchants 预置商户ID列表
 var Merchants = []string{"2000000000", "3000000000", "4000000000", "5000000000", "6000000000"}
+
+// PrepareConcurrency 准备阶段(注册/充值)的最大并发数, 避免瞬时SYN突发打爆Docker Desktop端口转发层
+const PrepareConcurrency = 300
 
 // HTTPTimeout HTTP 客户端超时
 const HTTPTimeout = 10 * time.Second
@@ -165,10 +168,13 @@ func main() {
 	}
 	results := make([]regResult, RegUserCount)
 	var regWg sync.WaitGroup
+	regSem := make(chan struct{}, PrepareConcurrency) // 并发闸门
 	for i := 0; i < RegUserCount; i++ {
+		regSem <- struct{}{} // 超过300个在途时阻塞等待
 		regWg.Add(1)
 		go func(i int) {
 			defer regWg.Done()
+			defer func() { <-regSem }()
 			userId := fmt.Sprintf("bench_%d_%d", uidPrefix, i)
 			body := regUserReq{
 				UserId:   userId,
@@ -258,10 +264,13 @@ func main() {
 		rechargeWg   sync.WaitGroup
 		rechargeFail int32 // 原子计数，>0 表示有充值失败
 	)
+	rechargeSem := make(chan struct{}, PrepareConcurrency) // 并发闸门
 	for i := range users {
+		rechargeSem <- struct{}{} // 超过300个在途时阻塞等待
 		rechargeWg.Add(1)
 		go func(i int) {
 			defer rechargeWg.Done()
+			defer func() { <-rechargeSem }()
 			// bank2c_pre 获取 transaction_id
 			preBody := bank2cPreReq{UserId: users[i].userId}
 			ok, data := postAndCheck(client, BaseURL+"/api/pay_gate/bank2c_pre", preBody, nil)
@@ -327,7 +336,7 @@ func main() {
 			defer wg.Done()
 			local := localLatencies[workerId]
 			seq := 0
-			userIdx := 0 // 当前协程的用户游标，循环遍历用户数组
+			userIdx := workerId % len(users) // 当前协程的用户游标, 按 workerId 加初始偏移, 避免所有协程从同一用户齐步走导致账户行锁排队
 			for time.Now().Before(deadline) {
 				// 循环从用户数组第一个到最后一个依次取用户，取完从头再来
 				u := users[userIdx]
