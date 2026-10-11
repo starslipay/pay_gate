@@ -20,7 +20,7 @@ import (
 const BaseURL = "http://localhost:30888"
 
 // RegUserCount 注册用户数（用户池大小）
-const RegUserCount = 10
+const RegUserCount = 300
 
 // Concurrency 并发支付协程数（从用户池中随机选用户发起支付）
 const Concurrency = 300
@@ -154,39 +154,59 @@ func main() {
 		},
 	}
 
-	// ---------- 第一阶段：注册用户，构建用户池 ----------
-	fmt.Printf("=== 第一阶段: 注册 %d 个用户 ===\n", RegUserCount)
-	users := make([]userInfo, 0, RegUserCount)
+	// ---------- 第一阶段：并发注册用户，构建用户池 ----------
+	fmt.Printf("=== 第一阶段: 并发注册 %d 个用户 ===\n", RegUserCount)
 	uidPrefix := time.Now().UnixMilli()
+
+	// 预分配槽位，各协程按下标写入，避免 append 竞争
+	type regResult struct {
+		user userInfo
+		ok   bool
+	}
+	results := make([]regResult, RegUserCount)
+	var regWg sync.WaitGroup
 	for i := 0; i < RegUserCount; i++ {
-		userId := fmt.Sprintf("bench_%d_%d", uidPrefix, i)
-		body := regUserReq{
-			UserId:   userId,
-			Password: Password,
-			Name:     "压测用户" + strconv.Itoa(i),
-			Gender:   1,
-			Age:      20 + int32(i%30),
-			Address:  "深圳市南山区科技园",
-			Phone:    fmt.Sprintf("138%08d", i),
-			Email:    fmt.Sprintf("bench%d@test.com", i),
-			IdType:   1,
-			IdCard:   fmt.Sprintf("4403%014d", i),
+		regWg.Add(1)
+		go func(i int) {
+			defer regWg.Done()
+			userId := fmt.Sprintf("bench_%d_%d", uidPrefix, i)
+			body := regUserReq{
+				UserId:   userId,
+				Password: Password,
+				Name:     "压测用户" + strconv.Itoa(i),
+				Gender:   1,
+				Age:      20 + int32(i%30),
+				Address:  "深圳市南山区科技园",
+				Phone:    fmt.Sprintf("138%08d", i),
+				Email:    fmt.Sprintf("bench%d@test.com", i),
+				IdType:   1,
+				IdCard:   fmt.Sprintf("4403%014d", i),
+			}
+			data, _, err := httpPost(client, BaseURL+"/api/pay_gate/reg_user", body, nil)
+			if err != nil {
+				fmt.Printf("  注册用户 %d 失败: %v\n", i, err)
+				return
+			}
+			var rsp apiRsp
+			if err := json.Unmarshal(data, &rsp); err != nil {
+				fmt.Printf("  注册用户 %d 解析失败: %v, body=%s\n", i, err, string(data))
+				return
+			}
+			if rsp.Code != 0 {
+				fmt.Printf("  注册用户 %d 业务失败: code=%d, msg=%s\n", i, rsp.Code, rsp.Msg)
+				return
+			}
+			results[i] = regResult{user: userInfo{userId: userId}, ok: true}
+		}(i)
+	}
+	regWg.Wait()
+
+	// 按原顺序收集注册成功的用户
+	users := make([]userInfo, 0, RegUserCount)
+	for _, r := range results {
+		if r.ok {
+			users = append(users, r.user)
 		}
-		data, _, err := httpPost(client, BaseURL+"/api/pay_gate/reg_user", body, nil)
-		if err != nil {
-			fmt.Printf("  注册用户 %d 失败: %v\n", i, err)
-			continue
-		}
-		var rsp apiRsp
-		if err := json.Unmarshal(data, &rsp); err != nil {
-			fmt.Printf("  注册用户 %d 解析失败: %v, body=%s\n", i, err, string(data))
-			continue
-		}
-		if rsp.Code != 0 {
-			fmt.Printf("  注册用户 %d 业务失败: code=%d, msg=%s\n", i, rsp.Code, rsp.Msg)
-			continue
-		}
-		users = append(users, userInfo{userId: userId})
 	}
 	fmt.Printf("  注册成功: %d/%d\n\n", len(users), RegUserCount)
 
@@ -232,37 +252,52 @@ func main() {
 	}
 	fmt.Printf("  获取 token 成功: %d/%d\n\n", tokenCount, len(users))
 
-	// ---------- 第三阶段：充值（确保余额充足，失败即退出） ----------
-	fmt.Printf("=== 第三阶段: 为 %d 个用户充值 %d 分 ===\n", len(users), RechargeAmount)
+	// ---------- 第三阶段：并发充值（确保余额充足，有失败即退出） ----------
+	fmt.Printf("=== 第三阶段: 并发为 %d 个用户充值 %d 分 ===\n", len(users), RechargeAmount)
+	var (
+		rechargeWg   sync.WaitGroup
+		rechargeFail int32 // 原子计数，>0 表示有充值失败
+	)
 	for i := range users {
-		// bank2c_pre 获取 transaction_id
-		preBody := bank2cPreReq{UserId: users[i].userId}
-		ok, data := postAndCheck(client, BaseURL+"/api/pay_gate/bank2c_pre", preBody, nil)
-		if !ok {
-			fmt.Printf("  用户 %s bank2c_pre 失败: %s\n", users[i].userId, string(data))
-			return
-		}
-		var preRsp struct {
-			UserId        string `json:"user_id"`
-			TransactionId string `json:"transaction_id"`
-		}
-		json.Unmarshal(data, &preRsp)
+		rechargeWg.Add(1)
+		go func(i int) {
+			defer rechargeWg.Done()
+			// bank2c_pre 获取 transaction_id
+			preBody := bank2cPreReq{UserId: users[i].userId}
+			ok, data := postAndCheck(client, BaseURL+"/api/pay_gate/bank2c_pre", preBody, nil)
+			if !ok {
+				fmt.Printf("  用户 %s bank2c_pre 失败: %s\n", users[i].userId, string(data))
+				atomic.AddInt32(&rechargeFail, 1)
+				return
+			}
+			var preRsp struct {
+				UserId        string `json:"user_id"`
+				TransactionId string `json:"transaction_id"`
+			}
+			json.Unmarshal(data, &preRsp)
 
-		// bank2c_do 充值
-		doBody := bank2cDoReq{
-			TransactionId: preRsp.TransactionId,
-			UserId:        users[i].userId,
-			BankType:      1, // 默认银行类型
-			Amount:        RechargeAmount,
-			VerifyType:    1, // 密码验证
-			Password:      Password,
-			Memo:          "压测充值",
-		}
-		ok, data = postAndCheck(client, BaseURL+"/api/pay_gate/bank2c_do", doBody, nil)
-		if !ok {
-			fmt.Printf("  用户 %s bank2c_do 失败: %s\n", users[i].userId, string(data))
-			return
-		}
+			// bank2c_do 充值
+			doBody := bank2cDoReq{
+				TransactionId: preRsp.TransactionId,
+				UserId:        users[i].userId,
+				BankType:      1, // 默认银行类型
+				Amount:        RechargeAmount,
+				VerifyType:    1, // 密码验证
+				Password:      Password,
+				Memo:          "压测充值",
+			}
+			ok, data = postAndCheck(client, BaseURL+"/api/pay_gate/bank2c_do", doBody, nil)
+			if !ok {
+				fmt.Printf("  用户 %s bank2c_do 失败: %s\n", users[i].userId, string(data))
+				atomic.AddInt32(&rechargeFail, 1)
+				return
+			}
+		}(i)
+	}
+	rechargeWg.Wait()
+	if atomic.LoadInt32(&rechargeFail) > 0 {
+		fmt.Printf("  有 %d 个用户充值失败，退出压测\n", atomic.LoadInt32(&rechargeFail))
+		return
 	}
 	fmt.Printf("  充值成功: %d/%d\n\n", len(users), len(users))
 
@@ -292,9 +327,12 @@ func main() {
 			defer wg.Done()
 			local := localLatencies[workerId]
 			seq := 0
+			userIdx := 0 // 当前协程的用户游标，循环遍历用户数组
 			for time.Now().Before(deadline) {
-				// 随机选用户和商户
-				u := users[rand.Intn(len(users))]
+				// 循环从用户数组第一个到最后一个依次取用户，取完从头再来
+				u := users[userIdx]
+				userIdx = (userIdx + 1) % len(users)
+				// 商户仍随机选择
 				merchantId := Merchants[rand.Intn(len(Merchants))]
 				headers := map[string]string{}
 				if u.token != "" {
