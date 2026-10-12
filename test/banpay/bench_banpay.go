@@ -20,13 +20,13 @@ import (
 const BaseURL = "http://localhost:30888"
 
 // RegUserCount 注册用户数（用户池大小）
-const RegUserCount = 400
+const RegUserCount = 800
 
 // Concurrency 并发支付协程数（从用户池中随机选用户发起支付）
-const Concurrency = 400
+const Concurrency = 800
 
 // Duration 压测持续时长，时间内一直发起并发支付请求
-const Duration = 5 * time.Second
+const Duration = 60 * time.Second
 
 // Password 注册用户使用的支付密码
 const Password = "123456"
@@ -121,6 +121,29 @@ func httpPost(client *http.Client, url string, body interface{}, headers map[str
 	defer resp.Body.Close()
 	data, _ := io.ReadAll(resp.Body)
 	return data, resp.StatusCode, nil
+}
+
+// initialConcurrency 返回起步并发数（配置并发数的10%，至少1个）
+func initialConcurrency() int {
+	v := Concurrency / 10
+	if v < 1 {
+		v = 1
+	}
+	return v
+}
+
+// stepConcurrency 返回第 step 档（从1开始）的目标并发数
+// step=1 → 10%, step=2 → 20%, ... step>=10 → 100%
+func stepConcurrency(step int) int {
+	p := step * 10
+	if p > 100 {
+		p = 100
+	}
+	v := Concurrency * p / 100
+	if v < 1 {
+		v = 1
+	}
+	return v
 }
 
 // postAndCheck 发送请求并检查响应码是否为0（成功），返回 data 字段的原始 JSON
@@ -310,9 +333,9 @@ func main() {
 	}
 	fmt.Printf("  充值成功: %d/%d\n\n", len(users), len(users))
 
-	// ---------- 第四阶段：并发支付（基于时间窗口） ----------
-	fmt.Printf("=== 第四阶段: 并发压测支付 (用户池=%d, 并发=%d, 持续=%s) ===\n",
-		len(users), Concurrency, Duration)
+	// ---------- 第四阶段：阶梯式并发支付（10% → 20% → ... → 100%，每档间隔5秒，实时打印QPS） ----------
+	fmt.Printf("=== 第四阶段: 阶梯压测支付 (用户池=%d, 目标并发=%d, 持续=%s, 起步并发=%d) ===\n",
+		len(users), Concurrency, Duration, initialConcurrency())
 
 	var (
 		successCnt int64 // ban_pay 成功
@@ -323,6 +346,55 @@ func main() {
 	startTime := time.Now()
 	deadline := startTime.Add(Duration)
 	var wg sync.WaitGroup
+
+	// 并发闸门：worker 每轮迭代必须先取到令牌才能发请求；
+	// 初始令牌数为并发数的10%，之后每5秒补发下一档，直到100%
+	tokens := make(chan struct{}, Concurrency)
+	for i := 0; i < initialConcurrency(); i++ {
+		tokens <- struct{}{}
+	}
+
+	// 阶梯控制器：每5秒提升一档并发，并打印当前窗口QPS
+	wg.Add(1)
+	go func() {
+		defer wg.Done()
+		active := initialConcurrency()
+		lastDone := int64(0)
+		lastTime := time.Now()
+		for step := 2; ; step++ {
+			select {
+			case <-time.After(5 * time.Second):
+			}
+			if !time.Now().Before(deadline) {
+				return
+			}
+			// 打印过去5秒的QPS与当前并发
+			done := atomic.LoadInt64(&successCnt) + atomic.LoadInt64(&failCnt)
+			now := time.Now()
+			windowQps := float64(done-lastDone) / now.Sub(lastTime).Seconds()
+			fmt.Printf("  [阶梯] 活跃并发=%d/%d, 近5s QPS=%.2f, 累计ban_pay=%d\n",
+				active, Concurrency, windowQps, done)
+			lastDone, lastTime = done, now
+			// 计算下一档并补发令牌
+			target := stepConcurrency(step)
+			for active < target {
+				tokens <- struct{}{}
+				active++
+			}
+			if active >= Concurrency {
+				// 已到100%，继续每5秒打印QPS直到压测结束
+				for time.Now().Before(deadline) {
+					<-time.After(5 * time.Second)
+					done = atomic.LoadInt64(&successCnt) + atomic.LoadInt64(&failCnt)
+					now = time.Now()
+					fmt.Printf("  [阶梯] 活跃并发=%d/%d, 近5s QPS=%.2f, 累计ban_pay=%d\n",
+						active, Concurrency, float64(done-lastDone)/now.Sub(lastTime).Seconds(), done)
+					lastDone, lastTime = done, now
+				}
+				return
+			}
+		}
+	}()
 
 	// 每个 worker 用本地 slice 收集延迟，避免全局锁竞争
 	localLatencies := make([][]int64, Concurrency)
@@ -338,6 +410,8 @@ func main() {
 			seq := 0
 			userIdx := workerId % len(users) // 当前协程的用户游标, 按 workerId 加初始偏移, 避免所有协程从同一用户齐步走导致账户行锁排队
 			for time.Now().Before(deadline) {
+				// 取不到令牌时阻塞，等阶梯控制器补发 → 未激活的 worker 不产生请求
+				<-tokens
 				// 循环从用户数组第一个到最后一个依次取用户，取完从头再来
 				u := users[userIdx]
 				userIdx = (userIdx + 1) % len(users)
@@ -356,6 +430,7 @@ func main() {
 				ok, data := postAndCheck(client, BaseURL+"/api/pay_gate/pay_re", preBody, headers)
 				if !ok {
 					atomic.AddInt64(&preFailCnt, 1)
+					tokens <- struct{}{} // 归还令牌
 					continue
 				}
 				var preRsp struct {
@@ -391,6 +466,7 @@ func main() {
 				}
 
 				local = append(local, latency.Nanoseconds())
+				tokens <- struct{}{} // 归还令牌，进入下一轮
 			}
 			localLatencies[workerId] = local
 		}(w)
