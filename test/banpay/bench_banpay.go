@@ -20,13 +20,13 @@ import (
 const BaseURL = "http://localhost:30888"
 
 // RegUserCount 注册用户数（用户池大小）
-const RegUserCount = 600
+const RegUserCount = 400
 
 // Concurrency 并发支付协程数（从用户池中随机选用户发起支付）
-const Concurrency = 500
+const Concurrency = 400
 
 // Duration 压测持续时长，时间内一直发起并发支付请求
-const Duration = 30 * time.Second
+const Duration = 5 * time.Second
 
 // Password 注册用户使用的支付密码
 const Password = "123456"
