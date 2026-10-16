@@ -1,0 +1,268 @@
+{
+  "annotations": {
+    "list": [
+      {
+        "builtIn": 1,
+        "datasource": { "type": "grafana", "uid": "-- Grafana --" },
+        "enable": true,
+        "hide": true,
+        "iconColor": "rgba(0, 211, 255, 1)",
+        "name": "Annotations & Alerts",
+        "type": "dashboard"
+      }
+    ]
+  },
+  "editable": true,
+  "fiscalYearStartMonth": 0,
+  "graphTooltip": 1,
+  "id": null,
+  "links": [],
+  "liveNow": false,
+  "refresh": "5s",
+  "schemaVersion": 39,
+  "tags": ["starslipay", "go-zero", "latency"],
+  "templating": {
+    "list": [
+      {
+        "current": { "selected": true, "text": ["P99 (0.99)"], "value": ["0.99"] },
+        "hide": 0,
+        "includeAll": false,
+        "label": "分位数",
+        "multi": false,
+        "name": "quantile",
+        "options": [
+          { "selected": true, "text": "P99 (0.99)", "value": "0.99" },
+          { "selected": false, "text": "P95 (0.95)", "value": "0.95" }
+        ],
+        "query": "0.99,0.95",
+        "type": "custom"
+      },
+      {
+        "current": { "selected": true, "text": ["All"], "value": ["$__all"] },
+        "datasource": { "type": "prometheus", "uid": "prometheus" },
+        "definition": "label_values(http_server_requests_duration_ms_bucket, path)",
+        "includeAll": true,
+        "multi": true,
+        "name": "gateway_api",
+        "options": [],
+        "query": { "query": "label_values(http_server_requests_duration_ms_bucket, path)", "refId": "StandardVariableQuery" },
+        "refresh": 2,
+        "regex": "",
+        "sort": 1,
+        "type": "query",
+        "label": "网关接口(HTTP)"
+      },
+      {
+        "current": { "selected": true, "text": ["All"], "value": ["$__all"] },
+        "datasource": { "type": "prometheus", "uid": "prometheus" },
+        "definition": "label_values(rpc_server_requests_duration_ms_bucket, module)",
+        "includeAll": true,
+        "multi": true,
+        "name": "rpc_module",
+        "options": [],
+        "query": { "query": "label_values(rpc_server_requests_duration_ms_bucket, module)", "refId": "StandardVariableQuery" },
+        "refresh": 2,
+        "regex": "",
+        "sort": 1,
+        "type": "query",
+        "label": "RPC模块"
+      },
+      {
+        "current": { "selected": true, "text": ["All"], "value": ["$__all"] },
+        "datasource": { "type": "prometheus", "uid": "prometheus" },
+        "definition": "label_values(rpc_server_requests_duration_ms_bucket{module=~\"$rpc_module\"}, method)",
+        "includeAll": true,
+        "multi": true,
+        "name": "rpc_api",
+        "options": [],
+        "query": { "query": "label_values(rpc_server_requests_duration_ms_bucket{module=~\"$rpc_module\"}, method)", "refId": "StandardVariableQuery" },
+        "refresh": 2,
+        "regex": "",
+        "sort": 1,
+        "type": "query",
+        "label": "RPC接口"
+      }
+    ]
+  },
+  "time": { "from": "now-30m", "to": "now" },
+  "timepicker": {},
+  "timezone": "browser",
+  "title": "接口耗时分位数 (P99/P95)",
+  "uid": "api-latency",
+  "version": 1,
+  "panels": [
+    {
+      "type": "row",
+      "title": "网关 HTTP 接口 (pay_gate)",
+      "gridPos": { "h": 1, "w": 24, "x": 0, "y": 0 },
+      "collapsed": false,
+      "panels": []
+    },
+    {
+      "type": "timeseries",
+      "title": "网关接口耗时 ($quantile 分位)",
+      "description": "按 path 分组的接口耗时分位数, 顶部可切换 P99/P95, 可选具体接口",
+      "datasource": { "type": "prometheus", "uid": "prometheus" },
+      "gridPos": { "h": 8, "w": 12, "x": 0, "y": 1 },
+      "fieldConfig": {
+        "defaults": {
+          "custom": { "drawStyle": "line", "fillOpacity": 8, "lineWidth": 2, "showPoints": "never", "spanNulls": false },
+          "unit": "ms",
+          "min": 0
+        },
+        "overrides": []
+      },
+      "options": {
+        "legend": { "displayMode": "table", "placement": "bottom", "showLegend": true, "calcs": ["lastNotNull", "max"] },
+        "tooltip": { "mode": "multi", "sort": "desc" }
+      },
+      "targets": [
+        {
+          "datasource": { "type": "prometheus", "uid": "prometheus" },
+          "expr": "histogram_quantile($quantile, sum(rate(http_server_requests_duration_ms_bucket{path=~\"$gateway_api\"}[$__rate_interval])) by (le, path))",
+          "legendFormat": "{{path}}",
+          "refId": "A"
+        }
+      ]
+    },
+    {
+      "type": "timeseries",
+      "title": "网关接口 P99 vs P95 对比",
+      "description": "选中接口的 P99 与 P95 同时展示, 用于观察长尾程度",
+      "datasource": { "type": "prometheus", "uid": "prometheus" },
+      "gridPos": { "h": 8, "w": 12, "x": 12, "y": 1 },
+      "fieldConfig": {
+        "defaults": {
+          "custom": { "drawStyle": "line", "fillOpacity": 0, "lineWidth": 2, "showPoints": "never", "spanNulls": false },
+          "unit": "ms",
+          "min": 0
+        },
+        "overrides": []
+      },
+      "options": {
+        "legend": { "displayMode": "table", "placement": "bottom", "showLegend": true, "calcs": ["lastNotNull", "max"] },
+        "tooltip": { "mode": "multi", "sort": "desc" }
+      },
+      "targets": [
+        {
+          "datasource": { "type": "prometheus", "uid": "prometheus" },
+          "expr": "histogram_quantile(0.99, sum(rate(http_server_requests_duration_ms_bucket{path=~\"$gateway_api\"}[$__rate_interval])) by (le, path))",
+          "legendFormat": "P99 {{path}}",
+          "refId": "A"
+        },
+        {
+          "datasource": { "type": "prometheus", "uid": "prometheus" },
+          "expr": "histogram_quantile(0.95, sum(rate(http_server_requests_duration_ms_bucket{path=~\"$gateway_api\"}[$__rate_interval])) by (le, path))",
+          "legendFormat": "P95 {{path}}",
+          "refId": "B"
+        }
+      ]
+    },
+    {
+      "type": "row",
+      "title": "RPC 服务端接口 (按模块)",
+      "gridPos": { "h": 1, "w": 24, "x": 0, "y": 9 },
+      "collapsed": false,
+      "panels": []
+    },
+    {
+      "type": "timeseries",
+      "title": "RPC 接口耗时 ($quantile 分位)",
+      "description": "按模块+方法分组, 顶部可选 RPC模块 与 RPC接口, 可切换 P99/P95",
+      "datasource": { "type": "prometheus", "uid": "prometheus" },
+      "gridPos": { "h": 8, "w": 12, "x": 0, "y": 10 },
+      "fieldConfig": {
+        "defaults": {
+          "custom": { "drawStyle": "line", "fillOpacity": 8, "lineWidth": 2, "showPoints": "never", "spanNulls": false },
+          "unit": "ms",
+          "min": 0
+        },
+        "overrides": []
+      },
+      "options": {
+        "legend": { "displayMode": "table", "placement": "bottom", "showLegend": true, "calcs": ["lastNotNull", "max"] },
+        "tooltip": { "mode": "multi", "sort": "desc" }
+      },
+      "targets": [
+        {
+          "datasource": { "type": "prometheus", "uid": "prometheus" },
+          "expr": "histogram_quantile($quantile, sum(rate(rpc_server_requests_duration_ms_bucket{module=~\"$rpc_module\", method=~\"$rpc_api\"}[$__rate_interval])) by (le, module, method))",
+          "legendFormat": "{{module}} {{method}}",
+          "refId": "A"
+        }
+      ]
+    },
+    {
+      "type": "timeseries",
+      "title": "RPC 接口 P99 vs P95 对比",
+      "datasource": { "type": "prometheus", "uid": "prometheus" },
+      "gridPos": { "h": 8, "w": 12, "x": 12, "y": 10 },
+      "fieldConfig": {
+        "defaults": {
+          "custom": { "drawStyle": "line", "fillOpacity": 0, "lineWidth": 2, "showPoints": "never", "spanNulls": false },
+          "unit": "ms",
+          "min": 0
+        },
+        "overrides": []
+      },
+      "options": {
+        "legend": { "displayMode": "table", "placement": "bottom", "showLegend": true, "calcs": ["lastNotNull", "max"] },
+        "tooltip": { "mode": "multi", "sort": "desc" }
+      },
+      "targets": [
+        {
+          "datasource": { "type": "prometheus", "uid": "prometheus" },
+          "expr": "histogram_quantile(0.99, sum(rate(rpc_server_requests_duration_ms_bucket{module=~\"$rpc_module\", method=~\"$rpc_api\"}[$__rate_interval])) by (le, module, method))",
+          "legendFormat": "P99 {{module}} {{method}}",
+          "refId": "A"
+        },
+        {
+          "datasource": { "type": "prometheus", "uid": "prometheus" },
+          "expr": "histogram_quantile(0.95, sum(rate(rpc_server_requests_duration_ms_bucket{module=~\"$rpc_module\", method=~\"$rpc_api\"}[$__rate_interval])) by (le, module, method))",
+          "legendFormat": "P95 {{module}} {{method}}",
+          "refId": "B"
+        }
+      ]
+    },
+    {
+      "type": "row",
+      "title": "pay_gate 调用下游 RPC (客户端视角)",
+      "gridPos": { "h": 1, "w": 24, "x": 0, "y": 18 },
+      "collapsed": false,
+      "panels": []
+    },
+    {
+      "type": "timeseries",
+      "title": "下游调用耗时 ($quantile 分位)",
+      "description": "pay_gate 作为 RPC 客户端看到的下游耗时, 含网络往返, 与上方服务端对比可看出链路排队",
+      "datasource": { "type": "prometheus", "uid": "prometheus" },
+      "gridPos": { "h": 8, "w": 24, "x": 0, "y": 19 },
+      "fieldConfig": {
+        "defaults": {
+          "custom": { "drawStyle": "line", "fillOpacity": 8, "lineWidth": 2, "showPoints": "never", "spanNulls": false },
+          "unit": "ms",
+          "min": 0
+        },
+        "overrides": []
+      },
+      "options": {
+        "legend": { "displayMode": "table", "placement": "bottom", "showLegend": true, "calcs": ["lastNotNull", "max"] },
+        "tooltip": { "mode": "multi", "sort": "desc" }
+      },
+      "targets": [
+        {
+          "datasource": { "type": "prometheus", "uid": "prometheus" },
+          "expr": "histogram_quantile(0.99, sum(rate(rpc_client_requests_duration_ms_bucket{method=~\"$rpc_api\"}[$__rate_interval])) by (le, method))",
+          "legendFormat": "P99 {{method}}",
+          "refId": "A"
+        },
+        {
+          "datasource": { "type": "prometheus", "uid": "prometheus" },
+          "expr": "histogram_quantile(0.95, sum(rate(rpc_client_requests_duration_ms_bucket{method=~\"$rpc_api\"}[$__rate_interval])) by (le, method))",
+          "legendFormat": "P95 {{method}}",
+          "refId": "B"
+        }
+      ]
+    }
+  ]
+}

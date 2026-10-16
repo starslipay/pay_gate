@@ -341,6 +341,7 @@ func main() {
 		successCnt int64 // ban_pay 成功
 		failCnt    int64 // ban_pay 失败
 		preFailCnt int64 // pay_pre 失败
+		latSumNs   int64 // ban_pay 延迟总和(ns), 用于阶梯窗口平均耗时
 	)
 
 	startTime := time.Now()
@@ -354,13 +355,30 @@ func main() {
 		tokens <- struct{}{}
 	}
 
-	// 阶梯控制器：每5秒提升一档并发，并打印当前窗口QPS
+	// 阶梯控制器：每5秒提升一档并发，并打印当前窗口QPS/平均耗时/成功失败数
 	wg.Add(1)
 	go func() {
 		defer wg.Done()
 		active := initialConcurrency()
-		lastDone := int64(0)
+		lastDone, lastSucc, lastFail, lastLat := int64(0), int64(0), int64(0), int64(0)
 		lastTime := time.Now()
+		// printWindow 打印近5秒窗口的QPS、平均耗时、本步与累计成功/失败数
+		printWindow := func() {
+			now := time.Now()
+			succ := atomic.LoadInt64(&successCnt)
+			fail := atomic.LoadInt64(&failCnt)
+			lat := atomic.LoadInt64(&latSumNs)
+			done := succ + fail
+			dReq := done - lastDone
+			windowQps := float64(dReq) / now.Sub(lastTime).Seconds()
+			avgMs := 0.0
+			if dReq > 0 {
+				avgMs = float64(lat-lastLat) / float64(dReq) / 1e6
+			}
+			fmt.Printf("  [阶梯] 活跃并发=%d/%d, 近5s QPS=%.2f, 平均耗时=%.1fms, 本步成功=%d 失败=%d, 累计: 成功=%d 失败=%d\n",
+				active, Concurrency, windowQps, avgMs, succ-lastSucc, fail-lastFail, succ, fail)
+			lastDone, lastSucc, lastFail, lastLat, lastTime = done, succ, fail, lat, now
+		}
 		for step := 2; ; step++ {
 			select {
 			case <-time.After(5 * time.Second):
@@ -368,13 +386,7 @@ func main() {
 			if !time.Now().Before(deadline) {
 				return
 			}
-			// 打印过去5秒的QPS与当前并发
-			done := atomic.LoadInt64(&successCnt) + atomic.LoadInt64(&failCnt)
-			now := time.Now()
-			windowQps := float64(done-lastDone) / now.Sub(lastTime).Seconds()
-			fmt.Printf("  [阶梯] 活跃并发=%d/%d, 近5s QPS=%.2f, 累计ban_pay=%d\n",
-				active, Concurrency, windowQps, done)
-			lastDone, lastTime = done, now
+			printWindow()
 			// 计算下一档并补发令牌
 			target := stepConcurrency(step)
 			for active < target {
@@ -382,14 +394,10 @@ func main() {
 				active++
 			}
 			if active >= Concurrency {
-				// 已到100%，继续每5秒打印QPS直到压测结束
+				// 已到100%，继续每5秒打印直到压测结束
 				for time.Now().Before(deadline) {
 					<-time.After(5 * time.Second)
-					done = atomic.LoadInt64(&successCnt) + atomic.LoadInt64(&failCnt)
-					now = time.Now()
-					fmt.Printf("  [阶梯] 活跃并发=%d/%d, 近5s QPS=%.2f, 累计ban_pay=%d\n",
-						active, Concurrency, float64(done-lastDone)/now.Sub(lastTime).Seconds(), done)
-					lastDone, lastTime = done, now
+					printWindow()
 				}
 				return
 			}
@@ -466,6 +474,7 @@ func main() {
 				}
 
 				local = append(local, latency.Nanoseconds())
+				atomic.AddInt64(&latSumNs, latency.Nanoseconds())
 				tokens <- struct{}{} // 归还令牌，进入下一轮
 			}
 			localLatencies[workerId] = local
