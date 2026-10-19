@@ -10,7 +10,6 @@ import (
 	"github.com/starslipay/pay_gate/internal/svc"
 	"github.com/starslipay/pay_gate/internal/types"
 	"github.com/starslipay/pay_gate/internal/xerr"
-	"github.com/starslipay/user_mgr/user_mgr_pb"
 
 	"github.com/zeromicro/go-zero/core/logx"
 )
@@ -30,11 +29,10 @@ func NewGet_user_flowLogic(ctx context.Context, svcCtx *svc.ServiceContext) *Get
 }
 
 func (l *Get_user_flowLogic) Get_user_flow(req *types.GetUserFlowReq) (resp *types.GetUserFlowRsp, err error) {
-	relationRsp, err := l.svcCtx.UserMgr.GetRelation(l.ctx, &user_mgr_pb.GetRelationReq{
-		UserId: req.UserId,
-	})
+	// 优先读 Redis relation 缓存, 未命中或 Redis 不可用时降级 UserMgr 查 DB
+	relationRsp, err := getRelationCached(l.ctx, l.svcCtx, req.UserId)
 	if err != nil {
-		return nil, xerr.HandleRPCError(err, "UserMgr.GetRelation")
+		return nil, err
 	}
 
 	userFlowRsp, err := l.svcCtx.AccountMgr.GetUserFlow(l.ctx, &account_mgr_pb.GetUserFlowReq{

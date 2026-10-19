@@ -14,7 +14,6 @@ import (
 	"github.com/starslipay/pay_gate/internal/svc"
 	"github.com/starslipay/pay_gate/internal/types"
 	"github.com/starslipay/pay_gate/internal/xerr"
-	"github.com/starslipay/user_mgr/user_mgr_pb"
 
 	"github.com/zeromicro/go-zero/core/logx"
 )
@@ -43,11 +42,10 @@ func NewGet_user_balance_infoLogic(ctx context.Context, svcCtx *svc.ServiceConte
 }
 
 func (l *Get_user_balance_infoLogic) Get_user_balance_info(req *types.GetUserBalanceInfoReq) (resp *types.GetUserBalanceInfoRsp, err error) {
-	relationRsp, err := l.svcCtx.UserMgr.GetRelation(l.ctx, &user_mgr_pb.GetRelationReq{
-		UserId: req.UserId,
-	})
+	// 优先读 Redis relation 缓存, 未命中或 Redis 不可用时降级 UserMgr 查 DB
+	relationRsp, err := getRelationCached(l.ctx, l.svcCtx, req.UserId)
 	if err != nil {
-		return nil, xerr.HandleRPCError(err, "UserMgr.GetRelation")
+		return nil, err
 	}
 
 	// 优先查 Redis 余额缓存, 命中则直接返回, 省去一次 AccountMgr RPC + DB 查询
@@ -83,19 +81,19 @@ func (l *Get_user_balance_infoLogic) getBalanceFromCache(uid int64) (balance int
 	if err != nil {
 		// key 不存在是正常未命中(不记错误); 其余错误说明 Redis 不可用, 记录后降级
 		if !errors.Is(err, redis.Nil) {
-			logx.WithContext(l.ctx).Errorf("get balance cache failed, uid: %d, err: %v", uid, err)
+			logx.WithContext(l.ctx).Errorf("getBalanceFromCache get balance cache failed, uid: %d, err: %v", uid, err)
 		}
 		return 0, 0, false
 	}
 
 	v, err := url.ParseQuery(cached)
 	if err != nil {
-		logx.WithContext(l.ctx).Errorf("parse balance cache failed, uid: %d, val: %s, err: %v", uid, cached, err)
+		logx.WithContext(l.ctx).Errorf("getBalanceFromCache parse balance cache failed, uid: %d, val: %s, err: %v", uid, cached, err)
 		return 0, 0, false
 	}
 	balance, err = strconv.ParseInt(v.Get("balance"), 10, 64)
 	if err != nil {
-		logx.WithContext(l.ctx).Errorf("parse balance cache balance failed, uid: %d, val: %s, err: %v", uid, cached, err)
+		logx.WithContext(l.ctx).Errorf("getBalanceFromCache parse balance cache balance failed, uid: %d, val: %s, err: %v", uid, cached, err)
 		return 0, 0, false
 	}
 	curTypeVal, _ := strconv.ParseInt(v.Get("cur_type"), 10, 32)

@@ -9,6 +9,7 @@ import (
 	"net/http"
 	"sort"
 	"strconv"
+	"strings"
 	"sync"
 	"sync/atomic"
 	"time"
@@ -157,6 +158,53 @@ func postAndCheck(client *http.Client, url string, body interface{}, headers map
 		return false, respData
 	}
 	return rsp.Code == 0, rsp.Data
+}
+
+// ===================== 阶梯窗口抽样 =====================
+
+const (
+	maxSampleWindows = 64 // 最大采样窗口数(5秒一个窗口, 60s压测=12个, 留足余量)
+	samplesPerWindow = 5  // 每个阶梯窗口抽样的 user_id 个数
+)
+
+var (
+	curWindowIdx    atomic.Int64 // 当前阶梯窗口编号(0起), 控制器每打印一个窗口后递增
+	windowSampleCnt [maxSampleWindows]atomic.Int64
+	windowSamples   [maxSampleWindows][]string
+	windowSampleMu  sync.Mutex
+)
+
+// sampleUserId 在当前阶梯窗口内抽样记录 user_id, 每窗口最多 samplesPerWindow 个,
+// 仅在未抽满时加锁, 对压测热路径几乎无开销
+func sampleUserId(userId string) {
+	w := curWindowIdx.Load()
+	if w < 0 || w >= maxSampleWindows {
+		return
+	}
+	if windowSampleCnt[w].Load() >= samplesPerWindow {
+		return // 本窗口已抽满
+	}
+	windowSampleMu.Lock()
+	if len(windowSamples[w]) < samplesPerWindow {
+		windowSamples[w] = append(windowSamples[w], userId)
+		windowSampleCnt[w].Add(1)
+	}
+	windowSampleMu.Unlock()
+}
+
+// printWindowSamples 压测结束后打印各阶梯窗口抽样的 user_id, 用于按 user_id 查询日志/trace
+func printWindowSamples() {
+	last := int(curWindowIdx.Load())
+	if last >= maxSampleWindows {
+		last = maxSampleWindows - 1
+	}
+	fmt.Printf("\n=== 各阶梯抽样 user_id(用于查询日志) ===\n")
+	for w := 0; w <= last; w++ {
+		if len(windowSamples[w]) == 0 {
+			continue
+		}
+		fmt.Printf("  第%d档: %s\n", w+1, strings.Join(windowSamples[w], ", "))
+	}
 }
 
 // ===================== 压测主流程 =====================
@@ -365,6 +413,7 @@ func main() {
 		// printWindow 打印近5秒窗口的QPS、平均耗时、本步与累计成功/失败数
 		printWindow := func() {
 			now := time.Now()
+			curWindowIdx.Add(1) // 当前采样窗口结束, 后续请求落入下一窗口
 			succ := atomic.LoadInt64(&successCnt)
 			fail := atomic.LoadInt64(&failCnt)
 			lat := atomic.LoadInt64(&latSumNs)
@@ -423,6 +472,7 @@ func main() {
 				// 循环从用户数组第一个到最后一个依次取用户，取完从头再来
 				u := users[userIdx]
 				userIdx = (userIdx + 1) % len(users)
+				sampleUserId(u.userId) // 按当前阶梯窗口抽样 user_id, 供压测结束后查日志
 				// 商户仍随机选择
 				merchantId := Merchants[rand.Intn(len(Merchants))]
 				headers := map[string]string{}
@@ -526,4 +576,7 @@ func main() {
 		fmt.Printf("  P99 延迟:   %.2f ms\n", p99)
 		fmt.Printf("  最大延迟:   %.2f ms\n", maxLatencyMs)
 	}
+
+	// 打印各阶梯窗口抽样的 user_id, 用于查询日志/trace
+	printWindowSamples()
 }
