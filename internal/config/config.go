@@ -18,6 +18,8 @@ type Config struct {
 
 	// Redis 哨兵高可用配置, 令牌桶限流状态存 Redis 实现多网关实例全局共享
 	Redis RedisConf
+	// Cache relation/balance 缓存配置
+	Cache CacheConf
 	// RateLimit 接口维度限流配置
 	RateLimit RateLimitConf
 
@@ -37,6 +39,13 @@ type RedisConf struct {
 	Password string `json:",optional"`
 	// DB 使用的逻辑库编号, 默认 0
 	DB int `json:",default=0"`
+}
+
+// CacheConf relation/balance 缓存配置
+type CacheConf struct {
+	// Degrade 缓存降级开关: true 时 relation/balance 不读写 Redis, 直接查询 DB(排查缓存问题用);
+	// 注意仅作用于业务缓存, 令牌桶限流的 Redis 读写不受影响
+	Degrade bool `json:",optional"`
 }
 
 // AccessLogConf 访问日志配置

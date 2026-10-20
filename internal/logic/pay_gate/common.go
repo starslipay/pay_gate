@@ -19,16 +19,19 @@ import (
 const RedisKeyRelationPrefix = "relation|"
 
 // getRelationCached 获取 relation 映射(user_id -> uid): 优先读 Redis 缓存,
-// 未命中或 Redis 不可用时降级调用 UserMgr.GetRelation 查 DB, 并将结果回填缓存
+// 未命中或 Redis 不可用时降级调用 UserMgr.GetRelation 查 DB, 并将结果回填缓存;
+// 缓存降级开关(Cache.Degrade)打开时不读写 Redis, 直接查 DB
 func getRelationCached(ctx context.Context, svcCtx *svc.ServiceContext, userId string) (*user_mgr_pb.GetRelationRsp, error) {
-	if uid, ok := getRelationFromCache(ctx, svcCtx, userId); ok {
-		return &user_mgr_pb.GetRelationRsp{
-			UserId: userId,
-			Uid:    uid,
-		}, nil
+	if !svcCtx.Config.Cache.Degrade {
+		if uid, ok := getRelationFromCache(ctx, svcCtx, userId); ok {
+			return &user_mgr_pb.GetRelationRsp{
+				UserId: userId,
+				Uid:    uid,
+			}, nil
+		}
 	}
 
-	// 缓存未命中或 Redis 不可用, 降级查 DB
+	// 缓存未命中/Redis 不可用/降级开关打开, 查 DB
 	relationRsp, err := svcCtx.UserMgr.GetRelation(ctx, &user_mgr_pb.GetRelationReq{
 		UserId: userId,
 	})
@@ -36,8 +39,10 @@ func getRelationCached(ctx context.Context, svcCtx *svc.ServiceContext, userId s
 		return nil, xerr.HandleRPCError(err, "UserMgr.GetRelation")
 	}
 
-	// 回源成功后回填缓存, 避免后续请求持续穿透到 UserMgr
-	setRelationCache(ctx, svcCtx, userId, relationRsp.Uid)
+	// 回源成功后回填缓存, 避免后续请求持续穿透到 UserMgr(降级开关打开时跳过)
+	if !svcCtx.Config.Cache.Degrade {
+		setRelationCache(ctx, svcCtx, userId, relationRsp.Uid)
+	}
 	return relationRsp, nil
 }
 

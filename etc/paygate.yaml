@@ -80,6 +80,10 @@ Redis:
     - redis-sentinel2:26379
     - redis-sentinel3:26379
 
+# Cache: relation/balance 缓存配置
+Cache:
+  Degrade: false     # 缓存降级开关: true=relation/balance不读写Redis直接查DB(排查缓存问题用)
+
 # RateLimit: 接口维度令牌桶限流
 RateLimit:
   Enable: true

@@ -49,15 +49,18 @@ func (l *Get_user_balance_infoLogic) Get_user_balance_info(req *types.GetUserBal
 	}
 
 	// 优先查 Redis 余额缓存, 命中则直接返回, 省去一次 AccountMgr RPC + DB 查询
-	if balance, curType, ok := l.getBalanceFromCache(relationRsp.Uid); ok {
-		return &types.GetUserBalanceInfoRsp{
-			UserId:  req.UserId,
-			Balance: balance,
-			CurType: curType,
-		}, nil
+	// 缓存降级开关(Cache.Degrade)打开时跳过 Redis, 直接走下方 DB 查询
+	if !l.svcCtx.Config.Cache.Degrade {
+		if balance, curType, ok := l.getBalanceFromCache(relationRsp.Uid); ok {
+			return &types.GetUserBalanceInfoRsp{
+				UserId:  req.UserId,
+				Balance: balance,
+				CurType: curType,
+			}, nil
+		}
 	}
 
-	// 缓存未命中或 Redis 不可用, 降级查 DB
+	// 缓存未命中/Redis 不可用/降级开关打开, 降级查 DB
 	getUserBalanceInfoRsp, err := l.svcCtx.AccountMgr.GetUserBalanceInfo(l.ctx, &account_mgr_pb.GetUserBalanceInfoReq{
 		Uid:     relationRsp.Uid,
 		QryMode: QryModeSlave, // 查询从库
