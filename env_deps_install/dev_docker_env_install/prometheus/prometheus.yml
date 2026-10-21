@@ -51,6 +51,14 @@ scrape_configs:
         labels:
           module: 'trade_id_mgr'
 
+  # 缓存管理 (RPC)
+  - job_name: 'cache-mgr'
+    metrics_path: /metrics
+    static_configs:
+      - targets: ['cache_mgr:9090']
+        labels:
+          module: 'cache_mgr'
+
   # MySQL 主库指标采集
   - job_name: 'mysql-master'
     static_configs:
