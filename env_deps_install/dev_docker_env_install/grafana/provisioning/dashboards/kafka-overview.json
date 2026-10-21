@@ -9,6 +9,19 @@
   "time": { "from": "now-15m", "to": "now" },
   "title": "Kafka 监控",
   "uid": "kafka-overview",
+  "templating": {
+    "list": [
+      {
+        "name": "window",
+        "type": "interval",
+        "label": "时间粒度",
+        "query": "30s,1m,5m,10m,30m,1h,6h,1d",
+        "current": { "text": "1m", "value": "1m" },
+        "includeAll": false,
+        "multi": false
+      }
+    ]
+  },
   "panels": [
     {
       "type": "stat",
@@ -59,32 +72,38 @@
     },
     {
       "type": "timeseries",
-      "title": "消息写入速率 (按 topic, msg/s)",
-      "gridPos": { "h": 8, "w": 12, "x": 0, "y": 4 },
+      "title": "消息写入请求量 (按 topic, 窗口={{window}})",
+      "description": "Y 轴为选定时间粒度内各 topic 新写入的消息条数 (increase offset), 切换顶部'时间粒度'变量可改变窗口大小 (秒级/分钟级/小时级)",
+      "gridPos": { "h": 10, "w": 12, "x": 0, "y": 4 },
       "datasource": { "type": "prometheus", "uid": "prometheus" },
       "targets": [{
-        "expr": "sum by(topic)(rate(kafka_topic_partition_current_offset[1m]))",
+        "expr": "sum by(topic)(increase(kafka_topic_partition_current_offset[$window]))",
         "legendFormat": "{{topic}}",
         "refId": "A"
       }],
-      "fieldConfig": { "defaults": { "unit": "ops", "custom": { "drawStyle": "line", "fillOpacity": 10 } } }
+      "fieldConfig": { "defaults": { "unit": "short", "custom": { "drawStyle": "bars", "fillOpacity": 60, "lineWidth": 0 } } },
+      "options": {
+        "tooltip": { "mode": "multi" },
+        "legend": { "displayMode": "list", "placement": "bottom" }
+      }
     },
     {
       "type": "timeseries",
-      "title": "分区最新 Offset (按 topic/分区)",
-      "gridPos": { "h": 8, "w": 12, "x": 12, "y": 4 },
+      "title": "累计写入 Offset (按 topic)",
+      "description": "Y 轴为自 broker 启动以来各 topic 的累计写入 offset, 用于对比各 topic 的总量级别",
+      "gridPos": { "h": 10, "w": 12, "x": 12, "y": 4 },
       "datasource": { "type": "prometheus", "uid": "prometheus" },
       "targets": [{
-        "expr": "kafka_topic_partition_current_offset",
-        "legendFormat": "{{topic}}-{{partition}}",
+        "expr": "sum by(topic)(kafka_topic_partition_current_offset)",
+        "legendFormat": "{{topic}}",
         "refId": "A"
       }],
-      "fieldConfig": { "defaults": { "custom": { "drawStyle": "line", "fillOpacity": 0 } } }
+      "fieldConfig": { "defaults": { "unit": "short", "custom": { "drawStyle": "line", "fillOpacity": 10 } } }
     },
     {
       "type": "timeseries",
       "title": "ISR 同步副本数 (应为3, 按 topic/分区)",
-      "gridPos": { "h": 8, "w": 8, "x": 0, "y": 12 },
+      "gridPos": { "h": 8, "w": 8, "x": 0, "y": 14 },
       "datasource": { "type": "prometheus", "uid": "prometheus" },
       "targets": [{
         "expr": "kafka_topic_partition_in_sync_replica",
@@ -96,7 +115,7 @@
     {
       "type": "timeseries",
       "title": "欠副本分区 (1=异常)",
-      "gridPos": { "h": 8, "w": 8, "x": 8, "y": 12 },
+      "gridPos": { "h": 8, "w": 8, "x": 8, "y": 14 },
       "datasource": { "type": "prometheus", "uid": "prometheus" },
       "targets": [{
         "expr": "kafka_topic_partition_under_replicated_partition",
@@ -108,7 +127,7 @@
     {
       "type": "timeseries",
       "title": "分区副本总数",
-      "gridPos": { "h": 8, "w": 8, "x": 16, "y": 12 },
+      "gridPos": { "h": 8, "w": 8, "x": 16, "y": 14 },
       "datasource": { "type": "prometheus", "uid": "prometheus" },
       "targets": [{
         "expr": "kafka_topic_partition_replicas",
@@ -120,26 +139,26 @@
     {
       "type": "timeseries",
       "title": "消费组积压 Lag",
-      "gridPos": { "h": 8, "w": 12, "x": 0, "y": 20 },
+      "gridPos": { "h": 8, "w": 12, "x": 0, "y": 22 },
       "datasource": { "type": "prometheus", "uid": "prometheus" },
       "targets": [{
         "expr": "sum by(consumergroup,topic)(kafka_consumergroup_lag)",
         "legendFormat": "{{consumergroup}}/{{topic}}",
         "refId": "A"
       }],
-      "fieldConfig": { "defaults": { "custom": { "drawStyle": "line", "fillOpacity": 10 } } }
+      "fieldConfig": { "defaults": { "unit": "short", "custom": { "drawStyle": "line", "fillOpacity": 10 } } }
     },
     {
       "type": "timeseries",
       "title": "消费组当前 Offset",
-      "gridPos": { "h": 8, "w": 12, "x": 12, "y": 20 },
+      "gridPos": { "h": 8, "w": 12, "x": 12, "y": 22 },
       "datasource": { "type": "prometheus", "uid": "prometheus" },
       "targets": [{
         "expr": "sum by(consumergroup,topic)(kafka_consumergroup_current_offset)",
         "legendFormat": "{{consumergroup}}/{{topic}}",
         "refId": "A"
       }],
-      "fieldConfig": { "defaults": { "custom": { "drawStyle": "line", "fillOpacity": 10 } } }
+      "fieldConfig": { "defaults": { "unit": "short", "custom": { "drawStyle": "line", "fillOpacity": 10 } } }
     }
   ]
 }
