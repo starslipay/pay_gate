@@ -7,7 +7,7 @@ require (
 	github.com/starslipay/account_mgr v1.1.5
 	github.com/starslipay/order_mgr v1.0.2
 	github.com/starslipay/paycomm v1.0.4
-	github.com/starslipay/trade_itg v1.1.4
+	github.com/starslipay/trade_itg v1.1.7
 	github.com/starslipay/user_mgr v1.0.6
 	github.com/zeromicro/go-zero v1.10.2
 	golang.org/x/time v0.14.0
@@ -56,6 +56,7 @@ require (
 	github.com/prometheus/common v0.66.1 // indirect
 	github.com/prometheus/procfs v0.16.1 // indirect
 	github.com/spaolacci/murmur3 v1.1.0 // indirect
+	github.com/starslipay/trade_id_mgr v1.0.0 // indirect
 	github.com/titanous/json5 v1.0.0 // indirect
 	github.com/x448/float16 v0.8.4 // indirect
 	go.etcd.io/etcd/api/v3 v3.5.21 // indirect

@@ -12,6 +12,7 @@ type BanPayReq struct {
 	VerifyType    int32  `json:"verify_type,optional"`    // 验证方式: 1密码
 	Password      string `json:"password,optional"`       // 支付密码
 	Memo          string `json:"memo,optional"`           // 交易备注
+	MockFlag      int32  `json:"mock_flag,optional"`      // 测试用断点控制: 0=正常, 1=下单前中断, 2=C2B扣款前中断, 3=订单更新前中断, 4=订单更新后中断
 }
 
 type BanPayRsp struct {
