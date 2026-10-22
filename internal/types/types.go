@@ -149,6 +149,24 @@ type GetOrderInfoRsp struct {
 	TradeState    int32  `json:"trade_state"`    // 交易状态: 如待支付/成功/关闭/退款
 }
 
+type QueryOrderReq struct {
+	TransactionId string `json:"transaction_id,optional"` // 交易单号
+}
+
+type QueryOrderRsp struct {
+	TransactionId     string `json:"transaction_id"`      // 交易单号
+	OutOrderNo        string `json:"out_order_no"`        // 商户订单号
+	MerchantId        string `json:"merchant_id"`         // 商户ID
+	MerchantUid       int64  `json:"merchant_uid"`        // 商户用户UID
+	MerchantName      string `json:"merchant_name"`       // 商户名称
+	UserId            string `json:"user_id"`             // 用户ID
+	Uid               int64  `json:"uid"`                 // 用户UID
+	Amount            int64  `json:"amount"`              // 订单金额, 单位分
+	PayTime           string `json:"pay_time"`            // 支付完成时间
+	TradeState        int32  `json:"trade_state"`         // 交易状态: 如待支付/成功/关闭/退款
+	OrderSuccessToken string `json:"order_success_token"` // 支付成功凭证token(仅订单成功时返回)
+}
+
 type GetUserBalanceInfoReq struct {
 	UserId string `json:"user_id,optional"` // 用户ID
 }
