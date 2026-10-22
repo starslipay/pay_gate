@@ -284,6 +284,14 @@ type UpdateUserInfoRsp struct {
 	UserId string `json:"user_id"` // 用户ID
 }
 
+type CancelUserReq struct {
+	UserId string `json:"user_id,optional"` // 用户ID
+}
+
+type CancelUserRsp struct {
+	UserId string `json:"user_id"` // 用户ID
+}
+
 type UserFlow struct {
 	TransactionId      string `json:"transaction_id"`       // 交易单号
 	UserId             string `json:"user_id"`              // 用户ID

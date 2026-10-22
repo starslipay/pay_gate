@@ -43,6 +43,11 @@ func RegisterHandlers(server *rest.Server, serverCtx *svc.ServiceContext) {
 			},
 			{
 				Method:  http.MethodPost,
+				Path:    "/cancel_user",
+				Handler: pay_gate.Cancel_userHandler(serverCtx),
+			},
+			{
+				Method:  http.MethodPost,
 				Path:    "/bank2c_do",
 				Handler: pay_gate.Bank2c_doHandler(serverCtx),
 			},

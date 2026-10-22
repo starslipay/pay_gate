@@ -8,13 +8,14 @@ require (
 	github.com/starslipay/order_mgr v1.0.2
 	github.com/starslipay/paycomm v1.0.4
 	github.com/starslipay/trade_itg v1.1.7
-	github.com/starslipay/user_mgr v1.0.6
+	github.com/starslipay/user_mgr v1.0.7
 	github.com/zeromicro/go-zero v1.10.2
 	golang.org/x/time v0.14.0
 	google.golang.org/grpc v1.82.1
 )
 
 require (
+	filippo.io/edwards25519 v1.2.0 // indirect
 	github.com/beorn7/perks v1.0.1 // indirect
 	github.com/cenkalti/backoff/v5 v5.0.3 // indirect
 	github.com/cespare/xxhash/v2 v2.3.0 // indirect
@@ -29,6 +30,7 @@ require (
 	github.com/go-openapi/jsonpointer v0.21.0 // indirect
 	github.com/go-openapi/jsonreference v0.20.2 // indirect
 	github.com/go-openapi/swag v0.23.0 // indirect
+	github.com/go-sql-driver/mysql v1.10.0 // indirect
 	github.com/gogo/protobuf v1.3.2 // indirect
 	github.com/golang-jwt/jwt/v4 v4.5.2 // indirect
 	github.com/golang/protobuf v1.5.4 // indirect
@@ -49,16 +51,19 @@ require (
 	github.com/munnerz/goautoneg v0.0.0-20191010083416-a7dc8b61c822 // indirect
 	github.com/openzipkin/zipkin-go v0.4.3 // indirect
 	github.com/pelletier/go-toml/v2 v2.3.1 // indirect
+	github.com/pierrec/lz4/v4 v4.1.27 // indirect
 	github.com/pkg/errors v0.9.1 // indirect
 	github.com/pmezard/go-difflib v1.0.0 // indirect
 	github.com/prometheus/client_golang v1.23.2 // indirect
 	github.com/prometheus/client_model v0.6.2 // indirect
 	github.com/prometheus/common v0.66.1 // indirect
 	github.com/prometheus/procfs v0.16.1 // indirect
+	github.com/segmentio/kafka-go v0.4.47 // indirect
 	github.com/spaolacci/murmur3 v1.1.0 // indirect
 	github.com/starslipay/trade_id_mgr v1.0.0 // indirect
 	github.com/titanous/json5 v1.0.0 // indirect
 	github.com/x448/float16 v0.8.4 // indirect
+	github.com/zeromicro/go-queue v1.2.2 // indirect
 	go.etcd.io/etcd/api/v3 v3.5.21 // indirect
 	go.etcd.io/etcd/client/pkg/v3 v3.5.21 // indirect
 	go.etcd.io/etcd/client/v3 v3.5.21 // indirect
