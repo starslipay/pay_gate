@@ -230,6 +230,21 @@ type (
 		TradeState        int32  `json:"trade_state"` // 交易状态: 如待支付/成功/关闭/退款
 		OrderSuccessToken string `json:"order_success_token"` // 支付成功凭证token(仅订单成功时返回)
 	}
+	QueryC2BBillReq {
+		TransactionId string `json:"transaction_id,optional"` // 交易单号
+	}
+	QueryC2BBillRsp {
+		TransactionId string `json:"transaction_id"` // 交易单号
+		OutTradeNo    string `json:"out_trade_no"` // 商户单号
+		Uid           int64  `json:"uid"` // 用户UID
+		UserId        string `json:"user_id"` // 用户ID
+		MerchantUid   int64  `json:"merchant_uid"` // 商户用户UID
+		MerchantId    string `json:"merchant_id"` // 商户ID
+		Amount        int64  `json:"amount"` // 订单金额, 单位分
+		State         int32  `json:"state"` // 单据状态: 如待支付/成功/关闭
+		PayTime       string `json:"pay_time"` // 支付完成时间
+		DeductToken   string `json:"deduct_token"` // 扣款凭证token(仅单据成功时返回)
+	}
 	CloseOrSupplyOrderReq {
 		TransactionId string `json:"transaction_id,optional"` // 交易单号
 		OutOrderNo    string `json:"out_order_no,optional"` // 商户订单号
@@ -329,6 +344,10 @@ service pay_gate {
 	// 查单(返回order_mgr订单全部信息)
 	@handler query_order
 	post /query_order (QueryOrderReq) returns (QueryOrderRsp)
+
+	// 查询c2b单据(返回account_mgr单据全部信息)
+	@handler query_c2b_bill
+	post /query_c2b_bill (QueryC2BBillReq) returns (QueryC2BBillRsp)
 
 	// 支付关单或补单
 	@handler close_or_supply_order

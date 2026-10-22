@@ -108,6 +108,11 @@ func RegisterHandlers(server *rest.Server, serverCtx *svc.ServiceContext) {
 			},
 			{
 				Method:  http.MethodPost,
+				Path:    "/query_c2b_bill",
+				Handler: pay_gate.Query_c2b_billHandler(serverCtx),
+			},
+			{
+				Method:  http.MethodPost,
 				Path:    "/query_order",
 				Handler: pay_gate.Query_orderHandler(serverCtx),
 			},

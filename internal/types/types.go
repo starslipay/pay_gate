@@ -167,6 +167,23 @@ type QueryOrderRsp struct {
 	OrderSuccessToken string `json:"order_success_token"` // 支付成功凭证token(仅订单成功时返回)
 }
 
+type QueryC2BBillReq struct {
+	TransactionId string `json:"transaction_id,optional"` // 交易单号
+}
+
+type QueryC2BBillRsp struct {
+	TransactionId string `json:"transaction_id"` // 交易单号
+	OutTradeNo    string `json:"out_trade_no"`   // 商户单号
+	Uid           int64  `json:"uid"`            // 用户UID
+	UserId        string `json:"user_id"`        // 用户ID
+	MerchantUid   int64  `json:"merchant_uid"`   // 商户用户UID
+	MerchantId    string `json:"merchant_id"`    // 商户ID
+	Amount        int64  `json:"amount"`         // 订单金额, 单位分
+	State         int32  `json:"state"`          // 单据状态: 如待支付/成功/关闭
+	PayTime       string `json:"pay_time"`       // 支付完成时间
+	DeductToken   string `json:"deduct_token"`   // 扣款凭证token(仅单据成功时返回)
+}
+
 type GetUserBalanceInfoReq struct {
 	UserId string `json:"user_id,optional"` // 用户ID
 }
