@@ -30,6 +30,11 @@ func RegisterHandlers(server *rest.Server, serverCtx *svc.ServiceContext) {
 				Path:    "/reg_user",
 				Handler: pay_gate.Reg_userHandler(serverCtx),
 			},
+			{
+				Method:  http.MethodPost,
+				Path:    "/get_merchant_balance_info",
+				Handler: pay_gate.GetMerchantBalanceInfoHandler(serverCtx),
+			},
 		},
 		rest.WithPrefix("/api/pay_gate"),
 	)
@@ -120,11 +125,6 @@ func RegisterHandlers(server *rest.Server, serverCtx *svc.ServiceContext) {
 				Method:  http.MethodPost,
 				Path:    "/query_order",
 				Handler: pay_gate.Query_orderHandler(serverCtx),
-			},
-			{
-				Method:  http.MethodPost,
-				Path:    "/get_merchant_balance_info",
-				Handler: pay_gate.GetMerchantBalanceInfoHandler(serverCtx),
 			},
 			{
 				Method:  http.MethodPost,

@@ -294,6 +294,10 @@ service pay_gate {
 
 	@handler get_user_token
 	post /get_user_token (GetUserTokenReq) returns (GetUserTokenRsp)
+
+	// 查询商户余额
+	@handler get_merchant_balance_info
+	post /get_merchant_balance_info (GetMerchantBalanceInfoReq) returns (GetMerchantBalanceInfoRsp)
 }
 
 @server (
@@ -369,10 +373,6 @@ service pay_gate {
 	// 查询c2b单据(返回account_mgr单据全部信息)
 	@handler query_c2b_bill
 	post /query_c2b_bill (QueryC2BBillReq) returns (QueryC2BBillRsp)
-
-	// 查询商户余额
-	@handler get_merchant_balance_info
-	post /get_merchant_balance_info (GetMerchantBalanceInfoReq) returns (GetMerchantBalanceInfoRsp)
 
 	// 支付关单或补单
 	@handler close_or_supply_order
