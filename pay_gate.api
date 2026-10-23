@@ -253,14 +253,15 @@ type (
 		DeductToken   string `json:"deduct_token"` // 扣款凭证token(仅单据成功时返回)
 	}
 	GetMerchantBalanceInfoReq {
-		MerchantUid int64 `json:"merchant_uid"` // 商户用户UID
-		QryMode     int32 `json:"qry_mode,optional"` // 查询模式: 0=主库, 1=从库, 默认0
+		MerchantId string `json:"merchant_id"` // 商户ID
+		QryMode    int32 `json:"qry_mode,optional"` // 查询模式: 0=主库, 1=从库, 默认0
 	}
 	GetMerchantBalanceInfoRsp {
-		MerchantUid int64  `json:"merchant_uid"` // 商户用户UID
-		MerchantId  string `json:"merchant_id"` // 商户ID
-		Balance     int64  `json:"balance"` // 余额, 单位分
-		CurType     int32  `json:"cur_type"` // 币种类型
+		MerchantId   string `json:"merchant_id"` // 商户ID
+		MerchantUid  int64  `json:"merchant_uid"` // 商户用户UID
+		MerchantName string `json:"merchant_name"` // 商户名称
+		Balance      int64  `json:"balance"` // 余额, 单位分
+		CurType      int32  `json:"cur_type"` // 币种类型
 	}
 	CloseOrSupplyOrderReq {
 		TransactionId string `json:"transaction_id,optional"` // 交易单号

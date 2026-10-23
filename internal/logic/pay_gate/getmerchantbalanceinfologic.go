@@ -7,6 +7,7 @@ import (
 	"github.com/starslipay/pay_gate/internal/svc"
 	"github.com/starslipay/pay_gate/internal/types"
 	"github.com/starslipay/paycomm/xerror"
+	"github.com/starslipay/user_mgr/user_mgr_pb"
 
 	"github.com/zeromicro/go-zero/core/logx"
 )
@@ -27,8 +28,17 @@ func NewGetMerchantBalanceInfoLogic(ctx context.Context, svcCtx *svc.ServiceCont
 }
 
 func (l *GetMerchantBalanceInfoLogic) GetMerchantBalanceInfo(req *types.GetMerchantBalanceInfoReq) (resp *types.GetMerchantBalanceInfoRsp, err error) {
-	rpcResp, err := l.svcCtx.AccountMgr.GetMerchantBalanceInfo(l.ctx, &account_mgr_pb.GetMerchantBalanceInfoReq{
-		MerchantUid: req.MerchantUid,
+	// 1. 先用 merchant_id 查 merchant_uid 和 merchant_name
+	merchantInfo, err := l.svcCtx.UserMgr.GetMerchantInfo(l.ctx, &user_mgr_pb.GetMerchantInfoReq{
+		MerchantId: req.MerchantId,
+	})
+	if err != nil {
+		return nil, xerror.HandleRPCError(err, "查询商户信息")
+	}
+
+	// 2. 再用 merchant_uid 查余额
+	balanceResp, err := l.svcCtx.AccountMgr.GetMerchantBalanceInfo(l.ctx, &account_mgr_pb.GetMerchantBalanceInfoReq{
+		MerchantUid: merchantInfo.MerchantUid,
 		QryMode:     req.QryMode,
 	})
 	if err != nil {
@@ -36,9 +46,10 @@ func (l *GetMerchantBalanceInfoLogic) GetMerchantBalanceInfo(req *types.GetMerch
 	}
 
 	return &types.GetMerchantBalanceInfoRsp{
-		MerchantUid: rpcResp.MerchantUid,
-		MerchantId:  rpcResp.MerchantId,
-		Balance:     rpcResp.Balance,
-		CurType:     rpcResp.CurType,
+		MerchantId:   merchantInfo.MerchantId,
+		MerchantUid:  merchantInfo.MerchantUid,
+		MerchantName: merchantInfo.MerchantName,
+		Balance:      balanceResp.Balance,
+		CurType:      balanceResp.CurType,
 	}, nil
 }

@@ -186,15 +186,16 @@ type QueryC2BBillRsp struct {
 }
 
 type GetMerchantBalanceInfoReq struct {
-	MerchantUid int64 `json:"merchant_uid"`      // 商户用户UID
-	QryMode     int32 `json:"qry_mode,optional"` // 查询模式: 0=主库, 1=从库, 默认0
+	MerchantId string `json:"merchant_id"`       // 商户ID
+	QryMode    int32  `json:"qry_mode,optional"` // 查询模式: 0=主库, 1=从库, 默认0
 }
 
 type GetMerchantBalanceInfoRsp struct {
-	MerchantUid int64  `json:"merchant_uid"` // 商户用户UID
-	MerchantId  string `json:"merchant_id"`  // 商户ID
-	Balance     int64  `json:"balance"`      // 余额, 单位分
-	CurType     int32  `json:"cur_type"`     // 币种类型
+	MerchantId   string `json:"merchant_id"`   // 商户ID
+	MerchantUid  int64  `json:"merchant_uid"`  // 商户用户UID
+	MerchantName string `json:"merchant_name"` // 商户名称
+	Balance      int64  `json:"balance"`       // 余额, 单位分
+	CurType      int32  `json:"cur_type"`      // 币种类型
 }
 
 type GetUserBalanceInfoReq struct {
