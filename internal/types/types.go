@@ -185,6 +185,18 @@ type QueryC2BBillRsp struct {
 	DeductToken   string `json:"deduct_token"`   // 扣款凭证token(仅单据成功时返回)
 }
 
+type GetMerchantBalanceInfoReq struct {
+	MerchantUid int64 `json:"merchant_uid"`      // 商户用户UID
+	QryMode     int32 `json:"qry_mode,optional"` // 查询模式: 0=主库, 1=从库, 默认0
+}
+
+type GetMerchantBalanceInfoRsp struct {
+	MerchantUid int64  `json:"merchant_uid"` // 商户用户UID
+	MerchantId  string `json:"merchant_id"`  // 商户ID
+	Balance     int64  `json:"balance"`      // 余额, 单位分
+	CurType     int32  `json:"cur_type"`     // 币种类型
+}
+
 type GetUserBalanceInfoReq struct {
 	UserId string `json:"user_id,optional"` // 用户ID
 }

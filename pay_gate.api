@@ -252,6 +252,16 @@ type (
 		PayTime       string `json:"pay_time"` // 支付完成时间
 		DeductToken   string `json:"deduct_token"` // 扣款凭证token(仅单据成功时返回)
 	}
+	GetMerchantBalanceInfoReq {
+		MerchantUid int64 `json:"merchant_uid"` // 商户用户UID
+		QryMode     int32 `json:"qry_mode,optional"` // 查询模式: 0=主库, 1=从库, 默认0
+	}
+	GetMerchantBalanceInfoRsp {
+		MerchantUid int64  `json:"merchant_uid"` // 商户用户UID
+		MerchantId  string `json:"merchant_id"` // 商户ID
+		Balance     int64  `json:"balance"` // 余额, 单位分
+		CurType     int32  `json:"cur_type"` // 币种类型
+	}
 	CloseOrSupplyOrderReq {
 		TransactionId string `json:"transaction_id,optional"` // 交易单号
 		OutOrderNo    string `json:"out_order_no,optional"` // 商户订单号
@@ -359,6 +369,10 @@ service pay_gate {
 	// 查询c2b单据(返回account_mgr单据全部信息)
 	@handler query_c2b_bill
 	post /query_c2b_bill (QueryC2BBillReq) returns (QueryC2BBillRsp)
+
+	// 查询商户余额
+	@handler get_merchant_balance_info
+	post /get_merchant_balance_info (GetMerchantBalanceInfoReq) returns (GetMerchantBalanceInfoRsp)
 
 	// 支付关单或补单
 	@handler close_or_supply_order

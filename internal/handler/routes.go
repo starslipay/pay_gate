@@ -123,6 +123,11 @@ func RegisterHandlers(server *rest.Server, serverCtx *svc.ServiceContext) {
 			},
 			{
 				Method:  http.MethodPost,
+				Path:    "/get_merchant_balance_info",
+				Handler: pay_gate.GetMerchantBalanceInfoHandler(serverCtx),
+			},
+			{
+				Method:  http.MethodPost,
 				Path:    "/update_user_info",
 				Handler: pay_gate.Update_user_infoHandler(serverCtx),
 			},
