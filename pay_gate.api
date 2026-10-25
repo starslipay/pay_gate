@@ -280,6 +280,12 @@ type (
 		PayTime           string `json:"pay_time"` // 支付完成时间
 		OrderSuccessToken string `json:"order_success_token"` // 支付成功凭证token
 	}
+	RefundOrderReq {
+		TransactionId string `json:"transaction_id"` // 交易单号
+	}
+	RefundOrderRsp {
+		TransactionId string `json:"transaction_id"` // 交易单号
+	}
 )
 
 @server (
@@ -378,5 +384,9 @@ service pay_gate {
 	// 支付关单或补单
 	@handler close_or_supply_order
 	post /close_or_supply_order (CloseOrSupplyOrderReq) returns (CloseOrSupplyOrderRsp)
+
+	// 退款
+	@handler refund_order
+	post /refund_order (RefundOrderReq) returns (RefundOrderRsp)
 }
 

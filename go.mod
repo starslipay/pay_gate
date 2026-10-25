@@ -4,10 +4,10 @@ go 1.25.4
 
 require (
 	github.com/redis/go-redis/v9 v9.19.0
-	github.com/starslipay/account_mgr v1.1.7
-	github.com/starslipay/order_mgr v1.0.2
+	github.com/starslipay/account_mgr v1.1.8
+	github.com/starslipay/order_mgr v1.0.3
 	github.com/starslipay/paycomm v1.0.4
-	github.com/starslipay/trade_itg v1.1.7
+	github.com/starslipay/trade_itg v1.1.8
 	github.com/starslipay/user_mgr v1.0.7
 	github.com/zeromicro/go-zero v1.10.2
 	golang.org/x/time v0.14.0

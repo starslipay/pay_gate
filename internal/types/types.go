@@ -111,14 +111,22 @@ type CloseOrSupplyOrderReq struct {
 }
 
 type CloseOrSupplyOrderRsp struct {
-	ResultCode        int32  `json:"result_code"`         // 处理结果码: 1订单成功 2订单关闭
-	TransactionId     string `json:"transaction_id"`      // 交易单号
-	OutOrderNo        string `json:"out_order_no"`        // 商户订单号
-	MerchantId        string `json:"merchant_id"`         // 商户ID
-	UserId            string `json:"user_id"`             // 用户ID
-	Amount            int64  `json:"amount"`              // 订单金额, 单位分
-	PayTime           string `json:"pay_time"`            // 支付完成时间
+	ResultCode        int32  `json:"result_code"`        // 处理结果码: 1订单成功 2订单关闭
+	TransactionId     string `json:"transaction_id"`     // 交易单号
+	OutOrderNo        string `json:"out_order_no"`       // 商户订单号
+	MerchantId        string `json:"merchant_id"`        // 商户ID
+	UserId            string `json:"user_id"`            // 用户ID
+	Amount            int64  `json:"amount"`             // 订单金额, 单位分
+	PayTime           string `json:"pay_time"`           // 支付完成时间
 	OrderSuccessToken string `json:"order_success_token"` // 支付成功凭证token
+}
+
+type RefundOrderReq struct {
+	TransactionId string `json:"transaction_id"` // 交易单号
+}
+
+type RefundOrderRsp struct {
+	TransactionId string `json:"transaction_id"` // 交易单号
 }
 
 type GetC2CBillReq struct {
