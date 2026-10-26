@@ -111,13 +111,13 @@ type CloseOrSupplyOrderReq struct {
 }
 
 type CloseOrSupplyOrderRsp struct {
-	ResultCode        int32  `json:"result_code"`        // 处理结果码: 1订单成功 2订单关闭
-	TransactionId     string `json:"transaction_id"`     // 交易单号
-	OutOrderNo        string `json:"out_order_no"`       // 商户订单号
-	MerchantId        string `json:"merchant_id"`        // 商户ID
-	UserId            string `json:"user_id"`            // 用户ID
-	Amount            int64  `json:"amount"`             // 订单金额, 单位分
-	PayTime           string `json:"pay_time"`           // 支付完成时间
+	ResultCode        int32  `json:"result_code"`         // 处理结果码: 1订单成功 2订单关闭
+	TransactionId     string `json:"transaction_id"`      // 交易单号
+	OutOrderNo        string `json:"out_order_no"`        // 商户订单号
+	MerchantId        string `json:"merchant_id"`         // 商户ID
+	UserId            string `json:"user_id"`             // 用户ID
+	Amount            int64  `json:"amount"`              // 订单金额, 单位分
+	PayTime           string `json:"pay_time"`            // 支付完成时间
 	OrderSuccessToken string `json:"order_success_token"` // 支付成功凭证token
 }
 
@@ -127,6 +127,25 @@ type RefundOrderReq struct {
 
 type RefundOrderRsp struct {
 	TransactionId string `json:"transaction_id"` // 交易单号
+}
+
+type QueryRechargeWithdrawOrderReq struct {
+	TransactionId string `json:"transaction_id"` // 充值提现单号
+}
+
+type QueryRechargeWithdrawOrderRsp struct {
+	TransactionId        string `json:"transaction_id"`         // 充值提现单号
+	ChannelTransactionId string `json:"channel_transaction_id"` // 银行渠道单号
+	UserId               string `json:"user_id"`                // 用户ID
+	Uid                  int64  `json:"uid"`                    // 用户uid
+	BizType              int32  `json:"biz_type"`               // 业务类型: 1=充值 2=提现
+	BankType             int32  `json:"bank_type"`              // 银行类型
+	Amount               int64  `json:"amount"`                 // 金额, 单位分
+	CurType              int32  `json:"cur_type"`               // 币种类型
+	TradeState           int32  `json:"trade_state"`            // 交易状态: 1=初始 2=成功 3=失败
+	Memo                 string `json:"memo"`                   // 备注
+	CreateTime           string `json:"create_time"`            // 创建时间
+	UpdateTime           string `json:"update_time"`            // 更新时间
 }
 
 type GetC2CBillReq struct {

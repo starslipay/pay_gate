@@ -152,6 +152,8 @@ github.com/starslipay/order_mgr v1.0.2 h1:s2b97JNMspeUjgjlymwBHicVN7RLl4BJaS703q
 github.com/starslipay/order_mgr v1.0.2/go.mod h1:VC3G3I5+O7xKr0GuKeLsIkVihrW3Sq8F4O4Bb0RfU5M=
 github.com/starslipay/order_mgr v1.0.3 h1:u5ayROS28+dL133IL7C1n+Z3J9TJZMOf7QZDvE+pFMA=
 github.com/starslipay/order_mgr v1.0.3/go.mod h1:g0d0wX3btDjBHRvCrZk4pl4BtkvyP05NiSnvvuZH2cw=
+github.com/starslipay/order_mgr v1.0.5 h1:bBjB0o3igEdE6/7sWmeXN9fGm3Gos7kPz0N0iDkLwhw=
+github.com/starslipay/order_mgr v1.0.5/go.mod h1:g0d0wX3btDjBHRvCrZk4pl4BtkvyP05NiSnvvuZH2cw=
 github.com/starslipay/paycomm v1.0.4 h1:p8MvoMAekbF1bSwCcRLXOExU408KnAYp23OYwutXInY=
 github.com/starslipay/paycomm v1.0.4/go.mod h1:FMxTnR8zdwPpifu8ZRcZKzMH9koVbDnveEv8l8OeKd0=
 github.com/starslipay/trade_id_mgr v1.0.0 h1:a5uNtIrjVUgvsi3NkZxsAxMUeFI2GUsvLVZBIhpqO4k=

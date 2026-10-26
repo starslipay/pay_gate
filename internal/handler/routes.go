@@ -133,6 +133,11 @@ func RegisterHandlers(server *rest.Server, serverCtx *svc.ServiceContext) {
 			},
 			{
 				Method:  http.MethodPost,
+				Path:    "/query_recharge_withdraw_order",
+				Handler: pay_gate.QueryRechargeWithdrawOrderHandler(serverCtx),
+			},
+			{
+				Method:  http.MethodPost,
 				Path:    "/update_user_info",
 				Handler: pay_gate.Update_user_infoHandler(serverCtx),
 			},
