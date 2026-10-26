@@ -59,6 +59,14 @@ scrape_configs:
         labels:
           module: 'cache_mgr'
 
+  # 银行渠道 (RPC)
+  - job_name: 'bank-channel'
+    metrics_path: /metrics
+    static_configs:
+      - targets: ['bank_channel:9090']
+        labels:
+          module: 'bank_channel'
+
   # MySQL 主库指标采集
   - job_name: 'mysql-master'
     static_configs:
