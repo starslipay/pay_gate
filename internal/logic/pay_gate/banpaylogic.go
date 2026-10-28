@@ -8,7 +8,7 @@ import (
 
 	"github.com/starslipay/pay_gate/internal/svc"
 	"github.com/starslipay/pay_gate/internal/types"
-	"github.com/starslipay/pay_gate/internal/xerr"
+	"github.com/starslipay/paycomm/xerror"
 	"github.com/starslipay/trade_itg/trade_itg_pb"
 
 	"github.com/zeromicro/go-zero/core/logx"
@@ -41,7 +41,7 @@ func (l *Ban_payLogic) Ban_pay(req *types.BanPayReq) (resp *types.BanPayRsp, err
 		MockFlag:      req.MockFlag,
 	})
 	if err != nil {
-		return nil, xerr.HandleRPCError(err, "TradeItg.BanPay")
+		return nil, xerror.HandleRPCError(err, "TradeItg.BanPay")
 	}
 	return &types.BanPayRsp{
 		TransactionId:     banPayRsp.TransactionId,

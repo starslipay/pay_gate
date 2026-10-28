@@ -8,7 +8,7 @@ import (
 
 	"github.com/starslipay/pay_gate/internal/svc"
 	"github.com/starslipay/pay_gate/internal/types"
-	"github.com/starslipay/pay_gate/internal/xerr"
+	"github.com/starslipay/paycomm/xerror"
 	"github.com/starslipay/user_mgr/user_mgr_pb"
 
 	"github.com/zeromicro/go-zero/core/logx"
@@ -34,7 +34,7 @@ func (l *Cancel_userLogic) Cancel_user(req *types.CancelUserReq) (resp *types.Ca
 		UserId: req.UserId,
 	})
 	if err != nil {
-		return nil, xerr.HandleRPCError(err, "UserMgr.CancelUser")
+		return nil, xerror.HandleRPCError(err, "UserMgr.CancelUser")
 	}
 	resp = &types.CancelUserRsp{
 		UserId: cancelUserRsp.UserId,

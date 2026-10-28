@@ -8,7 +8,7 @@ import (
 
 	"github.com/starslipay/pay_gate/internal/svc"
 	"github.com/starslipay/pay_gate/internal/types"
-	"github.com/starslipay/pay_gate/internal/xerr"
+	"github.com/starslipay/paycomm/xerror"
 	"github.com/starslipay/trade_itg/trade_itg_pb"
 
 	"github.com/zeromicro/go-zero/core/logx"
@@ -37,7 +37,7 @@ func (l *Close_or_supply_orderLogic) Close_or_supply_order(req *types.CloseOrSup
 		Amount:        req.Amount,
 	})
 	if err != nil {
-		return nil, xerr.HandleRPCError(err, "TradeItg.CloseOrSupplyOrder")
+		return nil, xerror.HandleRPCError(err, "TradeItg.CloseOrSupplyOrder")
 	}
 	resp = &types.CloseOrSupplyOrderRsp{
 		ResultCode:        closeOrSupplyOrderRsp.ResultCode,

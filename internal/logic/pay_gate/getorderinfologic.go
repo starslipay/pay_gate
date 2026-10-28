@@ -9,7 +9,7 @@ import (
 	"github.com/starslipay/order_mgr/order_mgr_pb"
 	"github.com/starslipay/pay_gate/internal/svc"
 	"github.com/starslipay/pay_gate/internal/types"
-	"github.com/starslipay/pay_gate/internal/xerr"
+	"github.com/starslipay/paycomm/xerror"
 
 	"github.com/zeromicro/go-zero/core/logx"
 )
@@ -33,7 +33,7 @@ func (l *Get_order_infoLogic) Get_order_info(req *types.GetOrderInfoReq) (resp *
 		TransactionId: req.TransactionId,
 	})
 	if err != nil {
-		return nil, xerr.HandleRPCError(err, "OrderMgr.QueryOrder")
+		return nil, xerror.HandleRPCError(err, "OrderMgr.QueryOrder")
 	}
 	resp = &types.GetOrderInfoRsp{
 		TransactionId: queryResp.OrderInfo.TransactionId,

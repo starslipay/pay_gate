@@ -9,7 +9,7 @@ import (
 	"github.com/starslipay/account_mgr/account_mgr_pb"
 	"github.com/starslipay/pay_gate/internal/svc"
 	"github.com/starslipay/pay_gate/internal/types"
-	"github.com/starslipay/pay_gate/internal/xerr"
+	"github.com/starslipay/paycomm/xerror"
 
 	"github.com/zeromicro/go-zero/core/logx"
 )
@@ -33,7 +33,7 @@ func (l *Query_c2b_billLogic) Query_c2b_bill(req *types.QueryC2BBillReq) (resp *
 		TransactionId: req.TransactionId,
 	})
 	if err != nil {
-		return nil, xerr.HandleRPCError(err, "AccountMgr.QueryC2BBill")
+		return nil, xerror.HandleRPCError(err, "AccountMgr.QueryC2BBill")
 	}
 	// 返回 account_mgr 查询到的全部单据信息
 	resp = &types.QueryC2BBillRsp{

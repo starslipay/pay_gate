@@ -8,7 +8,7 @@ import (
 
 	"github.com/redis/go-redis/v9"
 	"github.com/starslipay/pay_gate/internal/svc"
-	"github.com/starslipay/pay_gate/internal/xerr"
+	"github.com/starslipay/paycomm/xerror"
 	"github.com/starslipay/user_mgr/user_mgr_pb"
 
 	"github.com/zeromicro/go-zero/core/logx"
@@ -36,7 +36,7 @@ func getRelationCached(ctx context.Context, svcCtx *svc.ServiceContext, userId s
 		UserId: userId,
 	})
 	if err != nil {
-		return nil, xerr.HandleRPCError(err, "UserMgr.GetRelation")
+		return nil, xerror.HandleRPCError(err, "UserMgr.GetRelation")
 	}
 
 	// 回源成功后回填缓存, 避免后续请求持续穿透到 UserMgr(降级开关打开时跳过)

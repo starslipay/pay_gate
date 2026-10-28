@@ -9,7 +9,7 @@ import (
 	"github.com/starslipay/account_mgr/account_mgr_pb"
 	"github.com/starslipay/pay_gate/internal/svc"
 	"github.com/starslipay/pay_gate/internal/types"
-	"github.com/starslipay/pay_gate/internal/xerr"
+	"github.com/starslipay/paycomm/xerror"
 
 	"github.com/zeromicro/go-zero/core/logx"
 )
@@ -42,7 +42,7 @@ func (l *Get_user_flowLogic) Get_user_flow(req *types.GetUserFlowReq) (resp *typ
 	})
 
 	if err != nil {
-		return nil, xerr.HandleRPCError(err, "AccountMgr.GetUserFlow")
+		return nil, xerror.HandleRPCError(err, "AccountMgr.GetUserFlow")
 	}
 	resp = &types.GetUserFlowRsp{
 		UserId:     req.UserId,

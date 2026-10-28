@@ -340,4 +340,4 @@ sequenceDiagram
 ## 8. 错误码规范
 
 - paycomm/xerror 定义公共错误码，各服务复用或扩展
-- xerr.HandleRPCError 统一处理 zrpc 返回的 error，区分业务错误（附 code/msg）与网络/超时（500）
+- xerror.HandleRPCError 统一处理 zrpc 返回的 error，区分业务错误（附 code/msg）与网络/超时（500）

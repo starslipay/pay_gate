@@ -9,7 +9,7 @@ import (
 	"github.com/starslipay/order_mgr/order_mgr_pb"
 	"github.com/starslipay/pay_gate/internal/svc"
 	"github.com/starslipay/pay_gate/internal/types"
-	"github.com/starslipay/pay_gate/internal/xerr"
+	"github.com/starslipay/paycomm/xerror"
 
 	"github.com/zeromicro/go-zero/core/logx"
 )
@@ -33,7 +33,7 @@ func (l *Query_orderLogic) Query_order(req *types.QueryOrderReq) (resp *types.Qu
 		TransactionId: req.TransactionId,
 	})
 	if err != nil {
-		return nil, xerr.HandleRPCError(err, "OrderMgr.QueryOrder")
+		return nil, xerror.HandleRPCError(err, "OrderMgr.QueryOrder")
 	}
 	// 返回 order_mgr 查询到的全部订单信息
 	resp = &types.QueryOrderRsp{

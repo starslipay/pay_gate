@@ -58,6 +58,11 @@ func FromError(err error) *CodeMsg {
 	if ce, ok := err.(*CodeMsg); ok {
 		return ce
 	}
+	// 兼容 xerror.HandleRPCError 等返回 gRPC status error 的场景:
+	// 从 status details 中还原下游业务的 code/message, 避免降级成 unknown error
+	if bizErr, ok := xerror.ParseBizError(err); ok {
+		return NewError(bizErr.Code, bizErr.Message)
+	}
 	return NewError(CodeErrUnknown, "unknown error")
 }
 

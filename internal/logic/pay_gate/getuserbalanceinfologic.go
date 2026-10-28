@@ -13,7 +13,7 @@ import (
 	"github.com/starslipay/account_mgr/account_mgr_pb"
 	"github.com/starslipay/pay_gate/internal/svc"
 	"github.com/starslipay/pay_gate/internal/types"
-	"github.com/starslipay/pay_gate/internal/xerr"
+	"github.com/starslipay/paycomm/xerror"
 
 	"github.com/zeromicro/go-zero/core/logx"
 )
@@ -66,7 +66,7 @@ func (l *Get_user_balance_infoLogic) Get_user_balance_info(req *types.GetUserBal
 		QryMode: QryModeSlave, // 查询从库
 	})
 	if err != nil {
-		return nil, xerr.HandleRPCError(err, "AccountMgr.GetUserBalanceInfo")
+		return nil, xerror.HandleRPCError(err, "AccountMgr.GetUserBalanceInfo")
 	}
 
 	return &types.GetUserBalanceInfoRsp{

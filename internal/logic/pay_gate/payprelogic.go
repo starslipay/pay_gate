@@ -8,7 +8,7 @@ import (
 
 	"github.com/starslipay/pay_gate/internal/svc"
 	"github.com/starslipay/pay_gate/internal/types"
-	"github.com/starslipay/pay_gate/internal/xerr"
+	"github.com/starslipay/paycomm/xerror"
 	"github.com/starslipay/trade_itg/trade_itg_pb"
 
 	"github.com/zeromicro/go-zero/core/logx"
@@ -34,7 +34,7 @@ func (l *Pay_preLogic) Pay_pre(req *types.PayPreReq) (resp *types.PayPreRsp, err
 		MerchantId: req.MerchantId,
 	})
 	if err != nil {
-		return nil, xerr.HandleRPCError(err, "TradeItg.PayPre")
+		return nil, xerror.HandleRPCError(err, "TradeItg.PayPre")
 	}
 	return &types.PayPreRsp{
 		UserId:        payPreRsp.UserId,
