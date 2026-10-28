@@ -31,7 +31,7 @@ func (l *RefundOrderLogic) RefundOrder(req *types.RefundOrderReq) (resp *types.R
 		TransactionId: req.TransactionId,
 	})
 	if err != nil {
-		return nil, xerror.HandleRPCError(err, "退款")
+		return nil, xerror.HandleRPCError(err, "TradeItg.RefundOrder")
 	}
 
 	return &types.RefundOrderRsp{

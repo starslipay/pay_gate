@@ -33,7 +33,7 @@ func (l *GetMerchantBalanceInfoLogic) GetMerchantBalanceInfo(req *types.GetMerch
 		MerchantId: req.MerchantId,
 	})
 	if err != nil {
-		return nil, xerror.HandleRPCError(err, "查询商户信息")
+		return nil, xerror.HandleRPCError(err, "UserMgr.GetMerchantInfo")
 	}
 
 	// 2. 再用 merchant_uid 查余额
@@ -42,7 +42,7 @@ func (l *GetMerchantBalanceInfoLogic) GetMerchantBalanceInfo(req *types.GetMerch
 		QryMode:     req.QryMode,
 	})
 	if err != nil {
-		return nil, xerror.HandleRPCError(err, "查询商户余额")
+		return nil, xerror.HandleRPCError(err, "AccountMgr.GetMerchantBalanceInfo")
 	}
 
 	return &types.GetMerchantBalanceInfoRsp{

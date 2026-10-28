@@ -3,10 +3,10 @@ package pay_gate
 import (
 	"context"
 
+	"github.com/starslipay/order_mgr/order_mgr_pb"
 	"github.com/starslipay/pay_gate/internal/svc"
 	"github.com/starslipay/pay_gate/internal/types"
 	"github.com/starslipay/paycomm/xerror"
-	"github.com/starslipay/order_mgr/order_mgr_pb"
 
 	"github.com/zeromicro/go-zero/core/logx"
 )
@@ -31,7 +31,7 @@ func (l *QueryRechargeWithdrawOrderLogic) QueryRechargeWithdrawOrder(req *types.
 		TransactionId: req.TransactionId,
 	})
 	if err != nil {
-		return nil, xerror.HandleRPCError(err, "查询充值提现单")
+		return nil, xerror.HandleRPCError(err, "OrderMgr.QueryRechargeWithdrawOrder")
 	}
 
 	orderInfo := rpcResp.OrderInfo
